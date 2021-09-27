@@ -1,0 +1,1506 @@
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/ConformanceTestHelper.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/ConformanceTestHelper.java
+index c1369f47e5..291cbfe838 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/ConformanceTestHelper.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/ConformanceTestHelper.java
+@@ -52,7 +52,7 @@ import oscar.util.DateUtils;
+ 
+ public final class ConformanceTestHelper {
+ 	private static Logger logger = MiscUtils.getLogger();
+-	public static boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(OscarProperties.getInstance().getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
++	public static final boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(OscarProperties.getInstance().getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
+ 	
+ 	public static void populateLocalTicklerWithRemoteProviderMessageFollowUps(LoggedInInfo loggedInInfo) {
+ 		try {
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ClientReferral.java b/src/main/java/org/oscarehr/PMmodule/model/ClientReferral.java
+index 0c66e05886..259e8702bb 100755
+--- a/src/main/java/org/oscarehr/PMmodule/model/ClientReferral.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ClientReferral.java
+@@ -30,11 +30,11 @@ import java.io.Serializable;
+  */
+ public class ClientReferral implements Serializable {
+ 
+-    public static String STATUS_REJECTED = "rejected";
+-    public static String STATUS_ACTIVE = "active";
+-    public static String STATUS_CURRENT = "current";
+-    public static String STATUS_UNKNOWN = "unknown";
+-    public static String STATUS_PENDING = "pending";
++    public static final String STATUS_REJECTED = "rejected";
++    public static final String STATUS_ACTIVE = "active";
++    public static final String STATUS_CURRENT = "current";
++    public static final String STATUS_UNKNOWN = "unknown";
++    public static final String STATUS_PENDING = "pending";
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/Intake.java b/src/main/java/org/oscarehr/PMmodule/model/Intake.java
+index 8b657ef920..0ad53cba12 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/Intake.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/Intake.java
+@@ -45,7 +45,7 @@ public class Intake implements Serializable {
+ 	public static final String QUICK = "quick";
+ 	public static final String INDEPTH = "indepth";
+ 	public static final String PROGRAM = "program";
+-    public static String REF = "Intake";
++    public static final String REF = "Intake";
+     
+     
+     private int hashCode = Integer.MIN_VALUE;// primary key
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswer.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswer.java
+index 47eafaff5a..796dec353e 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswer.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswer.java
+@@ -29,7 +29,7 @@ import org.apache.commons.lang.builder.CompareToBuilder;
+ 
+ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
+ 
+-    public static String REF = "IntakeAnswer";
++    public static final String REF = "IntakeAnswer";
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Integer id;// fields
+     private String value;// many to one
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerElement.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerElement.java
+index f5bb547993..caa6b26b88 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerElement.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerElement.java
+@@ -31,7 +31,7 @@ public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Se
+ 
+ 	public static final String TRUE = "T";
+ 	public static final String FALSE = "F";
+-    public static String REF = "IntakeAnswerElement";
++    public static final String REF = "IntakeAnswerElement";
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Integer id;// fields
+     private boolean m_default;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerValidation.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerValidation.java
+index c5eb5cd56b..cebc2f925f 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerValidation.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerValidation.java
+@@ -28,7 +28,7 @@ import java.io.Serializable;
+ 
+ public class IntakeAnswerValidation implements Serializable {
+ 
+-    public static String REF = "IntakeAnswerValidation";
++    public static final String REF = "IntakeAnswerValidation";
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Integer id;// fields
+     private String type;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNode.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNode.java
+index fa95bc645e..34e7ef6e85 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNode.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNode.java
+@@ -38,7 +38,7 @@ public class IntakeNode implements Serializable {
+ 
+     private IntakeNodeWalker walker;
+ 
+-    public static String REF = "IntakeNode";
++    public static final String REF = "IntakeNode";
+     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Integer id;// many to one
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeLabel.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeLabel.java
+index 21173e6eab..e98e9dd1ef 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeLabel.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeLabel.java
+@@ -27,7 +27,7 @@ import java.io.Serializable;
+ 
+ public class IntakeNodeLabel implements Serializable {
+ 
+-    public static String REF = "IntakeNodeLabel";
++    public static final String REF = "IntakeNodeLabel";
+     
+     private int hashCode = Integer.MIN_VALUE;// primary key
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeTemplate.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeTemplate.java
+index 7af5e8f14f..a20b957fe7 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeTemplate.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeTemplate.java
+@@ -30,7 +30,7 @@ import java.util.TreeSet;
+ 
+ public class IntakeNodeTemplate implements Serializable {
+ 
+-    public static String REF = "IntakeNodeTemplate";
++    public static final String REF = "IntakeNodeTemplate";
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeType.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeType.java
+index f903c4437e..4627ef2272 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeType.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeType.java
+@@ -36,7 +36,7 @@ public class IntakeNodeType implements Serializable {
+ 	public static final Integer ANSWER_SCALAR_TEXT_ID = 7;
+ 	public static final Integer ANSWER_SCALAR_NOTE_ID = 8;
+ 	public static final Integer ANSWER_SCALAR_DATE_ID = 9;
+-    public static String REF = "IntakeNodeType";
++    public static final String REF = "IntakeNodeType";
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramClientStatus.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramClientStatus.java
+index fad9f4a653..eb74dadb53 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramClientStatus.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramClientStatus.java
+@@ -27,7 +27,7 @@ import java.io.Serializable;
+ 
+ 
+ public class ProgramClientStatus implements Serializable {
+-    public static String REF = "ProgramClientStatus";
++    public static final String REF = "ProgramClientStatus";
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramQueue.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramQueue.java
+index 5f0cb80332..1cf2a3e042 100755
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramQueue.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramQueue.java
+@@ -31,10 +31,10 @@ import java.io.Serializable;
+  */
+ public class ProgramQueue implements Serializable {
+ 
+-    public static String STATUS_ADMITTED = "admitted";
+-    public static String STATUS_REJECTED = "rejected";
+-    public static String STATUS_REMOVED = "removed";
+-    public static String STATUS_ACTIVE = "active";
++    public static final String STATUS_ADMITTED = "admitted";
++    public static final String STATUS_REJECTED = "rejected";
++    public static final String STATUS_REMOVED = "removed";
++    public static final String STATUS_ACTIVE = "active";
+ 
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
+index 5571ce1b85..9af0dbd1ef 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
+@@ -31,7 +31,7 @@ import java.util.List;
+  */
+ public class ProgramTeam implements Serializable {
+ 
+-    public static String REF = "ProgramTeam";
++    public static final String REF = "ProgramTeam";
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Integer id;// fields
+     private String name;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/VacancyClientMatch.java b/src/main/java/org/oscarehr/PMmodule/model/VacancyClientMatch.java
+index 9350c5ee22..94d7399662 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/VacancyClientMatch.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/VacancyClientMatch.java
+@@ -44,10 +44,10 @@ import org.oscarehr.common.model.AbstractModel;
+ @Table(name="vacancy_client_match")
+ public class VacancyClientMatch extends AbstractModel<Integer> implements Comparable<VacancyClientMatch>{
+ 	
+-	public static String ACCEPTED = "accepted";
+-	public static String FORWARDED = "forwarded";
+-	public static String PENDING = "pending";
+-	public static String REJECTED = "rejected";
++	public static final String ACCEPTED = "accepted";
++	public static final String FORWARDED = "forwarded";
++	public static final String PENDING = "pending";
++	public static final String REJECTED = "rejected";
+ 	
+ 
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClients.java b/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClients.java
+index dba4e9d703..7651b3772e 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClients.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClients.java
+@@ -55,10 +55,10 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ManageLinkedClients {
+-	public static Logger logger = MiscUtils.getLogger();
+-	public static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+-	public static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
+-	public static ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
++	public static final Logger logger = MiscUtils.getLogger();
++	public static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
++	public static final ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
++	public static final ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
+ 
+ 	public static class LinkedDemographicHolder {
+ 		public int matchingScore = 0;
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClientsAction.java b/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClientsAction.java
+index 9d7f95afd4..262ec6f396 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClientsAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClientsAction.java
+@@ -42,8 +42,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ManageLinkedClientsAction {
+-	public static Logger logger = MiscUtils.getLogger();
+-	public static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
++	public static final Logger logger = MiscUtils.getLogger();
++	public static final ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
+ 
+ 	private Integer newHnrLinkedId = null;
+ 	private ArrayList<FacilityDemographicPrimaryKey> linkedCaisiIds = new ArrayList<FacilityDemographicPrimaryKey>();
+diff --git a/src/main/java/org/oscarehr/admin/traceability/GenerateTraceAction.java b/src/main/java/org/oscarehr/admin/traceability/GenerateTraceAction.java
+index 58b9107901..d8f4e8ddaa 100644
+--- a/src/main/java/org/oscarehr/admin/traceability/GenerateTraceAction.java
++++ b/src/main/java/org/oscarehr/admin/traceability/GenerateTraceAction.java
+@@ -50,7 +50,7 @@ import oscar.log.LogConst;
+  *
+  */
+ public class GenerateTraceAction extends DispatchAction {
+-	public static int BUFFER_SIZE = 8192;
++	public static final int BUFFER_SIZE = 8192;
+ 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
+ 		String userName = (String) request.getSession().getAttribute("user");
+ 		String roleName$ = (String) request.getSession().getAttribute("userrole") + "," + userName;
+diff --git a/src/main/java/org/oscarehr/casemgmt/model/CaseManagementNote.java b/src/main/java/org/oscarehr/casemgmt/model/CaseManagementNote.java
+index cb1db04a07..09d6ff8548 100644
+--- a/src/main/java/org/oscarehr/casemgmt/model/CaseManagementNote.java
++++ b/src/main/java/org/oscarehr/casemgmt/model/CaseManagementNote.java
+@@ -414,7 +414,7 @@ public class CaseManagementNote extends BaseObject {
+ 		};
+ 
+ 	}
+-	public static Comparator<CaseManagementNote> noteObservationDateComparator = new Comparator<CaseManagementNote>() {
++	public static final Comparator<CaseManagementNote> noteObservationDateComparator = new Comparator<CaseManagementNote>() {
+ 
+             public int compare(CaseManagementNote note1, CaseManagementNote note2) {
+ 			if (note1 == null || note2 == null) {
+diff --git a/src/main/java/org/oscarehr/casemgmt/model/CaseManagementNoteExt.java b/src/main/java/org/oscarehr/casemgmt/model/CaseManagementNoteExt.java
+index 369f3fc364..4d46d4b298 100644
+--- a/src/main/java/org/oscarehr/casemgmt/model/CaseManagementNoteExt.java
++++ b/src/main/java/org/oscarehr/casemgmt/model/CaseManagementNoteExt.java
+@@ -31,19 +31,19 @@ import oscar.util.UtilDateUtilities;
+ public class CaseManagementNoteExt {
+ 	
+ 	// Key Value constants ***All date value key must be in format "XXX Date"
+-	public static String STARTDATE	    = "Start Date"	;
+-	public static String RESOLUTIONDATE = "Resolution Date"	;
+-	public static String PROCEDUREDATE  = "Procedure Date"	;
++	public static final String STARTDATE	    = "Start Date"	;
++	public static final String RESOLUTIONDATE = "Resolution Date"	;
++	public static final String PROCEDUREDATE  = "Procedure Date"	;
+ 	
+-	public static String AGEATONSET	    = "Age at Onset"	;
+-	public static String TREATMENT	    = "Treatment"	;
+-	public static String PROBLEMSTATUS  = "Problem Status"	;
+-	public static String EXPOSUREDETAIL = "Exposure Details";
+-	public static String RELATIONSHIP   = "Relationship"	;
+-	public static String LIFESTAGE	    = "Life Stage"	;
+-	public static String HIDECPP	    = "Hide Cpp"	;
+-	public static String PROBLEMDESC    = "Problem Description";
+-	public static String PROCEDURE    = "Procedure";
++	public static final String AGEATONSET	    = "Age at Onset"	;
++	public static final String TREATMENT	    = "Treatment"	;
++	public static final String PROBLEMSTATUS  = "Problem Status"	;
++	public static final String EXPOSUREDETAIL = "Exposure Details";
++	public static final String RELATIONSHIP   = "Relationship"	;
++	public static final String LIFESTAGE	    = "Life Stage"	;
++	public static final String HIDECPP	    = "Hide Cpp"	;
++	public static final String PROBLEMDESC    = "Problem Description";
++	public static final String PROCEDURE    = "Procedure";
+         
+ 	
+ 	
+diff --git a/src/main/java/org/oscarehr/casemgmt/model/Issue.java b/src/main/java/org/oscarehr/casemgmt/model/Issue.java
+index 3aad325d1b..a4fe93be65 100644
+--- a/src/main/java/org/oscarehr/casemgmt/model/Issue.java
++++ b/src/main/java/org/oscarehr/casemgmt/model/Issue.java
+@@ -29,12 +29,12 @@ import org.caisi.model.BaseObject;
+ import org.oscarehr.util.MiscUtils;
+ 
+ public class Issue extends BaseObject {
+-	public static String CUSTOM_ISSUE = "userDefined";
+-	public static String SYSTEM = "system";
+-	public static String ICD_9 = "ICD9";
+-	public static String ICD_10 = "ICD10";
+-	public static String SNOMED = "SNOMED";
+-	public static String SNOMED_CORE = "SnomedCore";
++	public static final String CUSTOM_ISSUE = "userDefined";
++	public static final String SYSTEM = "system";
++	public static final String ICD_9 = "ICD9";
++	public static final String ICD_10 = "ICD10";
++	public static final String SNOMED = "SNOMED";
++	public static final String SNOMED_CORE = "SnomedCore";
+ 	
+ 	  
+ 	private java.text.DateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
+diff --git a/src/main/java/org/oscarehr/common/model/BillingONPayment.java b/src/main/java/org/oscarehr/common/model/BillingONPayment.java
+index 5b4c62782f..61ffc7866a 100644
+--- a/src/main/java/org/oscarehr/common/model/BillingONPayment.java
++++ b/src/main/java/org/oscarehr/common/model/BillingONPayment.java
+@@ -41,8 +41,8 @@ import java.util.Date;
+ @Entity
+ @Table(name = "billing_on_payment")
+ public class BillingONPayment extends AbstractModel<Integer> implements Serializable {
+-	public static String PAYMENT = "P";
+-	public static String REFUND = "R";
++	public static final String PAYMENT = "P";
++	public static final String REFUND = "R";
+ 	
+ 	
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/common/model/CustomFilter.java b/src/main/java/org/oscarehr/common/model/CustomFilter.java
+index 0323ef33ce..d90391fb4a 100644
+--- a/src/main/java/org/oscarehr/common/model/CustomFilter.java
++++ b/src/main/java/org/oscarehr/common/model/CustomFilter.java
+@@ -129,8 +129,8 @@ public class CustomFilter extends AbstractModel<Integer> {
+ 	@Transient
+ 	private String demographic_webName;
+ 	
+-    public static List<OptionsBean> statusList;
+-    public static List<OptionsBean> priorityList;
++    public static final List<OptionsBean> statusList;
++    public static final List<OptionsBean> priorityList;
+    
+ 
+     static {
+diff --git a/src/main/java/org/oscarehr/common/model/Queue.java b/src/main/java/org/oscarehr/common/model/Queue.java
+index b81549afd2..a8667c0cdc 100644
+--- a/src/main/java/org/oscarehr/common/model/Queue.java
++++ b/src/main/java/org/oscarehr/common/model/Queue.java
+@@ -48,7 +48,7 @@ import org.apache.commons.lang.StringUtils;
+ @Table(name = "queue")
+ 
+ public class Queue extends AbstractModel<Integer> implements Serializable {
+-	public static int DEFAULT_QUEUE_ID=1;
++	public static final int DEFAULT_QUEUE_ID=1;
+ 
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/web/ContactAction.java b/src/main/java/org/oscarehr/common/web/ContactAction.java
+index 1eb8e678b0..9dac0a0e27 100644
+--- a/src/main/java/org/oscarehr/common/web/ContactAction.java
++++ b/src/main/java/org/oscarehr/common/web/ContactAction.java
+@@ -823,7 +823,7 @@ public class ContactAction extends DispatchAction {
+ 		return contact;
+ 	}
+ 	
+-	public static Comparator<Contact> byLastName = new Comparator<Contact>() {
++	public static final Comparator<Contact> byLastName = new Comparator<Contact>() {
+ 		public int compare(Contact contact1, Contact contact2) {
+ 			String lastname1 = contact1.getLastName().toUpperCase();
+ 			String lastname2 = contact2.getLastName().toUpperCase();
+diff --git a/src/main/java/org/oscarehr/eyeform/web/MacroAction.java b/src/main/java/org/oscarehr/eyeform/web/MacroAction.java
+index 5312c9b50e..3b4404266f 100644
+--- a/src/main/java/org/oscarehr/eyeform/web/MacroAction.java
++++ b/src/main/java/org/oscarehr/eyeform/web/MacroAction.java
+@@ -50,7 +50,7 @@ import org.oscarehr.util.SpringUtils;
+ 
+ public class MacroAction extends DispatchAction {
+ 
+-	public static List<LabelValueBean> sliCodeList = new ArrayList<LabelValueBean>();
++	public static final List<LabelValueBean> sliCodeList = new ArrayList<LabelValueBean>();
+ 	static {
+ 		sliCodeList.add(new LabelValueBean("Not Applicable","NA"));
+ 		sliCodeList.add(new LabelValueBean("HDS | Hospital Day Surgery","HDS"));
+diff --git a/src/main/java/org/oscarehr/hospitalReportManager/SFTPConnector.java b/src/main/java/org/oscarehr/hospitalReportManager/SFTPConnector.java
+index 2dc85723e1..fada6ead4f 100644
+--- a/src/main/java/org/oscarehr/hospitalReportManager/SFTPConnector.java
++++ b/src/main/java/org/oscarehr/hospitalReportManager/SFTPConnector.java
+@@ -69,7 +69,7 @@ public class SFTPConnector {
+ 	private static final int OMD_HRM_PORT = Integer.parseInt(OscarProperties.getInstance().getProperty("OMD_HRM_PORT"));
+ 
+ 	//this file needs chmod 444 permissions for the connection to go through
+-	public static  String OMD_directory = OscarProperties.getInstance().getProperty("OMD_directory");
++	public static final  String OMD_directory = OscarProperties.getInstance().getProperty("OMD_directory");
+ 	private static  String OMD_keyLocation = OMD_directory + OscarProperties.getInstance().getProperty("OMD_HRM_AUTH_KEY_FILENAME");
+ 	public static final String XSD_ontariomd = OMD_directory + "ontariomd_cds_dt.xsd";
+ 	public static final String XSD_reportmanager = OMD_directory + "report_manager_cds.xsd";
+@@ -78,12 +78,12 @@ public class SFTPConnector {
+ 	public final String logDirectory = OscarProperties.getInstance().getProperty("OMD_log_directory");
+ 
+ 	//root folder for daily downloads
+-	public static String downloadsDirectory= OscarProperties.getInstance().getProperty("OMD_downloads");
++	public static final String downloadsDirectory= OscarProperties.getInstance().getProperty("OMD_downloads");
+ 
+ 	public final String fileDirectory = OscarProperties.getInstance().getProperty("OMD_stored");
+ 
+ 	//set when initialized, to change keys, manually do it in the main constructor
+-	public static String decryptionKey=null;
++	public static final String decryptionKey=null;
+ 	
+ 	private HrmLogDao hrmLogDao = SpringUtils.getBean(HrmLogDao.class);
+ 	private HrmLogEntryDao hrmLogEntryDao = SpringUtils.getBean(HrmLogEntryDao.class);
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/ControllerHandler.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/ControllerHandler.java
+index fa9c21fc22..f5861328e1 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/ControllerHandler.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/ControllerHandler.java
+@@ -44,7 +44,7 @@ import oscar.util.StringUtils;
+  */
+ public class ControllerHandler {
+ 	
+-	public static Logger logger = Logger.getLogger(ControllerHandler.class);
++	public static final Logger logger = Logger.getLogger(ControllerHandler.class);
+ 
+ 	private static final String DEFAULT_PROVIDER = "999999";
+ 	private static final String DEFAULT_SERVICE_NAME = "Excelleris";
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/HL7LabHandler.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/HL7LabHandler.java
+index 49b65c0758..05ebab7d37 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/HL7LabHandler.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/HL7LabHandler.java
+@@ -61,7 +61,7 @@ import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
+  */
+ public class HL7LabHandler {
+ 
+-	public static Logger logger = Logger.getLogger("ExpediusHL7LabHandler");
++	public static final Logger logger = Logger.getLogger("ExpediusHL7LabHandler");
+ 	
+ 	private static final String DEFAULT_SAVE_PATH = "/var/lib/expedius/labs/";
+ 	private static final String DOCUMENT_FORMAT = "UTF-8";
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/MessageHandler.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/MessageHandler.java
+index 051510fa59..4fbaddeee4 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/MessageHandler.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/MessageHandler.java
+@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
+  */
+ public class MessageHandler {
+ 	
+-	public static Logger logger = Logger.getLogger(MessageHandler.class);
++	public static final Logger logger = Logger.getLogger(MessageHandler.class);
+ 	private String statusMessage;
+ 	private ArrayList<String> errorMessages;
+ 	private Date lastDownload;
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/PollTimer.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/PollTimer.java
+index f44261c982..6765643d19 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/PollTimer.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/PollTimer.java
+@@ -46,7 +46,7 @@ public class PollTimer {
+ 	
+ 	// available services 
+ 	
+-	public static int DEFAULT_POLL_INTERVAL = 7200;
++	public static final int DEFAULT_POLL_INTERVAL = 7200;
+ 	
+ 	// polling frequencies
+ 	private static final Integer INITIAL_DELAY = (60*30); // download after 10 minutes of start.
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/main/StartupListener.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/main/StartupListener.java
+index 3af50011cc..d85392b0bf 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/main/StartupListener.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/main/StartupListener.java
+@@ -51,7 +51,7 @@ import oscar.OscarProperties;
+  */
+ public class StartupListener implements ServletContextListener {
+ 
+-	public static Logger logger = Logger.getLogger("ExpediusStartupListener");
++	public static final Logger logger = Logger.getLogger("ExpediusStartupListener");
+ 	private static Properties properties;
+ 	private static final String keyFilePath = "./keys.txt";
+ 	
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/mailbox/DetailDataCustom.java b/src/main/java/org/oscarehr/integration/mcedt/mailbox/DetailDataCustom.java
+index 2df865586c..43c886018e 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/mailbox/DetailDataCustom.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/mailbox/DetailDataCustom.java
+@@ -99,7 +99,7 @@ public class DetailDataCustom{
+ 	}
+ 
+ 
+-	public static Comparator<DetailDataCustom> ResourceIdComparator = new Comparator<DetailDataCustom> () {
++	public static final Comparator<DetailDataCustom> ResourceIdComparator = new Comparator<DetailDataCustom> () {
+ 		 public int compare(DetailDataCustom detailData1,DetailDataCustom detailData2) {
+             String resourceID1 = detailData1.getResourceID().toString();
+             String resourceID2 = detailData2.getResourceID().toString();
+diff --git a/src/main/java/org/oscarehr/managers/TicklerManager.java b/src/main/java/org/oscarehr/managers/TicklerManager.java
+index 81e0f2a461..390c0e4457 100644
+--- a/src/main/java/org/oscarehr/managers/TicklerManager.java
++++ b/src/main/java/org/oscarehr/managers/TicklerManager.java
+@@ -79,15 +79,15 @@ import com.quatro.model.security.Secrole;
+ @Service
+ public class TicklerManager {
+ 	   
+-    	public static String DEMOGRAPHIC_NAME = "demographic_name";
+-        public static String CREATOR = "creator";
+-        public static String SERVICE_DATE = "service_date";
+-        public static String CREATION_DATE = "creation_date";
+-        public static String PRIORITY = "priority";
+-        public static String TASK_ASSIGNED_TO = "task_assigned_to";
+-        public static String STATUS = "status";
+-        public static String SORT_ASC = "asc";
+-        public static String SORT_DESC = "desc";
++    	public static final String DEMOGRAPHIC_NAME = "demographic_name";
++        public static final String CREATOR = "creator";
++        public static final String SERVICE_DATE = "service_date";
++        public static final String CREATION_DATE = "creation_date";
++        public static final String PRIORITY = "priority";
++        public static final String TASK_ASSIGNED_TO = "task_assigned_to";
++        public static final String STATUS = "status";
++        public static final String SORT_ASC = "asc";
++        public static final String SORT_DESC = "desc";
+         
+ 	private static final String TICKLER_EMAIL_TEMPLATE_FILE="/tickler_email_notification_template.txt";
+ 	private static final String PRIVILEGE_READ = "r";
+diff --git a/src/main/java/org/oscarehr/olis/OLISPoller.java b/src/main/java/org/oscarehr/olis/OLISPoller.java
+index 1f47b86b0a..0b08a8df25 100644
+--- a/src/main/java/org/oscarehr/olis/OLISPoller.java
++++ b/src/main/java/org/oscarehr/olis/OLISPoller.java
+@@ -190,7 +190,7 @@ public class OLISPoller {
+ 	    	logger.error("Error polling OLIS for facility", e);
+ 	    }
+     }
+-	public static HashMap<String, OLISHL7Handler> pollResultsMap = new HashMap<String, OLISHL7Handler>();
++	public static final HashMap<String, OLISHL7Handler> pollResultsMap = new HashMap<String, OLISHL7Handler>();
+ 	
+ 	private List<String> parsePollResults(String response) {
+ 		try {
+diff --git a/src/main/java/org/oscarehr/olis/OLISResultsAction.java b/src/main/java/org/oscarehr/olis/OLISResultsAction.java
+index 76261f83ea..a827143c3c 100644
+--- a/src/main/java/org/oscarehr/olis/OLISResultsAction.java
++++ b/src/main/java/org/oscarehr/olis/OLISResultsAction.java
+@@ -51,7 +51,7 @@ import oscar.oscarLab.ca.all.util.Utilities;
+ 
+ public class OLISResultsAction extends DispatchAction {
+ 
+-	public static HashMap<String, OLISHL7Handler> searchResultsMap = new HashMap<String, OLISHL7Handler>();
++	public static final HashMap<String, OLISHL7Handler> searchResultsMap = new HashMap<String, OLISHL7Handler>();
+ 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+ 	protected OLISResultsDao olisResultsDao = SpringUtils.getBean(OLISResultsDao.class);
+ 	protected ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+diff --git a/src/main/java/org/oscarehr/olis/OLISSearchAction.java b/src/main/java/org/oscarehr/olis/OLISSearchAction.java
+index 49862933f7..bfb85f0f29 100644
+--- a/src/main/java/org/oscarehr/olis/OLISSearchAction.java
++++ b/src/main/java/org/oscarehr/olis/OLISSearchAction.java
+@@ -79,7 +79,7 @@ public class OLISSearchAction extends DispatchAction {
+ 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+ 	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+ 	
+-	public static HashMap<String, Query> searchQueryMap = new HashMap<String, Query>();
++	public static final HashMap<String, Query> searchQueryMap = new HashMap<String, Query>();
+ 
+ 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+ 
+diff --git a/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java b/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
+index c090671522..35a3640ef2 100644
+--- a/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
++++ b/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
+@@ -62,7 +62,7 @@ import oscar.util.UtilDateUtilities;
+ public class ReportBuilder {
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+-	public static DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
++	public static final DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
+ 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+ 	BillingONCHeader1Dao billingONCHeader1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+ 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+diff --git a/src/main/java/org/oscarehr/util/CppUtils.java b/src/main/java/org/oscarehr/util/CppUtils.java
+index c03e9ee268..c981ee667a 100644
+--- a/src/main/java/org/oscarehr/util/CppUtils.java
++++ b/src/main/java/org/oscarehr/util/CppUtils.java
+@@ -26,7 +26,7 @@ package org.oscarehr.util;
+ import java.util.Arrays;
+ 
+ public class CppUtils {
+-	public static String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
++	public static final String cppCodes = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
+ 	
+ 	public static void addCppCode(String code) {
+ 		String[] result = Arrays.copyOf(cppCodes, cppCodes.length+1);
+diff --git a/src/main/java/org/oscarehr/util/SpringUtils.java b/src/main/java/org/oscarehr/util/SpringUtils.java
+index 0ee39b66ba..2359b53fa2 100644
+--- a/src/main/java/org/oscarehr/util/SpringUtils.java
++++ b/src/main/java/org/oscarehr/util/SpringUtils.java
+@@ -36,7 +36,7 @@ public class SpringUtils {
+     /**
+      * This variable is populated by one of the context listeners.
+      */
+-    public static BeanFactory beanFactory = null;
++    public static final BeanFactory beanFactory = null;
+ 
+     public static Object getBean(String beanName)
+     {
+diff --git a/src/main/java/org/oscarehr/ws/rest/NotesService.java b/src/main/java/org/oscarehr/ws/rest/NotesService.java
+index 3b90a9b373..5e98ec15e6 100644
+--- a/src/main/java/org/oscarehr/ws/rest/NotesService.java
++++ b/src/main/java/org/oscarehr/ws/rest/NotesService.java
+@@ -99,7 +99,7 @@ import oscar.oscarEncounter.pageUtil.EctSessionBean;
+ @Component("notesService")
+ public class NotesService extends AbstractServiceImpl {
+ 
+-	public static String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
++	public static final String cppCodes = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
+ 	
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/IssueTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/IssueTo1.java
+index 05708a556b..70c53329cf 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/IssueTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/IssueTo1.java
+@@ -32,11 +32,11 @@ import javax.xml.bind.annotation.XmlRootElement;
+ @XmlRootElement(name="issue")
+ public class IssueTo1 implements Serializable{
+ 	
+-	public static String CUSTOM_ISSUE = "userDefined";
+-	public static String SYSTEM = "system";
+-	public static String ICD_9 = "ICD9";
+-	public static String ICD_10 = "ICD10";
+-	public static String SNOMED = "SNOMED";
++	public static final String CUSTOM_ISSUE = "userDefined";
++	public static final String SYSTEM = "system";
++	public static final String ICD_9 = "ICD9";
++	public static final String ICD_10 = "ICD10";
++	public static final String SNOMED = "SNOMED";
+ 	
+ 	  
+ 	  
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/NoteExtTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/NoteExtTo1.java
+index 28a48137c7..5379026b9f 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/NoteExtTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/NoteExtTo1.java
+@@ -34,19 +34,19 @@ import javax.xml.bind.annotation.XmlRootElement;
+ public class NoteExtTo1 implements Serializable{
+ 	
+ 	// Key Value constants ***All date value key must be in format "XXX Date"
+-	public static String STARTDATE	    = "Start Date"	;
+-	public static String RESOLUTIONDATE = "Resolution Date"	;
+-	public static String PROCEDUREDATE  = "Procedure Date"	;
+-	
+-	public static String AGEATONSET	    = "Age at Onset"	;
+-	public static String TREATMENT	    = "Treatment"	;
+-	public static String PROBLEMSTATUS  = "Problem Status"	;
+-	public static String EXPOSUREDETAIL = "Exposure Details";
+-	public static String RELATIONSHIP   = "Relationship"	;
+-	public static String LIFESTAGE	    = "Life Stage"	;
+-	public static String HIDECPP	    = "Hide Cpp"	;
+-	public static String PROBLEMDESC    = "Problem Description";
+-	public static String PROCEDURE    = "Procedure";
++	public static final String STARTDATE	    = "Start Date"	;
++	public static final String RESOLUTIONDATE = "Resolution Date"	;
++	public static final String PROCEDUREDATE  = "Procedure Date"	;
++	
++	public static final String AGEATONSET	    = "Age at Onset"	;
++	public static final String TREATMENT	    = "Treatment"	;
++	public static final String PROBLEMSTATUS  = "Problem Status"	;
++	public static final String EXPOSUREDETAIL = "Exposure Details";
++	public static final String RELATIONSHIP   = "Relationship"	;
++	public static final String LIFESTAGE	    = "Life Stage"	;
++	public static final String HIDECPP	    = "Hide Cpp"	;
++	public static final String PROBLEMDESC    = "Problem Description";
++	public static final String PROCEDURE    = "Procedure";
+         
+ 		
+ 	//Class fields
+diff --git a/src/main/java/oscar/form/study/hsfo2/pageUtil/XMLTransferUtil.java b/src/main/java/oscar/form/study/hsfo2/pageUtil/XMLTransferUtil.java
+index d83b261b3e..0d3669fc68 100644
+--- a/src/main/java/oscar/form/study/hsfo2/pageUtil/XMLTransferUtil.java
++++ b/src/main/java/oscar/form/study/hsfo2/pageUtil/XMLTransferUtil.java
+@@ -23,6 +23,10 @@
+  */
+ 
+ package oscar.form.study.hsfo2.pageUtil;
++import StringFollowUpIntervalUnits;
++import HsfHmpDataDocument;
++import StringGoalView;
++import StringHtnDxType;
+ 
+ import java.io.ByteArrayOutputStream;
+ import java.io.File;
+@@ -188,12 +192,12 @@ public class XMLTransferUtil
+ 	private static Logger logger = MiscUtils.getLogger();
+   public static enum SoapElementKey
+   {
+-	  DataVaultStatusStrResult, StatusMessage, responseStatusCode, DataVaultResult, GetDataDateRangeResult, DataBeginDate, DataEndDate,
++	  DataVaultStatusStrResult, StatusMessage, responseStatusCode, DataVaultResult, GetDataDateRangeResult, DataBeginDate, DataEndDate;
+ 
+   }
+ 
+-  public static SimpleDateFormat dformat1     = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+-  public static SimpleDateFormat dformat2     = new SimpleDateFormat( "yyyy-MM-dd" );
++  public static final SimpleDateFormat dformat1     = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
++  public static final SimpleDateFormat dformat2     = new SimpleDateFormat( "yyyy-MM-dd" );
+ 
+   private String defaultweb = "https://www.clinforma.net/Hsf/HmpVaultWS/";
+   //"https://www.clinforma.net/P-Prompt/DataReceiveWS/";
+diff --git a/src/main/java/oscar/ocan/service/OcanDataProcessor.java b/src/main/java/oscar/ocan/service/OcanDataProcessor.java
+index 3d6bbec4ed..17972f2fc4 100644
+--- a/src/main/java/oscar/ocan/service/OcanDataProcessor.java
++++ b/src/main/java/oscar/ocan/service/OcanDataProcessor.java
+@@ -108,12 +108,12 @@ import oscar.ocan.domain.submission.TimeLivedInCanada;
+ 
+ public class OcanDataProcessor {
+ 
+-	public static DateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
++	public static final DateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
+ 
+ 	private String serviceOrganizationNumber;
+ 	private String submissionFileLocation;
+ 
+-	private ObjectFactory of = new ObjectFactory();;
++	private ObjectFactory of = new ObjectFactory();
+ 
+ 	public class OcanProcess {
+ 		public Date now;
+diff --git a/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java b/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java
+index 913b1be1a2..5031114332 100644
+--- a/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java
++++ b/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java
+@@ -48,20 +48,20 @@ import oscar.util.ConversionUtils;
+ 
+ public class MSPReconcile {
+ 
+-	public static String REJECTED = "R";
+-	public static String NOTSUBMITTED = "O";
+-	public static String SUBMITTED = "B";
+-	public static String SETTLED = "S";
+-	public static String DELETED = "D";
+-	public static String HELD = "Z";
+-	public static String DATACENTERCHANGED = "C";
+-	public static String PAIDWITHEXP = "E";
+-	public static String REFUSED = "F";
+-	public static String BADDEBT = "X";
+-	public static String WCB = "W";
+-	public static String CAPITATED = "H";
+-	public static String DONOTBILL = "N";
+-	public static String BILLPATIENT = "P";
++	public static final String REJECTED = "R";
++	public static final String NOTSUBMITTED = "O";
++	public static final String SUBMITTED = "B";
++	public static final String SETTLED = "S";
++	public static final String DELETED = "D";
++	public static final String HELD = "Z";
++	public static final String DATACENTERCHANGED = "C";
++	public static final String PAIDWITHEXP = "E";
++	public static final String REFUSED = "F";
++	public static final String BADDEBT = "X";
++	public static final String WCB = "W";
++	public static final String CAPITATED = "H";
++	public static final String DONOTBILL = "N";
++	public static final String BILLPATIENT = "P";
+ 
+ 	private BillingmasterDAO billingmasterDao = SpringUtils.getBean(BillingmasterDAO.class);
+ 
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanAPI.java b/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanAPI.java
+index d772d4df7b..5f315b7bf2 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanAPI.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanAPI.java
+@@ -51,17 +51,17 @@ import oscar.OscarProperties;
+ public class TeleplanAPI {
+     static Logger log=MiscUtils.getLogger();
+     	
+-    public static String ExternalActionLogon      = "AsignOn";
+-    public static String ExternalActionLogoff     = "AsignOff";
+-    public static String ExternalActionChangePW   = "AchangePW";
+-    public static String ExternalActionGetLog     = "AgetLog";
+-    public static String ExternalActionGetLogList = "AgetLogList";
+-    public static String ExternalActionGetRemit   = "AgetRemit";
+-    public static String ExternalActionGetAscii   = "AgetAscii";
+-    public static String ExternalActionGetAsciiMF = "AgetAsciiMF";
+-    public static String ExternalActionPutAscii   = "AputAscii";
+-    public static String ExternalActionPutRemit   = "AputRemit";
+-    public static String ExternalActionCheckE45   = "AcheckE45";
++    public static final String ExternalActionLogon      = "AsignOn";
++    public static final String ExternalActionLogoff     = "AsignOff";
++    public static final String ExternalActionChangePW   = "AchangePW";
++    public static final String ExternalActionGetLog     = "AgetLog";
++    public static final String ExternalActionGetLogList = "AgetLogList";
++    public static final String ExternalActionGetRemit   = "AgetRemit";
++    public static final String ExternalActionGetAscii   = "AgetAscii";
++    public static final String ExternalActionGetAsciiMF = "AgetAsciiMF";
++    public static final String ExternalActionPutAscii   = "AputAscii";
++    public static final String ExternalActionPutRemit   = "AputRemit";
++    public static final String ExternalActionCheckE45   = "AcheckE45";
+ 
+     
+     //public String CONTACT_URL = "https://tlpt2.moh.hnet.bc.ca/TeleplanBroker";
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java b/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java
+index fd21d0f4f6..697711a164 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java
+@@ -22,36 +22,36 @@ import java.util.Properties;
+ import java.util.Vector;
+ 
+ public final class BillingDataHlp {
+-	public static int FIELD_SERVICE_NUM = 10;
+-	public static int FIELD_MAX_SERVICE_NUM = 20;
++	public static final int FIELD_SERVICE_NUM = 10;
++	public static final int FIELD_MAX_SERVICE_NUM = 20;
+ 
+-	public static String BATCHHEADER_TRANSACTIONIDENTIFIER = "HE";
+-	public static String BATCHHEADER_REORDIDENTIFICATION = "B";
+-	public static String BATCHHEADER_SPECID = "V03";
+-	public static String CLAIMHEADER1_TRANSACTIONIDENTIFIER = "HE";
+-	public static String CLAIMHEADER1_REORDIDENTIFICATION = "H";
+-	public static String CLAIMHEADER1_PAYMENTPROGRAM_PRIVATE = "PAT";
+-	public static String CLAIMHEADER1_PAYEE = "P";
++	public static final String BATCHHEADER_TRANSACTIONIDENTIFIER = "HE";
++	public static final String BATCHHEADER_REORDIDENTIFICATION = "B";
++	public static final String BATCHHEADER_SPECID = "V03";
++	public static final String CLAIMHEADER1_TRANSACTIONIDENTIFIER = "HE";
++	public static final String CLAIMHEADER1_REORDIDENTIFICATION = "H";
++	public static final String CLAIMHEADER1_PAYMENTPROGRAM_PRIVATE = "PAT";
++	public static final String CLAIMHEADER1_PAYEE = "P";
+ 
+-	public static String ITEM_TRANSACTIONIDENTIFIER = "HE";
+-	public static String ITEM_REORDIDENTIFICATION = "T";
++	public static final String ITEM_TRANSACTIONIDENTIFIER = "HE";
++	public static final String ITEM_REORDIDENTIFICATION = "T";
+ 
+-	public static String BILLINGFILE_STATUS_UNCERT = "U";
+-	public static String BILLINGFILE_STATUS_DELETED = "D";
+-	public static String BILLINGFILE_STATUS_BILLED = "B";
++	public static final String BILLINGFILE_STATUS_UNCERT = "U";
++	public static final String BILLINGFILE_STATUS_DELETED = "D";
++	public static final String BILLINGFILE_STATUS_BILLED = "B";
+ 
+-	public static String BILLINGACTION_CREATE = "create";
+-	public static String BILLINGACTION_UPDATE = "update";
++	public static final String BILLINGACTION_CREATE = "create";
++	public static final String BILLINGACTION_UPDATE = "update";
+ 
+-	public static String BILLINGMATCHSTRING_3RDPARTY = "PAT|OCF|ODS|CPP|STD|IFH";
++	public static final String BILLINGMATCHSTRING_3RDPARTY = "PAT|OCF|ODS|CPP|STD|IFH";
+ 
+ 	// UH: update billing_on_cheader1, refer to issue#233 https://github.com/oscaremr/oscar/issues/233
+-	public enum ACTION_TYPE {C, R, U, D, UH};
++	public enum ACTION_TYPE {C, R, U, D, UH;}
+ 	
+-	public static Properties propMonthCode = new Properties();
+-	public static Properties propBillingCenter = new Properties();
+-	public static Properties propBillingType = new Properties();
+-	public static Vector vecPaymentType = new Vector();
++	public static final Properties propMonthCode = new Properties();
++	public static final Properties propBillingCenter = new Properties();
++	public static final Properties propBillingType = new Properties();
++	public static final Vector vecPaymentType = new Vector();
+ 	static {
+ 		propMonthCode.setProperty("1", "A");
+ 		propMonthCode.setProperty("2", "B");
+diff --git a/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java b/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java
+index c7655b760d..f026cdbacf 100644
+--- a/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java
++++ b/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java
+@@ -35,10 +35,10 @@ public final class DBPreparedHandlerParam {
+    private String paramType;
+    private Timestamp timestampValue;
+ 
+-   public static String PARAM_STRING = "String";
+-   public static String PARAM_DATE = "Date";
+-   public static String PARAM_INT = "Int";
+-   public static String PARAM_TIMESTAMP = "Timestamp";
++   public static final String PARAM_STRING = "String";
++   public static final String PARAM_DATE = "Date";
++   public static final String PARAM_INT = "Int";
++   public static final String PARAM_TIMESTAMP = "Timestamp";
+    
+    public DBPreparedHandlerParam(String stringValue){
+ 	   this.intValue = 0;
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/Util.java b/src/main/java/oscar/oscarDemographic/pageUtil/Util.java
+index 219819b08f..93a18ac1f9 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/Util.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/Util.java
+@@ -529,8 +529,8 @@ public class Util {
+         return codeFormatted;
+     }
+     
+-    static public SpokenLangProperties spokenLangProperties = SpokenLangProperties.getInstance();
+-    static public RosterTermReasonProperties rosterTermReasonProperties = RosterTermReasonProperties.getInstance();
++    public static final SpokenLangProperties spokenLangProperties = SpokenLangProperties.getInstance();
++    public static final RosterTermReasonProperties rosterTermReasonProperties = RosterTermReasonProperties.getInstance();
+     
+     static public String convertLanguageToCode(String lang) {
+     	return spokenLangProperties.getCodeByLang(lang);
+diff --git a/src/main/java/oscar/oscarEncounter/data/myoscar/FieldToTypesMapping.java b/src/main/java/oscar/oscarEncounter/data/myoscar/FieldToTypesMapping.java
+index 7a95a7e290..51f884e223 100644
+--- a/src/main/java/oscar/oscarEncounter/data/myoscar/FieldToTypesMapping.java
++++ b/src/main/java/oscar/oscarEncounter/data/myoscar/FieldToTypesMapping.java
+@@ -33,7 +33,7 @@ import org.oscarehr.myoscar.commons.MedicalDataType;
+ 
+ public class FieldToTypesMapping {
+ 
+-	public static Map<MedicalDataType, List<String>> mapping;
++	public static final Map<MedicalDataType, List<String>> mapping;
+ 	static {
+ 		Map<MedicalDataType, List<String>> mapping = new HashMap<MedicalDataType, List<String>>();
+ 		mapping.put(MedicalDataType.BLOOD_PRESSURE, Collections.unmodifiableList(Arrays.asList(new String[] {"SystolicValue", "DiastolicValue", "HeartRate"})));
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/MEDITECHHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/MEDITECHHandler.java
+index d280e07cba..ce2764a460 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/MEDITECHHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/MEDITECHHandler.java
+@@ -57,17 +57,17 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
+  */
+ public class MEDITECHHandler implements MessageHandler {
+ 
+-	public static enum DIAGNOSTIC_ID {PTH,ITS,LAB,MIC,BBK,MB} // Pathology, Report, Lab, Microbiology, Blood Bank, Microbiology
+-	public static enum UNSTRUCTURED {PTH,ITS} // Pathology, Report(dictation etc..)
+-	public static enum STRUCTURED {LAB,MIC,BBK} // Lab, Microbiology, Blood Bank
+-	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT} // Numeric, String, Coded Element, Text, FreeText
+-	public static enum ORDER_STATUS {F,C,S,P,X,I} // complete(or final), corrected, signed, preliminary, cancelled, incomplete
++	public static enum DIAGNOSTIC_ID {PTH,ITS,LAB,MIC,BBK,MB;} // Pathology, Report, Lab, Microbiology, Blood Bank, Microbiology
++	public static enum UNSTRUCTURED {PTH,ITS;} // Pathology, Report(dictation etc..)
++	public static enum STRUCTURED {LAB,MIC,BBK;} // Lab, Microbiology, Blood Bank
++	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT;} // Numeric, String, Coded Element, Text, FreeText
++	public static enum ORDER_STATUS {F,C,S,P,X,I;} // complete(or final), corrected, signed, preliminary, cancelled, incomplete
+ 	
+ //	public static final boolean USE_OBR_HEADERS_FOR_OBR_NAME = Boolean.TRUE; 
+ 	public static final String DEFAULT_LAB_NAME = "LAB";
+ 	public static final String NORMAL_LAB = "N";
+-	public static String DATE_FORMAT = "yyyyMMddHHmmss";
+-	public static String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
++	public static final String DATE_FORMAT = "yyyyMMddHHmmss";
++	public static final String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
+ 
+ 	protected static Logger logger = Logger.getLogger(MEDITECHHandler.class);
+ 	protected ORU_R01 msg = null;
+diff --git a/src/main/java/oscar/oscarLab/ca/on/LabResultData.java b/src/main/java/oscar/oscarLab/ca/on/LabResultData.java
+index 0ac41ad54d..1541d34d5b 100644
+--- a/src/main/java/oscar/oscarLab/ca/on/LabResultData.java
++++ b/src/main/java/oscar/oscarLab/ca/on/LabResultData.java
+@@ -61,7 +61,7 @@ public class LabResultData implements Comparable<LabResultData> {
+ 	public static final String TRUENORTH = "TRUENORTH";
+ 	
+ 	//HL7TEXT handles all messages types recieved as a hl7 formatted string
+-	public static String HL7TEXT = "HL7";
++	public static final String HL7TEXT = "HL7";
+ 
+ 	public String segmentID;
+ 	public String labPatientId;
+diff --git a/src/main/java/oscar/oscarPrevention/reports/PreventionReportUtil.java b/src/main/java/oscar/oscarPrevention/reports/PreventionReportUtil.java
+index 566afeda6c..44cf72934f 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/PreventionReportUtil.java
++++ b/src/main/java/oscar/oscarPrevention/reports/PreventionReportUtil.java
+@@ -40,8 +40,8 @@ import org.oscarehr.util.SpringUtils;
+ public final class PreventionReportUtil {
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+-	public static DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
+-	public static DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
++	public static final DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
++	public static final DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
+ 
+ 	public static boolean wasRostered(LoggedInInfo loggedInInfo, Integer demographicId, Date onThisDate) {
+ 		logger.debug("Checking rosterd:" + demographicId);
+diff --git a/src/main/java/oscar/oscarReport/data/RptTableShadowFieldConst.java b/src/main/java/oscar/oscarReport/data/RptTableShadowFieldConst.java
+index a0d6973f1b..1f68f6eca3 100644
+--- a/src/main/java/oscar/oscarReport/data/RptTableShadowFieldConst.java
++++ b/src/main/java/oscar/oscarReport/data/RptTableShadowFieldConst.java
+@@ -33,5 +33,5 @@ package oscar.oscarReport.data;
+  * @author yilee18
+  */
+ public class RptTableShadowFieldConst {
+-    public static String fieldName = "ID|demographic_no|provider_no|formCreated|formEdited|c_lastVisited";
++    public static final String fieldName = "ID|demographic_no|provider_no|formCreated|formEdited|c_lastVisited";
+ }
+diff --git a/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java b/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java
+index 7227893110..a4a277c61b 100644
+--- a/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java
++++ b/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java
+@@ -273,8 +273,8 @@ public final class RxSearchDrugAction extends DispatchAction {
+     private static class Parameter {
+     	
+     	//public static String DRUG_STATUS;
+-    	public static String WILDCARD;
+-    	public static String SEARCH_STRING;
++    	public static final String WILDCARD;
++    	public static final String SEARCH_STRING;
+     	
+     	private static void reset() {
+     		//DRUG_STATUS = ""; 
+diff --git a/src/main/java/oscar/oscarRx/util/RxDrugRef.java b/src/main/java/oscar/oscarRx/util/RxDrugRef.java
+index c41383b659..e3f4042b68 100644
+--- a/src/main/java/oscar/oscarRx/util/RxDrugRef.java
++++ b/src/main/java/oscar/oscarRx/util/RxDrugRef.java
+@@ -53,14 +53,14 @@ public class RxDrugRef {
+ 
+ 	
+ 	// DRUG CATEGORIES FOR THE DRUG REF SEARCH TABLE.
+-	public static int CAT_BRAND = 13;
+-	public static int CAT_COMPOSITE_GENERIC = 12;
+-	public static int CAT_GENERIC = 11;
+-	public static int CAT_ATC = 8;
+-	public static int CAT_AHFS = 10;
+-	public static int CAT_ACTIVE_INGREDIENT = 14;
+-	public static int CAT_AI_COMPOSITE_GENERIC = 19;
+-	public static int CAT_AI_GENERIC = 18;
++	public static final int CAT_BRAND = 13;
++	public static final int CAT_COMPOSITE_GENERIC = 12;
++	public static final int CAT_GENERIC = 11;
++	public static final int CAT_ATC = 8;
++	public static final int CAT_AHFS = 10;
++	public static final int CAT_ACTIVE_INGREDIENT = 14;
++	public static final int CAT_AI_COMPOSITE_GENERIC = 19;
++	public static final int CAT_AI_GENERIC = 18;
+ 
+     private static Logger logger=MiscUtils.getLogger(); 
+ 
+diff --git a/src/main/java/oscar/oscarSecurity/CookieSecurity.java b/src/main/java/oscar/oscarSecurity/CookieSecurity.java
+index 9745a567b5..fd211edba5 100644
+--- a/src/main/java/oscar/oscarSecurity/CookieSecurity.java
++++ b/src/main/java/oscar/oscarSecurity/CookieSecurity.java
+@@ -32,7 +32,7 @@ import javax.servlet.http.Cookie;
+ 
+ public class CookieSecurity
+ {
+-    public static String providerCookie = "oscprvid";
++    public static final String providerCookie = "oscprvid";
+     
+     public Cookie GiveMeACookie(String cookieName) {
+         Random rndGenerator = new Random();
+diff --git a/src/main/java/oscar/oscarSurveillance/Survey.java b/src/main/java/oscar/oscarSurveillance/Survey.java
+index ef0eaff82d..edfa031d90 100644
+--- a/src/main/java/oscar/oscarSurveillance/Survey.java
++++ b/src/main/java/oscar/oscarSurveillance/Survey.java
+@@ -85,10 +85,10 @@ public class Survey {
+ 	private Hashtable answerTable = null;
+ 	String surveyStatus = "";
+ 
+-	public static String DEFFERED = "D";
+-	public static String NOTSELECTED = "P";
+-	public static String ANSWERED = "A";
+-	public static String DOESNOTMEETCRITERIA = "C";
++	public static final String DEFFERED = "D";
++	public static final String NOTSELECTED = "P";
++	public static final String ANSWERED = "A";
++	public static final String DOESNOTMEETCRITERIA = "C";
+ 	Random random = null;
+ 
+ 	/** Creates a new instance of Survey */
+@@ -227,9 +227,9 @@ public class Survey {
+ 		return insertId;
+ 	}
+ 
+-	public static String YES = "Y";
+-	public static String NO = "N";
+-	public static String DONTASKAGAIN = "R";
++	public static final String YES = "Y";
++	public static final String NO = "N";
++	public static final String DONTASKAGAIN = "R";
+ 
+ 	private String getSurveyIdForDemographic(String demographic_no) {
+ 		SurveyDataDao dao = SpringUtils.getBean(SurveyDataDao.class);
+diff --git a/src/main/java/oscar/oscarTickler/TicklerData.java b/src/main/java/oscar/oscarTickler/TicklerData.java
+index 7f92f16b59..ab36b61e00 100644
+--- a/src/main/java/oscar/oscarTickler/TicklerData.java
++++ b/src/main/java/oscar/oscarTickler/TicklerData.java
+@@ -45,13 +45,13 @@ import oscar.util.ConversionUtils;
+  */
+ public class TicklerData {
+    
+-   public static String ACTIVE  = "A";
+-   public static String COMPLETED = "C";
+-   public static String DELETED = "D";
++   public static final String ACTIVE  = "A";
++   public static final String COMPLETED = "C";
++   public static final String DELETED = "D";
+       
+-   public static String HIGH = "High";
+-   public static String NORMAL = "Normal";
+-   public static String LOW = "Low";
++   public static final String HIGH = "High";
++   public static final String NORMAL = "Normal";
++   public static final String LOW = "Low";
+    
+    private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+    
+diff --git a/src/test/java/org/oscarehr/common/dao/utils/SchemaUtils.java b/src/test/java/org/oscarehr/common/dao/utils/SchemaUtils.java
+index 7286b14902..647448e754 100644
+--- a/src/test/java/org/oscarehr/common/dao/utils/SchemaUtils.java
++++ b/src/test/java/org/oscarehr/common/dao/utils/SchemaUtils.java
+@@ -76,8 +76,8 @@ public class SchemaUtils
+ {
+ 	private static Logger logger=MiscUtils.getLogger();
+ 	
+-	public static boolean inited=false;
+-	public static Map<String,String> createTableStatements = new HashMap<String,String>();
++	public static final boolean inited=false;
++	public static final Map<String,String> createTableStatements = new HashMap<String,String>();
+ 
+ 	private static Connection getConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
+ 	{
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/AlertsModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/AlertsModelTest.java
+index 5aa9e80248..ec9c84a1da 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/AlertsModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/AlertsModelTest.java
+@@ -48,12 +48,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class AlertsModelTest extends AbstractExportModelTest {
+-	public static CaseManagementNoteDAO dao;
+-	public static CaseManagementNote alert;
+-	public static AlertsModel alertsModel;
++	public static final CaseManagementNoteDAO dao;
++	public static final CaseManagementNote alert;
++	public static final AlertsModel alertsModel;
+ 
+-	public static CaseManagementNote nullAlert;
+-	public static AlertsModel nullAlertsModel;
++	public static final CaseManagementNote nullAlert;
++	public static final AlertsModel nullAlertsModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/AllergiesModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/AllergiesModelTest.java
+index 6e017fcffa..4a6dbc78eb 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/AllergiesModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/AllergiesModelTest.java
+@@ -59,12 +59,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class AllergiesModelTest extends AbstractExportModelTest {
+-	public static AllergyDao dao;
+-	public static Allergy allergy;
+-	public static AllergiesModel allergiesModel;
++	public static final AllergyDao dao;
++	public static final Allergy allergy;
++	public static final AllergiesModel allergiesModel;
+ 
+-	public static Allergy nullAllergy;
+-	public static AllergiesModel nullAllergiesModel;
++	public static final Allergy nullAllergy;
++	public static final AllergiesModel nullAllergiesModel;
+ 
+ 	@Before
+ 	public void before() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/ClinicallyMeasuredObservationsModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/ClinicallyMeasuredObservationsModelTest.java
+index a74403e576..fa3465d64f 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/ClinicallyMeasuredObservationsModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/ClinicallyMeasuredObservationsModelTest.java
+@@ -62,12 +62,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ClinicallyMeasuredObservationsModelTest extends AbstractExportModelTest {
+-	public static MeasurementDao dao;
+-	public static Measurement measurement;
+-	public static ClinicallyMeasuredObservationsModel cmoModel;
++	public static final MeasurementDao dao;
++	public static final Measurement measurement;
++	public static final ClinicallyMeasuredObservationsModel cmoModel;
+ 
+-	public static Measurement nullMeasurement;
+-	public static ClinicallyMeasuredObservationsModel nullCmoModel;
++	public static final Measurement nullMeasurement;
++	public static final ClinicallyMeasuredObservationsModel nullCmoModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/EncountersModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/EncountersModelTest.java
+index fd3c9e9d4a..c9476a9974 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/EncountersModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/EncountersModelTest.java
+@@ -57,12 +57,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class EncountersModelTest extends AbstractExportModelTest {
+-	public static CaseManagementNoteDAO dao;
+-	public static CaseManagementNote encounter;
+-	public static EncountersModel encountersModel;
++	public static final CaseManagementNoteDAO dao;
++	public static final CaseManagementNote encounter;
++	public static final EncountersModel encountersModel;
+ 
+-	public static CaseManagementNote nullEncounter;
+-	public static EncountersModel nullEncountersModel;
++	public static final CaseManagementNote nullEncounter;
++	public static final EncountersModel nullEncountersModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/FamilyHistoryModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/FamilyHistoryModelTest.java
+index 7374bd338e..c9eff6d281 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/FamilyHistoryModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/FamilyHistoryModelTest.java
+@@ -66,13 +66,13 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class FamilyHistoryModelTest extends AbstractExportModelTest {
+-	public static CaseManagementNoteDAO caseManagementNoteDao;
+-	public static CaseManagementNoteExtDAO caseManagementNoteExtDao;
+-	public static List<CaseManagementNoteExt> noteExts;
+-	public static CaseManagementNote familyHistory;
+-	public static FamilyHistoryEntry familyHistoryEntry;
+-	public static FamilyHistoryModel familyHistoryModel;
+-	public static FamilyHistoryModel nullFamilyHistoryModel;
++	public static final CaseManagementNoteDAO caseManagementNoteDao;
++	public static final CaseManagementNoteExtDAO caseManagementNoteExtDao;
++	public static final List<CaseManagementNoteExt> noteExts;
++	public static final CaseManagementNote familyHistory;
++	public static final FamilyHistoryEntry familyHistoryEntry;
++	public static final FamilyHistoryModel familyHistoryModel;
++	public static final FamilyHistoryModel nullFamilyHistoryModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/ImmunizationsModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/ImmunizationsModelTest.java
+index 478479590f..8c9ba5cb62 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/ImmunizationsModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/ImmunizationsModelTest.java
+@@ -67,11 +67,11 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ImmunizationsModelTest extends AbstractExportModelTest {
+-	public static Prevention prevention;
+-	public static List<PreventionExt> preventionExt;
+-	public static Immunization immunization;
+-	public static ImmunizationsModel immunizationsModel;
+-	public static ImmunizationsModel nullImmunizationsModel;
++	public static final Prevention prevention;
++	public static final List<PreventionExt> preventionExt;
++	public static final Immunization immunization;
++	public static final ImmunizationsModel immunizationsModel;
++	public static final ImmunizationsModel nullImmunizationsModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/LabsModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/LabsModelTest.java
+index 6e219de0e9..5719422894 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/LabsModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/LabsModelTest.java
+@@ -50,12 +50,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class LabsModelTest extends AbstractExportModelTest {
+-	public static Hl7TextInfoDao dao;
+-	public static Hl7TextInfo hl7TextInfo;
+-	public static LabsModel labsModel;
++	public static final Hl7TextInfoDao dao;
++	public static final Hl7TextInfo hl7TextInfo;
++	public static final LabsModel labsModel;
+ 
+-	public static Hl7TextInfo nullHl7TextInfo;
+-	public static LabsModel nullLabsModel;
++	public static final Hl7TextInfo nullHl7TextInfo;
++	public static final LabsModel nullLabsModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/MedicationsModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/MedicationsModelTest.java
+index b8edc83db4..050bd119cf 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/MedicationsModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/MedicationsModelTest.java
+@@ -48,12 +48,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class MedicationsModelTest extends AbstractExportModelTest {
+-	public static DrugDao dao;
+-	public static Drug drug;
+-	public static MedicationsModel medicationsModel;
++	public static final DrugDao dao;
++	public static final Drug drug;
++	public static final MedicationsModel medicationsModel;
+ 
+-	public static Drug nullDrug;
+-	public static MedicationsModel nullMedicationsModel;
++	public static final Drug nullDrug;
++	public static final MedicationsModel nullMedicationsModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/ProblemsModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/ProblemsModelTest.java
+index c8489d6fc5..002cf6eec1 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/ProblemsModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/ProblemsModelTest.java
+@@ -51,12 +51,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ProblemsModelTest extends AbstractExportModelTest {
+-	public static DxresearchDAO dao;
+-	public static Dxresearch problem;
+-	public static ProblemsModel problemsModel;
++	public static final DxresearchDAO dao;
++	public static final Dxresearch problem;
++	public static final ProblemsModel problemsModel;
+ 
+-	public static Dxresearch nullProblem;
+-	public static ProblemsModel nullProblemsModel;
++	public static final Dxresearch nullProblem;
++	public static final ProblemsModel nullProblemsModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/body/RiskFactorsModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/body/RiskFactorsModelTest.java
+index 323a84ff58..be6b91d8f0 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/body/RiskFactorsModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/body/RiskFactorsModelTest.java
+@@ -55,12 +55,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class RiskFactorsModelTest extends AbstractExportModelTest {
+-	public static CaseManagementNoteDAO dao;
+-	public static CaseManagementNote riskFactor;
+-	public static RiskFactorsModel riskFactorsModel;
++	public static final CaseManagementNoteDAO dao;
++	public static final CaseManagementNote riskFactor;
++	public static final RiskFactorsModel riskFactorsModel;
+ 
+-	public static CaseManagementNote nullRiskFactor;
+-	public static RiskFactorsModel nullRiskFactorsModel;
++	public static final CaseManagementNote nullRiskFactor;
++	public static final RiskFactorsModel nullRiskFactorsModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/header/AuthorModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/header/AuthorModelTest.java
+index a6e240539f..62578db6e5 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/header/AuthorModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/header/AuthorModelTest.java
+@@ -52,12 +52,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class AuthorModelTest extends AbstractExportModelTest {
+-	public static ProviderDataDao dao;
+-	public static ProviderData provider;
+-	public static AuthorModel authorModel;
++	public static final ProviderDataDao dao;
++	public static final ProviderData provider;
++	public static final AuthorModel authorModel;
+ 
+-	public static ProviderData nullProvider;
+-	public static AuthorModel nullAuthorModel;
++	public static final ProviderData nullProvider;
++	public static final AuthorModel nullAuthorModel;
+ 
+ 	public static final String test = "test";
+ 
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/header/CustodianModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/header/CustodianModelTest.java
+index 268df05405..bea1ca272c 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/header/CustodianModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/header/CustodianModelTest.java
+@@ -44,12 +44,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class CustodianModelTest extends AbstractExportModelTest {
+-	public static ClinicDAO dao;
+-	public static Clinic clinic;
+-	public static CustodianModel custodianModel;
++	public static final ClinicDAO dao;
++	public static final Clinic clinic;
++	public static final CustodianModel custodianModel;
+ 
+-	public static Clinic nullClinic;
+-	public static CustodianModel nullCustodianModel;
++	public static final Clinic nullClinic;
++	public static final CustodianModel nullCustodianModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/header/RecordTargetModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/header/RecordTargetModelTest.java
+index 5767ab8f6b..4daf5851be 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/header/RecordTargetModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/header/RecordTargetModelTest.java
+@@ -60,12 +60,12 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class RecordTargetModelTest extends AbstractExportModelTest {
+-	public static DemographicDao dao;
+-	public static Demographic demographic;
+-	public static RecordTargetModel recordTargetModel;
++	public static final DemographicDao dao;
++	public static final Demographic demographic;
++	public static final RecordTargetModel recordTargetModel;
+ 
+-	public static Demographic nullDemographic;
+-	public static RecordTargetModel nullRecordTargetModel;
++	public static final Demographic nullDemographic;
++	public static final RecordTargetModel nullRecordTargetModel;
+ 
+ 	@Before
+ 	public void before() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/template/ConsumableModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/template/ConsumableModelTest.java
+index af04e41dcf..b4f791e08a 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/template/ConsumableModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/template/ConsumableModelTest.java
+@@ -57,13 +57,13 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ConsumableModelTest extends AbstractExportModelTest {
+-	public static PreventionDao preventionDao;
+-	public static PreventionExtDao preventionExtDao;
+-	public static Immunization immunization;
++	public static final PreventionDao preventionDao;
++	public static final PreventionExtDao preventionExtDao;
++	public static final Immunization immunization;
+ 
+-	public static DrugDao drugDao;
+-	public static Drug drug;
+-	public static ConsumableModel consumableModel;
++	public static final DrugDao drugDao;
++	public static final Drug drug;
++	public static final ConsumableModel consumableModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/template/MedicationPrescriptionEventModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/template/MedicationPrescriptionEventModelTest.java
+index a343dde5e2..b817f7b88f 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/template/MedicationPrescriptionEventModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/template/MedicationPrescriptionEventModelTest.java
+@@ -54,10 +54,10 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class MedicationPrescriptionEventModelTest extends AbstractExportModelTest {
+-	public static DrugDao dao;
+-	public static Drug drug;
+-	public static Drug nullDrug;
+-	public static MedicationPrescriptionEventModel mpeModel;
++	public static final DrugDao dao;
++	public static final Drug drug;
++	public static final Drug nullDrug;
++	public static final MedicationPrescriptionEventModel mpeModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/template/ResultComponentModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/template/ResultComponentModelTest.java
+index ddf3c14b27..6967b8b6be 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/template/ResultComponentModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/template/ResultComponentModelTest.java
+@@ -80,15 +80,15 @@ import org.oscarehr.e2e.util.EverestUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ResultComponentModelTest extends AbstractExportModelTest {
+-	public static MeasurementDao measurementDao;
+-	public static MeasurementsExtDao measurementsExtDao;
++	public static final MeasurementDao measurementDao;
++	public static final MeasurementsExtDao measurementsExtDao;
+ 
+-	public static Measurement measurement;
+-	public static List<MeasurementsExt> measurementsExt;
++	public static final Measurement measurement;
++	public static final List<MeasurementsExt> measurementsExt;
+ 
+-	public static LabComponent labComponent;
+-	public static LabComponent nullLabComponent;
+-	public static ResultComponentModel resultComponentModel;
++	public static final LabComponent labComponent;
++	public static final LabComponent nullLabComponent;
++	public static final ResultComponentModel resultComponentModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/template/ResultOrganizerModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/template/ResultOrganizerModelTest.java
+index e1518651aa..cd04073b2c 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/template/ResultOrganizerModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/template/ResultOrganizerModelTest.java
+@@ -46,7 +46,7 @@ import org.oscarehr.e2e.model.PatientExport.LabOrganizer;
+ import org.oscarehr.e2e.model.export.AbstractExportModelTest;
+ 
+ public class ResultOrganizerModelTest extends AbstractExportModelTest {
+-	public static ResultOrganizerModel resultOrganizerModel;
++	public static final ResultOrganizerModel resultOrganizerModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/e2e/model/export/template/observation/DoseObservationModelTest.java b/src/test/java/org/oscarehr/e2e/model/export/template/observation/DoseObservationModelTest.java
+index db33413e26..f69847ac34 100644
+--- a/src/test/java/org/oscarehr/e2e/model/export/template/observation/DoseObservationModelTest.java
++++ b/src/test/java/org/oscarehr/e2e/model/export/template/observation/DoseObservationModelTest.java
+@@ -54,10 +54,10 @@ import org.oscarehr.e2e.model.export.AbstractExportModelTest;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class DoseObservationModelTest extends AbstractExportModelTest {
+-	public static DrugDao dao;
+-	public static Drug drug;
+-	public static Drug nullDrug;
+-	public static DoseObservationModel doseObservationModel;
++	public static final DrugDao dao;
++	public static final Drug drug;
++	public static final Drug nullDrug;
++	public static final DoseObservationModel doseObservationModel;
+ 
+ 	@BeforeClass
+ 	public static void beforeClass() {
+diff --git a/src/test/java/org/oscarehr/labs/alberta/TestLabs.java b/src/test/java/org/oscarehr/labs/alberta/TestLabs.java
+index 3621b84067..8b713cb00b 100644
+--- a/src/test/java/org/oscarehr/labs/alberta/TestLabs.java
++++ b/src/test/java/org/oscarehr/labs/alberta/TestLabs.java
+@@ -1856,9 +1856,9 @@ public class TestLabs {
+ 	
+ 	static final int LAB_COUNT = 57;
+ 	
+-	public static String[] ALL_LABS = new String[LAB_COUNT];
++	public static final String[] ALL_LABS = new String[LAB_COUNT];
+ 	
+-	public static String[] LAB_NAMES = new String[LAB_COUNT];
++	public static final String[] LAB_NAMES = new String[LAB_COUNT];
+ 	
+ 	static {
+ 		for(int i = 1; i <= LAB_COUNT; i++) {

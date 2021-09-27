@@ -1,0 +1,552 @@
+diff --git a/src/main/java/org/oscarehr/common/dao/BillingONCHeader1Dao.java b/src/main/java/org/oscarehr/common/dao/BillingONCHeader1Dao.java
+index b3f3e71534..2b84bd8512 100644
+--- a/src/main/java/org/oscarehr/common/dao/BillingONCHeader1Dao.java
++++ b/src/main/java/org/oscarehr/common/dao/BillingONCHeader1Dao.java
+@@ -253,8 +253,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
+         GstControl gstControl = gstControlDao.find(new Integer(1));
+         BigDecimal gst;
+         BigDecimal gstTotal;
+-        BigDecimal total = new BigDecimal(0.0);
+-        BigDecimal percent = new BigDecimal(0.0);
++        BigDecimal total = BigDecimal.valueOf(0.0);
++        BigDecimal percent = BigDecimal.valueOf(0.0);
+         BillingPercLimit billingPerc;
+         ArrayList<BillingService> aPercentCodes = new ArrayList<BillingService>();
+         BillingService billingservice = null;
+@@ -269,7 +269,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
+             else {
+                 if( billingservice != null && billingservice.getGstFlag() ) {
+                     gst = gstControl.getGstPercent();
+-                    gst = gst.divide(new BigDecimal(100.0));
++                    gst = gst.divide(BigDecimal.valueOf(100.0));
+                     gstTotal = gst.multiply(new BigDecimal(Double.parseDouble(billingservice.getValue())));
+                     total = total.add(gstTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+                 }
+diff --git a/src/main/java/oscar/entities/Billingmaster.java b/src/main/java/oscar/entities/Billingmaster.java
+index eb759ed826..4d315e3599 100644
+--- a/src/main/java/oscar/entities/Billingmaster.java
++++ b/src/main/java/oscar/entities/Billingmaster.java
+@@ -1335,9 +1335,9 @@ public class Billingmaster {
+         BigDecimal bdFee = null;
+         try {
+             double dFee = Double.parseDouble(getBillAmount());
+-            bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++            bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+         } catch (Exception e) {
+-            bdFee = new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_UP);
++            bdFee = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
+         }
+         return bdFee;
+     }
+diff --git a/src/main/java/oscar/entities/PrivateBillTransaction.java b/src/main/java/oscar/entities/PrivateBillTransaction.java
+index 03eabe6542..65d4308716 100644
+--- a/src/main/java/oscar/entities/PrivateBillTransaction.java
++++ b/src/main/java/oscar/entities/PrivateBillTransaction.java
+@@ -47,7 +47,7 @@ public class PrivateBillTransaction {
+   }
+ 
+   public void setAmount_received(double amount_received) {
+-    BigDecimal bdFee = new BigDecimal(amount_received).setScale(2,
++    BigDecimal bdFee = BigDecimal.valueOf(amount_received).setScale(2,
+         BigDecimal.ROUND_HALF_UP);
+     this.amount_received = bdFee.doubleValue();
+   }
+diff --git a/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java b/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java
+index bf0d9608d8..4060e15cfa 100644
+--- a/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java
++++ b/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java
+@@ -273,7 +273,7 @@ public class ExtractBean extends Object implements Serializable {
+                         logValue =  dataLine;
+                         if (eFlag.equals("1")) setLog(logNo,logValue);
+                         dFee = Double.parseDouble(rs2.getString("bill_amount"));
+-                        bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++                        bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+                         BigTotal = BigTotal.add(bdFee);
+                         
+                         if (invCount == 0) {                            
+diff --git a/src/main/java/oscar/oscarBilling/OHIP/ExtractBean.java b/src/main/java/oscar/oscarBilling/OHIP/ExtractBean.java
+index 3022447af2..c6a7200117 100755
+--- a/src/main/java/oscar/oscarBilling/OHIP/ExtractBean.java
++++ b/src/main/java/oscar/oscarBilling/OHIP/ExtractBean.java
+@@ -390,7 +390,7 @@ public class ExtractBean extends Object implements Serializable {
+ 					count = 6 - fee.length();
+ 					apptDate = UtilDateUtilities.DateToString(bd.getAppointmentDate(), "yyyyMMdd");
+ 					dFee = Double.parseDouble(fee);
+-					bdFee = new BigDecimal(dFee).setScale(2,
++					bdFee = BigDecimal.valueOf(dFee).setScale(2,
+ 							BigDecimal.ROUND_HALF_UP);
+ 					BigTotal = BigTotal.add(bdFee);
+ 					
+@@ -412,7 +412,7 @@ public class ExtractBean extends Object implements Serializable {
+ 			flagOrder = 4 - pCount.length();
+ 			secondFlag = 5 - rCount.length();
+ 			thirdFlag = 4 - hcCount.length();
+-			percent = new BigDecimal(0.01)
++			percent = BigDecimal.valueOf(0.01)
+ 					.setScale(2, BigDecimal.ROUND_HALF_UP);
+ 			BigTotal = BigTotal.multiply(percent);
+ 			value += buildTrailer();
+@@ -422,7 +422,7 @@ public class ExtractBean extends Object implements Serializable {
+ 			ohipRecord = String.valueOf(rCount);
+ 			ohipClaim = String.valueOf(pCount);
+ 			totalAmount = BigTotal.toString();
+-			//}
++			// }
+ 		} catch (Exception e) {
+ 			MiscUtils.getLogger().error("error", e);
+ 		}
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/ExtractBean.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/ExtractBean.java
+index 2a8459963c..4cfda64db5 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/ExtractBean.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/ExtractBean.java
+@@ -160,7 +160,7 @@ public class ExtractBean extends Object implements Serializable {
+                                  }
+ 
+                                  dFee = bm.getBillAmountAsDouble();
+-                                 bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++                                 bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+                                  BigTotal = BigTotal.add(bdFee);
+ 
+                                  if (isMSPInsurer(bm)){
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java
+index 3e24e181c7..1af73e6be1 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java
+@@ -1862,7 +1862,7 @@ public class MSPReconcile {
+ 	 *oscar.oscarBilling.ca.bc.MSP.MSPReconcile.convCurValue(
+ 	 */
+ 	public static String convCurValue(String value) {
+-		BigDecimal curValue = new BigDecimal(0.0);
++		BigDecimal curValue = BigDecimal.valueOf(0.0);
+ 		if (value == null || value.equals("")) {
+ 			return "0.0";
+ 		}
+@@ -1883,7 +1883,7 @@ public class MSPReconcile {
+ 			}
+ 
+ 			double newDouble = dblValue * .01;
+-			curValue = new BigDecimal(newDouble).setScale(2, BigDecimal.ROUND_HALF_UP);
++			curValue = BigDecimal.valueOf(newDouble).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 		} catch (Exception e) {
+ 			MiscUtils.getLogger().error("Error", e);
+ 			return curValue.toString();
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbSb.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbSb.java
+index 4806b5eb6b..dd01ac9455 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbSb.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbSb.java
+@@ -221,9 +221,9 @@ public class WcbSb {
+ 		BigDecimal bdFee = null;
+ 		try {
+ 			double dFee = Double.parseDouble(billamountforfeeitem1);
+-			bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++			bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 		} catch (Exception e) {
+-			bdFee = new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_UP);
++			bdFee = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 		}
+ 		return bdFee;
+ 	}
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanCodesManager.java b/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanCodesManager.java
+index 406fc59563..26afc34811 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanCodesManager.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanCodesManager.java
+@@ -85,7 +85,7 @@ REM076 **                                                             **
+               String code = line.substring(0,5);
+               String fee = line.substring(5,12);
+               double newDoub = (Double.parseDouble(fee))/100;                                             
+-              BigDecimal newPriceDec = new BigDecimal(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
++              BigDecimal newPriceDec = BigDecimal.valueOf(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
+               String desc = line.substring(26,76);
+               HashMap h = new HashMap();
+               
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java
+index 04d8097443..7d36f9ce99 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java
+@@ -229,7 +229,7 @@ public class BillingBillingManager {
+ 			grandtotal += bi.getLineTotal();
+ 			MiscUtils.getLogger().debug("total:" + grandtotal);
+ 		}
+-		BigDecimal bdFee = new BigDecimal(grandtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal bdFee = BigDecimal.valueOf(grandtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 		return bdFee.toString();
+ 
+ 	}
+@@ -283,7 +283,8 @@ public class BillingBillingManager {
+ 		}
+ 
+ 		public String getDispPrice() {
+-			BigDecimal bdFee = new BigDecimal(price).setScale(2,
++			BigDecimal bdFee = 
++			BigDecimal.valueOf(price).setScale(2,
+ 			//BigDecimal.ROUND_HALF_UP);
+ 			        RoundingMode.HALF_UP);
+ 			MiscUtils.getLogger().debug("price" + price + " fee" + bdFee.toString());
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/OHIP/ExtractBean.java b/src/main/java/oscar/oscarBilling/ca/on/OHIP/ExtractBean.java
+index 608f43217d..03a0cea49c 100755
+--- a/src/main/java/oscar/oscarBilling/ca/on/OHIP/ExtractBean.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/OHIP/ExtractBean.java
+@@ -56,8 +56,8 @@ public class ExtractBean implements Serializable {
+     private String batchCount = "";
+     private String batchHeader;
+     private int batchOrder = 0;
+-    private BigDecimal bdFee = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
+-    private BigDecimal BigTotal = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
++    private BigDecimal bdFee = BigDecimal.valueOf(((double) (0))).setScale(2, BigDecimal.ROUND_HALF_UP);
++    private BigDecimal BigTotal = BigDecimal.valueOf(((double) (0))).setScale(2, BigDecimal.ROUND_HALF_UP);
+     private String billingUnit;
+     private String content;
+     private int count = 0;
+@@ -108,7 +108,7 @@ public class ExtractBean implements Serializable {
+     private String patientHeader;
+     private String patientHeader2;
+     private String pCount = "";
+-    private BigDecimal percent = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
++    private BigDecimal percent = BigDecimal.valueOf(((double) (0))).setScale(2, BigDecimal.ROUND_HALF_UP);
+     private String providerNo;
+     private String rCount = "";
+     private int recordCount = 0;
+@@ -374,7 +374,7 @@ public class ExtractBean implements Serializable {
+                     count = 6 - fee.length();
+                     apptDate = UtilDateUtilities.DateToString(bd.getAppointmentDate(), "yyyyMMdd");
+                     dFee = Double.parseDouble(fee);
+-                    bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++                    bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+                     BigTotal = BigTotal.add(bdFee);
+                     checkItem();
+                     value += buildItem();
+@@ -394,7 +394,7 @@ public class ExtractBean implements Serializable {
+             flagOrder = 4 - pCount.length();
+             secondFlag = 5 - rCount.length();
+             thirdFlag = 4 - hcCount.length();
+-            percent = new BigDecimal(.01).setScale(2, BigDecimal.ROUND_HALF_UP);
++            percent = BigDecimal.valueOf(0.01).setScale(2, BigDecimal.ROUND_HALF_UP);
+             BigTotal = BigTotal.multiply(percent);
+             value += buildTrailer();
+             htmlCode = buildHTMLContentTrailer();
+@@ -403,8 +403,8 @@ public class ExtractBean implements Serializable {
+             ohipRecord = String.valueOf(rCount);
+             ohipClaim = String.valueOf(pCount);
+             totalAmount = BigTotal.toString();
+-            //}
+-            //dbExt.closeConnection();
++            // }
++            // dbExt.closeConnection();
+         } catch (Exception e) {
+         	MiscUtils.getLogger().error("error",e);
+         }
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java b/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java
+index f9ef9e5c1d..ef149a9cae 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java
+@@ -45,10 +45,17 @@ import oscar.oscarBilling.ca.on.data.BillingCodeData;
+  *
+  * @author Jay Gallagher
+  */
+-public class ScheduleOfBenefits {
++public class ScheduleOfBenefits {boolean forceUpdate;
+ 
+-	boolean forceUpdate, addNewCodes, addChangedCodes;
+-	int newfees, oldfees, total;
++	boolean addNewCodes;
++
++	boolean addChangedCodes;
++
++	int newfees;
++
++	int oldfees;
++
++	int total;
+ 	BillingCodeData bc;
+ 
+ 	public ScheduleOfBenefits() {
+@@ -95,7 +102,7 @@ public class ScheduleOfBenefits {
+ 
+ 				String newPrice = (String) newPricingInfo.get("gpFees");
+ 				double newDoub = (Double.parseDouble(newPrice))/10000;
+-				BigDecimal newPriceDec = new BigDecimal(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
++				BigDecimal newPriceDec = BigDecimal.valueOf(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 
+ 				if( newPriceDec.compareTo(zeroBD) == 0){
+ 					newPriceDec = getJBD((String) newPricingInfo.get("specFee"));
+@@ -138,7 +145,7 @@ public class ScheduleOfBenefits {
+ 		} catch (Exception e) {
+ 			oldDoub = 0.00;
+ 		}
+-		BigDecimal oldPriceDec = new BigDecimal(oldDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal oldPriceDec = BigDecimal.valueOf(oldDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 		BigDecimal diffPriceDec = fee.subtract(oldPriceDec);
+ 		boolean feeChanged = oldPriceDec.compareTo(fee) != 0;
+ 		boolean feeNonZero = fee.compareTo(BigDecimal.ZERO) != 0;
+@@ -190,14 +197,14 @@ public class ScheduleOfBenefits {
+ 
+ 	BigDecimal getBD(String s){
+ 		double dgpFees = Double.parseDouble(s);
+-		BigDecimal bd = new BigDecimal(dgpFees);
++		BigDecimal bd = BigDecimal.valueOf(dgpFees);
+ 		bd.setScale(2,BigDecimal.ROUND_UP);
+ 		return bd;
+ 	}
+ 
+ 	BigDecimal getBD4digit(String s){
+ 		double dgpFees = Double.parseDouble(s);
+-		BigDecimal bd = new BigDecimal((dgpFees/10000));
++		BigDecimal bd = BigDecimal.valueOf(dgpFees / 10000);
+ 		bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+ 		return bd;
+ 	}
+@@ -205,7 +212,7 @@ public class ScheduleOfBenefits {
+ 
+ 	BigDecimal getJBD(String s){
+ 		double newDoub = (Double.parseDouble(s))/10000;
+-		return new BigDecimal(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
++		return BigDecimal.valueOf(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 	}
+ 
+ 	Hashtable breakLine(String s){
+@@ -231,7 +238,7 @@ public class ScheduleOfBenefits {
+ 			h.put("anaesthetistFee", anaesthetistFee);
+ 			h.put("nonAnaesthetistFee",nonAnaesthetistFee);
+ 			double dgpFees = Double.parseDouble(gpFees);
+-			BigDecimal bd = new BigDecimal(dgpFees);
++			BigDecimal bd = BigDecimal.valueOf(dgpFees);
+ 			bd.setScale(2);
+ 			MiscUtils.getLogger().debug(feeCode+" "+effectiveDate+" "+terminactionDate+" "+gpFees+" "+assistantCompFee+" "+specFee+" "+anaesthetistFee+" "+nonAnaesthetistFee);
+ 			MiscUtils.getLogger().debug(feeCode+" "+effectiveDate+" "+terminactionDate+" "+getJBD(gpFees)+" "+getJBD(assistantCompFee)+" "+getJBD(specFee)+" "+getJBD(anaesthetistFee)+" "+getJBD(nonAnaesthetistFee));
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCreateBillingFile.java b/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCreateBillingFile.java
+index 9489f58a77..1e955fc6d2 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCreateBillingFile.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingCreateBillingFile.java
+@@ -73,8 +73,8 @@ public class JdbcBillingCreateBillingFile {
+ 	private BillingONHeaderDao headerDao = SpringUtils.getBean(BillingONHeaderDao.class);
+ 	private BillingONFilenameDao filenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
+ 	private String batchHeader;
+-	private BigDecimal bdFee = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
+-	private BigDecimal BigTotal = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
++	private BigDecimal bdFee = BigDecimal.valueOf(((double) (0))).setScale(2, BigDecimal.ROUND_HALF_UP);
++	private BigDecimal BigTotal = BigDecimal.valueOf(((double) (0))).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 	private DateRange dateRange;
+ 	public String[] dbParam;
+ 	private double dFee;
+@@ -433,7 +433,7 @@ public class JdbcBillingCreateBillingFile {
+ 			// start here
+ 			value = batchHeader;
+ 
+-			BigDecimal proTotal = new BigDecimal(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++			BigDecimal proTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 			int proItem = 0;
+ 			String ohipNo = "";
+ 
+@@ -537,7 +537,7 @@ public class JdbcBillingCreateBillingFile {
+ 					}
+ 
+ 					dFee = Double.parseDouble(fee);
+-					bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++					bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 					proTotal = proTotal.add(bdFee);
+ 					BigTotal = BigTotal.add(bdFee);
+ 					_logger.info("createBillingFileStr(BigTotal = " + BigTotal + ")");
+@@ -694,7 +694,7 @@ public class JdbcBillingCreateBillingFile {
+ 					itemObj.setStatus(i.getStatus());
+ 					fee = i.getFee();
+ 					dFee = Double.parseDouble(fee);
+-					bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++					bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 					BigTotal = BigTotal.add(bdFee);
+ 					_logger.info("createBillingFileStr(BigTotal = " + BigTotal + ")");
+ 					checkItem();
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java
+index db6f3a811d..ae245f1ada 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java
+@@ -755,7 +755,7 @@ public class BillingCorrectionPrep {
+ 
+ 	private String sumFee(Vector vecFee) {
+ 		String ret = "";
+-		BigDecimal fee = new BigDecimal(Double.parseDouble("0.00")).setScale(4,
++		BigDecimal fee = BigDecimal.valueOf(Double.parseDouble("0.00")).setScale(4,
+ 				BigDecimal.ROUND_HALF_UP);
+ 		for (int i = 0; i < vecFee.size(); i++) {
+ 			String temp = (String) vecFee.get(i);
+@@ -765,7 +765,7 @@ public class BillingCorrectionPrep {
+ 			if (temp.indexOf(".") < 0) {
+ 				temp = temp + ".00";
+ 			}
+-			BigDecimal tFee = new BigDecimal(Double.parseDouble(temp))
++			BigDecimal tFee = BigDecimal.valueOf(Double.parseDouble(temp))
+ 					.setScale(4, BigDecimal.ROUND_HALF_UP);
+ 			fee = fee.add(tFee);
+ 		}
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingRAPrep.java b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingRAPrep.java
+index d062f4b0e2..70a7a20169 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingRAPrep.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingRAPrep.java
+@@ -57,15 +57,15 @@ public class BillingRAPrep {
+ 		List ret = dbObj.getRASummary(raNo, providerOhipNo);
+ 		double dCFee = 0.0;
+ 		double dPFee = 0.0;
+-		BigDecimal BigCTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+-		BigDecimal BigPTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+-		BigDecimal BigOBTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+-		BigDecimal BigCOTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+-		BigDecimal BigHTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+-		BigDecimal BigLocalHTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+-		BigDecimal BigTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+-		BigDecimal BigOTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+-		BigDecimal BigLTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigCTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigPTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigOBTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigCOTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigHTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigLocalHTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigOTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal BigLTotal = BigDecimal.valueOf(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 		// Billing No Provider Patient HIN Service Date Service Code Invoiced :
+ 		// new BigDecimal(0)
+ 		// Paid Clinic Pay Hospital Pay OB Error
+@@ -89,11 +89,11 @@ public class BillingRAPrep {
+ 			String obPay = "";
+ 
+ 			dCFee = Double.parseDouble(amountsubmit);
+-			BigDecimal bdCFee = new BigDecimal(dCFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++			BigDecimal bdCFee = BigDecimal.valueOf(dCFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 			BigCTotal = BigCTotal.add(bdCFee);
+ 
+ 			dPFee = Double.parseDouble(amountpay);
+-			BigDecimal bdPFee = new BigDecimal(dPFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++			BigDecimal bdPFee = BigDecimal.valueOf(dPFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 			BigPTotal = BigPTotal.add(bdPFee);
+ 			String COflag = "0";
+ 			String OBflag = "0";
+@@ -117,7 +117,7 @@ public class BillingRAPrep {
+ 			if (OBflag.equals("1")) {
+ 				String amountOB = amountpay;
+ 				double dOBFee = Double.parseDouble(amountOB);
+-				BigDecimal bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++				BigDecimal bdOBFee = BigDecimal.valueOf(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 				BigOBTotal = BigOBTotal.add(bdOBFee);
+                                 obPay = amountpay;
+ 			} else {
+@@ -128,7 +128,7 @@ public class BillingRAPrep {
+ 			if (COflag.equals("1")) {
+ 				String amountCO = amountpay;
+ 				double dCOFee = Double.parseDouble(amountCO);
+-				BigDecimal bdCOFee = new BigDecimal(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++				BigDecimal bdCOFee = BigDecimal.valueOf(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 				BigCOTotal = BigCOTotal.add(bdCOFee);
+ 			} else {
+ 				// amountCO = "N/A";
+@@ -141,7 +141,7 @@ public class BillingRAPrep {
+ 
+ 			if (location.compareTo("02") == 0) {
+ 				double dHFee = Double.parseDouble(amountpay);
+-				BigDecimal bdHFee = new BigDecimal(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++				BigDecimal bdHFee = BigDecimal.valueOf(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 				BigHTotal = BigHTotal.add(bdHFee);
+ 				clinicPay = "N/A";
+ 				hospitalPay = "N/A";
+@@ -154,13 +154,13 @@ public class BillingRAPrep {
+ 			} else {
+ 				if (location.compareTo("00") == 0 && demo_hin.length() > 1 && servicedate.equals(localServiceDate)) {
+ 					double dFee = Double.parseDouble(amountpay);
+-					BigDecimal bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++					BigDecimal bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 					BigTotal = BigTotal.add(bdFee);
+ 					clinicPay = amountpay;
+ 					hospitalPay = "N/A";
+ 				} else {
+ 					double dOFee = Double.parseDouble(amountpay);
+-					BigDecimal bdOFee = new BigDecimal(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
++					BigDecimal bdOFee = BigDecimal.valueOf(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 					BigOTotal = BigOTotal.add(bdOFee);
+ 					clinicPay = "N/A";
+ 					hospitalPay = "N/A";
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java
+index a9d5882c35..969bbadc90 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java
+@@ -326,9 +326,9 @@ public class BillingSavePrep {
+ 		// _logger.info("No billing item for billing # " + itemNum);
+ 
+ 		for (int i = 0; i < vecServiceCode.size(); i++) { // recordCount
+-			BigDecimal bdEachPrice = new BigDecimal(Double.parseDouble((String) vecServiceCodePrice.get(i))).setScale(
++			BigDecimal bdEachPrice = BigDecimal.valueOf(Double.parseDouble(((String) (vecServiceCodePrice.get(i))))).setScale(
+ 					2, BigDecimal.ROUND_HALF_UP);
+-			BigDecimal bdEachUnit = new BigDecimal(Double.parseDouble((String) vecServiceCodeUnit.get(i))).setScale(2,
++			BigDecimal bdEachUnit = BigDecimal.valueOf(Double.parseDouble(((String) (vecServiceCodeUnit.get(i))))).setScale(2,
+ 					BigDecimal.ROUND_HALF_UP);
+ 			BigDecimal bdEachTotal = bdEachPrice.multiply(bdEachUnit).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 
+diff --git a/src/main/java/oscar/oscarBilling/pageUtil/BillingBillingManager.java b/src/main/java/oscar/oscarBilling/pageUtil/BillingBillingManager.java
+index 08ce3e9408..60107ba17e 100644
+--- a/src/main/java/oscar/oscarBilling/pageUtil/BillingBillingManager.java
++++ b/src/main/java/oscar/oscarBilling/pageUtil/BillingBillingManager.java
+@@ -194,7 +194,7 @@ public class BillingBillingManager {
+ 			grandtotal += bi.getLineTotal();
+ 			MiscUtils.getLogger().debug("total:" + grandtotal);
+ 		}
+-		BigDecimal bdFee = new BigDecimal(grandtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
++		BigDecimal bdFee = BigDecimal.valueOf(grandtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 		return bdFee.toString();
+ 
+ 	}
+@@ -247,7 +247,7 @@ public class BillingBillingManager {
+ 		}
+ 
+ 		public String getDispPrice() {
+-			BigDecimal bdFee = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP);
++			BigDecimal bdFee = BigDecimal.valueOf(price).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 			return bdFee.toString();
+ 		}
+ 
+@@ -281,7 +281,7 @@ public class BillingBillingManager {
+ 		}
+ 
+ 		public String getDispLineTotal() {
+-			BigDecimal bdFee = new BigDecimal(lineTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
++			BigDecimal bdFee = BigDecimal.valueOf(lineTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+ 			return bdFee.toString();
+ 		}
+ 
+diff --git a/src/main/java/oscar/util/UtilMisc.java b/src/main/java/oscar/util/UtilMisc.java
+index ed3deab17b..e123393627 100755
+--- a/src/main/java/oscar/util/UtilMisc.java
++++ b/src/main/java/oscar/util/UtilMisc.java
+@@ -426,7 +426,7 @@ public class UtilMisc {
+    * @return double
+    */
+   public static double toCurrencyDouble(double value){
+-    BigDecimal bd = new BigDecimal(value );
++    BigDecimal bd = BigDecimal.valueOf(value);
+     bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+     return bd.doubleValue();
+   }
+diff --git a/src/test/java/org/oscarehr/common/dao/utils/EntityDataGenerator.java b/src/test/java/org/oscarehr/common/dao/utils/EntityDataGenerator.java
+index 59cc9fdc87..fbee7bfc83 100644
+--- a/src/test/java/org/oscarehr/common/dao/utils/EntityDataGenerator.java
++++ b/src/test/java/org/oscarehr/common/dao/utils/EntityDataGenerator.java
+@@ -47,11 +47,11 @@ public class EntityDataGenerator {
+ 
+ 	public static Object generateTestDataForModelClass(Object model) throws Exception {
+ 
+-		Field f[] = model.getClass().getDeclaredFields();
++		Field f = model.getClass().getDeclaredFields();
+ 		AccessibleObject.setAccessible(f, true);
+ 		for (int i = 0; i < f.length; i++) {
+ 			boolean isId=false;
+-	        Annotation annotations[] = f[i].getAnnotations();
++	        Annotation annotations = f[i].getAnnotations();
+ 	        for (int j = 0; j < annotations.length; j++) {
+ 	            if(annotations[j].annotationType() == Id.class) {
+ 	            	isId=true;
+@@ -106,7 +106,7 @@ public class EntityDataGenerator {
+ 	 	    }else if(f[i].getType() == Provider.class || f[i].getType() == DemographicExt[].class) {
+ 	 	    	//ignore
+ 	 	    }else if(f[i].getType() == char.class || f[i].getType() == BigDecimal.class) {
+-	 	    	BigDecimal bd = new BigDecimal(Math.random()*5000);
++	 	    	BigDecimal bd = BigDecimal.valueOf(Math.random() * 5000);
+ 	 	        f[i].set(model,bd);
+ 	        } else {
+ 	        	MiscUtils.getLogger().warn("Can't generate test data for class type:" + f[i].getType());

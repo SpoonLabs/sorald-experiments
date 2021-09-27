@@ -1,0 +1,1076 @@
+diff --git a/src/main/java/com/indivica/olis/Driver.java b/src/main/java/com/indivica/olis/Driver.java
+index 6186634fb7..f08985b2ba 100644
+--- a/src/main/java/com/indivica/olis/Driver.java
++++ b/src/main/java/com/indivica/olis/Driver.java
+@@ -8,6 +8,7 @@
+  */
+ 
+ package com.indivica.olis;
++import javax.xml.XMLConstants;
+ 
+ import java.io.File;
+ import java.io.FileInputStream;
+@@ -203,7 +204,7 @@ public class Driver {
+ 		olisResponse = olisResponse.replaceAll("<Errors", "<Errors xmlns=\"\" ");
+ 
+ 		try {
+-			DocumentBuilderFactory.newInstance().newDocumentBuilder();
++			createDocumentBuilderFactory().newDocumentBuilder();
+ 			SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+ 
+ 			Source schemaFile = new StreamSource(new File(OscarProperties.getInstance().getProperty("olis_response_schema")));
+@@ -448,4 +449,11 @@ public class Driver {
+ 			MiscUtils.getLogger().error("Error", e);
+ 		}
+ 	}
++
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
+ }
+diff --git a/src/main/java/org/oscarehr/PMmodule/exporter/AbstractIntakeExporter.java b/src/main/java/org/oscarehr/PMmodule/exporter/AbstractIntakeExporter.java
+index cc51d255e4..7f8c0ba866 100644
+--- a/src/main/java/org/oscarehr/PMmodule/exporter/AbstractIntakeExporter.java
++++ b/src/main/java/org/oscarehr/PMmodule/exporter/AbstractIntakeExporter.java
+@@ -22,6 +22,7 @@
+  */
+ 
+ package org.oscarehr.PMmodule.exporter;
++import javax.xml.XMLConstants;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -108,7 +109,7 @@ public abstract class AbstractIntakeExporter {
+ 	}
+ 
+ 	private void loadFields(String fieldsFile) throws Exception {
+-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		DocumentBuilderFactory factory = createDocumentBuilderFactory();
+ 		DocumentBuilder builder;
+ 		Document document = null;
+ 		builder = factory.newDocumentBuilder();
+@@ -236,4 +237,11 @@ public abstract class AbstractIntakeExporter {
+ 		this.validator = validator;
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/org/oscarehr/dashboard/handler/IndicatorTemplateHandler.java b/src/main/java/org/oscarehr/dashboard/handler/IndicatorTemplateHandler.java
+index a0eede20dd..29fdec4194 100644
+--- a/src/main/java/org/oscarehr/dashboard/handler/IndicatorTemplateHandler.java
++++ b/src/main/java/org/oscarehr/dashboard/handler/IndicatorTemplateHandler.java
+@@ -252,7 +252,7 @@ public class IndicatorTemplateHandler{
+ 	private final Document byteToDocument( final byte[] bytearray ) {
+ 		
+ 		Document document = null;
+-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		DocumentBuilderFactory factory = createDocumentBuilderFactory();
+ 	    factory.setNamespaceAware(true);
+ 	    factory.setSchema( getSchema() );
+ 	    
+@@ -271,4 +271,11 @@ public class IndicatorTemplateHandler{
+ 	    return document;
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/org/oscarehr/e2e/util/EverestUtils.java b/src/main/java/org/oscarehr/e2e/util/EverestUtils.java
+index 3ceebdaee3..3748f15adc 100644
+--- a/src/main/java/org/oscarehr/e2e/util/EverestUtils.java
++++ b/src/main/java/org/oscarehr/e2e/util/EverestUtils.java
+@@ -22,6 +22,7 @@
+  * Victoria, Canada
+  */
+ package org.oscarehr.e2e.util;
++import javax.xml.XMLConstants;
+ 
+ import java.io.InputStream;
+ import java.io.StringReader;
+@@ -172,7 +173,7 @@ public class EverestUtils {
+ 				Source xmlInput = new StreamSource(new StringReader(input));
+ 				StreamResult xmlOutput = new StreamResult(new StringWriter());
+ 
+-				Transformer tf = TransformerFactory.newInstance().newTransformer();
++				Transformer tf = createTransformerFactory().newTransformer();
+ 				tf.setOutputProperty(OutputKeys.ENCODING, Constants.XML.ENCODING);
+ 				tf.setOutputProperty(OutputKeys.INDENT, "yes");
+ 				tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
+@@ -412,4 +413,11 @@ public class EverestUtils {
+ 		}
+ 		return answer;
+ 	}
++
++	private static TransformerFactory createTransformerFactory() {
++		TransformerFactory factory = TransformerFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
++		return factory;
++	}
+ }
+diff --git a/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java b/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
+index 623f8474ce..d91c7f18c1 100644
+--- a/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
++++ b/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
+@@ -98,7 +98,7 @@ public class HRMReportParser {
+ 				}
+ 				if (tmpXMLholder.exists()) fileData = FileUtils.getStringFromFile(tmpXMLholder);
+ 				// Parse an XML document into a DOM tree.
+-				DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
++				DocumentBuilder parser = createDocumentBuilderFactory().newDocumentBuilder();
+ 				// Create a SchemaFactory capable of understanding WXS schemas.
+ 
+ 
+@@ -654,4 +654,11 @@ public class HRMReportParser {
+ 		hrmDocumentToDemographicDao.merge(demographicRouting);
+ 
+ 	}
++
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
+ }
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/Connect.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/Connect.java
+index b23e669548..a3d61166c4 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/Connect.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/Connect.java
+@@ -22,6 +22,7 @@
+  * Ontario, Canada
+  */
+ package org.oscarehr.integration.excelleris.com.colcamex.www.core;
++import javax.xml.XMLConstants;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
+@@ -75,7 +76,7 @@ public class Connect {
+ 	private int responseCode;
+ 	
+ 	private Connect() { 
+-		DocumentBuilderFactory documentBuilderFactory =  DocumentBuilderFactory.newInstance();	
++		DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();	
+ 		try {
+ 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+ 		} catch (ParserConfigurationException e) {
+@@ -596,4 +597,11 @@ public class Connect {
+ 		this.documentHandler = documentHandler;
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/HL7LabHandler.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/HL7LabHandler.java
+index 49b65c0758..3f3585a62a 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/HL7LabHandler.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/HL7LabHandler.java
+@@ -22,6 +22,7 @@
+  * Ontario, Canada
+  */
+ package org.oscarehr.integration.excelleris.com.colcamex.www.core;
++import javax.xml.XMLConstants;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.File;
+@@ -392,7 +393,7 @@ public class HL7LabHandler {
+ 		}
+ 		
+ 		// convert Document into input stream for use with oscar utilities.
+-		transformerFactory = TransformerFactory.newInstance();
++		transformerFactory = createTransformerFactory();
+ 		transformer = transformerFactory.newTransformer();
+ 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+ 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+@@ -499,4 +500,11 @@ public class HL7LabHandler {
+ 		}
+ 	}
+ 
++	private static TransformerFactory createTransformerFactory() {
++		TransformerFactory factory = TransformerFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/W3CDocumentHandler.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/W3CDocumentHandler.java
+index 0f07a99ba3..2eba53c44c 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/W3CDocumentHandler.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/W3CDocumentHandler.java
+@@ -22,6 +22,7 @@
+  * Ontario, Canada
+  */
+ package org.oscarehr.integration.excelleris.com.colcamex.www.core;
++import javax.xml.XMLConstants;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
+@@ -67,7 +68,7 @@ public class W3CDocumentHandler {
+ 	
+ 	public W3CDocumentHandler() {
+ 		super();
+-		DocumentBuilderFactory documentBuilderFactory =  DocumentBuilderFactory.newInstance();	
++		DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();	
+ 		
+ 		try {			
+ 			setDocumentBuilder( documentBuilderFactory.newDocumentBuilder() );
+@@ -327,4 +328,11 @@ public class W3CDocumentHandler {
+ 		return attributes;
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/org/oscarehr/olis/OLISUtils.java b/src/main/java/org/oscarehr/olis/OLISUtils.java
+index a813c6ea2c..39b7ae389e 100644
+--- a/src/main/java/org/oscarehr/olis/OLISUtils.java
++++ b/src/main/java/org/oscarehr/olis/OLISUtils.java
+@@ -1,4 +1,5 @@
+ package org.oscarehr.olis;
++import javax.xml.XMLConstants;
+ /**
+  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+  * This software is published under the GPL GNU General Public License.
+@@ -70,7 +71,7 @@ public class OLISUtils {
+ 		response = response.replaceAll("<Content", "<Content xmlns=\"\" ");
+ 		response = response.replaceAll("<Errors", "<Errors xmlns=\"\" ");
+ 		
+-		DocumentBuilderFactory.newInstance().newDocumentBuilder();
++		createDocumentBuilderFactory().newDocumentBuilder();
+ 		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+ 		
+ 		InputStream is = OLISPoller.class.getResourceAsStream("/org/oscarehr/olis/response.xsd");
+@@ -211,6 +212,13 @@ public class OLISUtils {
+ 		
+ 		return false;	
+ 	}
++
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
+ 	
+ 	
+ 	
+diff --git a/src/main/java/oscar/OscarPingTalk.java b/src/main/java/oscar/OscarPingTalk.java
+index 585c5032d0..e6f479a678 100644
+--- a/src/main/java/oscar/OscarPingTalk.java
++++ b/src/main/java/oscar/OscarPingTalk.java
+@@ -24,6 +24,7 @@
+ 
+ 
+ package oscar;
++import javax.xml.XMLConstants;
+ 
+ import java.util.List;
+ import java.util.Map;
+@@ -136,7 +137,7 @@ public class OscarPingTalk {
+         Marshaller marshaller = context.createMarshaller();
+         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+ 
+-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
++        DocumentBuilderFactory dbf = createDocumentBuilderFactory();
+         dbf.setNamespaceAware(true);
+         DocumentBuilder db = dbf.newDocumentBuilder();
+         Document doc = db.newDocument();
+@@ -156,4 +157,11 @@ public class OscarPingTalk {
+         return dt;
+     }
+ 
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
++
+ }
+diff --git a/src/main/java/oscar/form/study/HSFO/pageUtil/XMLTransferUtil.java b/src/main/java/oscar/form/study/HSFO/pageUtil/XMLTransferUtil.java
+index b8fd50856c..7487836f9a 100644
+--- a/src/main/java/oscar/form/study/HSFO/pageUtil/XMLTransferUtil.java
++++ b/src/main/java/oscar/form/study/HSFO/pageUtil/XMLTransferUtil.java
+@@ -24,6 +24,8 @@
+ 
+ 
+ package oscar.form.study.HSFO.pageUtil;
++import HsfoHbpsDataDocument;
++import javax.xml.XMLConstants;
+ import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
+ import java.text.SimpleDateFormat;
+@@ -1475,7 +1477,7 @@ public class XMLTransferUtil
+ 
+ 	private static DOMResult transform(SOAPPart part) throws Exception
+ 	{
+-		Transformer trans = TransformerFactory.newInstance().newTransformer();
++		Transformer trans = createTransformerFactory().newTransformer();
+ 		DOMResult rs = new DOMResult();
+ 		trans.transform(part.getContent(), rs);
+ 
+@@ -1566,6 +1568,13 @@ public class XMLTransferUtil
+ 		}
+ 	}
+ 
++	private static TransformerFactory createTransformerFactory() {
++		TransformerFactory factory = TransformerFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
++		return factory;
++	}
++
+ 	// public ArrayList soapCall(String hsfoString) throws Exception {
+ 	// logger.info("=============inside soapcall===========");
+ 	// SOAPConnectionFactory fact;
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java b/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java
+index 3a95dae28f..cf43a7a2c4 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java
+@@ -3395,7 +3395,7 @@ public class DemographicExportAction4 extends Action {
+ 	public Boolean validateExport(File f) {
+ 		Boolean result = true;
+ 
+-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		DocumentBuilderFactory factory = createDocumentBuilderFactory();
+ 		factory.setNamespaceAware(true);
+ 		DocumentBuilder builder = null;
+ 		try {
+@@ -3463,6 +3463,13 @@ public class DemographicExportAction4 extends Action {
+ 		de.setDataType(dataType);
+ 		de.setName(name);
+ 	}
++
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
+ }
+ 
+ class Enrolment {
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/DefaultHandler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/DefaultHandler.java
+index a7fc82e172..aa7f1de534 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/DefaultHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/DefaultHandler.java
+@@ -32,6 +32,7 @@
+  * and open the template in the editor.
+  */
+ package oscar.oscarLab.ca.all.upload.handlers;
++import javax.xml.XMLConstants;
+ 
+ import java.io.BufferedReader;
+ import java.io.FileInputStream;
+@@ -108,7 +109,7 @@ public class DefaultHandler implements MessageHandler {
+      */
+     private Document getXML(String fileName){
+         try{
+-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++            DocumentBuilderFactory factory = createDocumentBuilderFactory();
+             factory.setValidating(false);
+             Document doc = factory.newDocumentBuilder().parse(new FileInputStream(fileName));
+             return(doc);
+@@ -136,4 +137,11 @@ public class DefaultHandler implements MessageHandler {
+         return sb.toString();
+     }
+ 
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
++
+ }
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/ExcellerisOntarioHandler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/ExcellerisOntarioHandler.java
+index 578820651f..54004a6937 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/ExcellerisOntarioHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/ExcellerisOntarioHandler.java
+@@ -23,6 +23,7 @@
+  */
+ 
+ package oscar.oscarLab.ca.all.upload.handlers;
++import javax.xml.XMLConstants;
+ 
+ import java.io.FileInputStream;
+ 
+@@ -47,7 +48,7 @@ public class ExcellerisOntarioHandler implements MessageHandler {
+ 	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
+ 		Document doc = null;
+ 		try {
+-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
++			DocumentBuilderFactory docFactory = createDocumentBuilderFactory();
+ 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+ 			doc = docBuilder.parse(new FileInputStream(fileName));
+ 		} catch (Exception e) {
+@@ -80,4 +81,11 @@ public class ExcellerisOntarioHandler implements MessageHandler {
+ 
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/IHAHandler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/IHAHandler.java
+index 0d0b9617a4..ebf9be2c47 100755
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/IHAHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/IHAHandler.java
+@@ -26,6 +26,7 @@
+ //Created on December 8, 2009. Modified from DefaultHandler.java
+ 
+ package oscar.oscarLab.ca.all.upload.handlers;
++import javax.xml.XMLConstants;
+ 
+ import java.io.FileInputStream;
+ //*import java.sql.Connection;
+@@ -62,7 +63,14 @@ import oscar.oscarLab.ca.all.upload.MessageUploader;
+ public class IHAHandler extends DefaultGenericHandler implements MessageHandler {
+     Logger logger = Logger.getLogger(IHAHandler.class);
+     String hl7Type = null;
+-    String proNo,UserID, Password,Alias;
++
++    String proNo;
++
++    String UserID;
++
++    String Password;
++
++    String Alias;
+     ArrayList<String> headerList = null;
+     Object terser;
+     Object msg = null;
+@@ -187,7 +195,7 @@ public class IHAHandler extends DefaultGenericHandler implements MessageHandler
+      */
+     private Document getXML(String fileName){
+         try{
+-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++            DocumentBuilderFactory factory = createDocumentBuilderFactory();
+             factory.setValidating(false);
+             Document doc = factory.newDocumentBuilder().parse(new FileInputStream(fileName));
+             return(doc);
+@@ -197,4 +205,11 @@ public class IHAHandler extends DefaultGenericHandler implements MessageHandler
+             return(null);
+         }
+     }
++
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
+ }
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/IHAPOIHandler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/IHAPOIHandler.java
+index 90d92b6814..8f6d364b98 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/IHAPOIHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/IHAPOIHandler.java
+@@ -22,6 +22,7 @@
+  * Ontario, Canada
+  */
+ package oscar.oscarLab.ca.all.upload.handlers;
++import javax.xml.XMLConstants;
+ 
+ 
+ import java.io.ByteArrayInputStream;
+@@ -163,7 +164,7 @@ public class IHAPOIHandler implements MessageHandler {
+ 		NodeList messagesNode = null;
+ 
+ 		Map<String, String> hl7BodyMap = null;
+-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
++		DocumentBuilderFactory docFactory = createDocumentBuilderFactory();
+ 		docFactory.setNamespaceAware(true);
+ 		docFactory.setValidating(false);
+ 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+@@ -232,4 +233,11 @@ public class IHAPOIHandler implements MessageHandler {
+         return messageId;
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/MEDITECHHandler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/MEDITECHHandler.java
+index 97ddcac057..5db194881a 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/MEDITECHHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/MEDITECHHandler.java
+@@ -23,6 +23,7 @@
+  */
+ 
+ package oscar.oscarLab.ca.all.upload.handlers;
++import javax.xml.XMLConstants;
+ 
+ import java.io.FileInputStream;
+ import java.io.IOException;
+@@ -130,7 +131,7 @@ public class MEDITECHHandler implements MessageHandler {
+ 		NodeList messages = null;
+ 
+ 		List<String> hl7BodyList = null;
+-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
++		DocumentBuilderFactory docFactory = createDocumentBuilderFactory();
+ 
+ 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+ 		Document doc = docBuilder.parse(hl7Body);
+@@ -182,4 +183,11 @@ public class MEDITECHHandler implements MessageHandler {
+ 		return writer.toString();
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/PATHL7Handler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/PATHL7Handler.java
+index 28f29f1310..0bbadbe507 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/PATHL7Handler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/PATHL7Handler.java
+@@ -32,6 +32,7 @@
+  * and open the template in the editor.
+  */
+ package oscar.oscarLab.ca.all.upload.handlers;
++import javax.xml.XMLConstants;
+ 
+ import java.io.FileInputStream;
+ 
+@@ -57,7 +58,7 @@ public class PATHL7Handler implements MessageHandler {
+ 	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
+ 		Document doc = null;
+ 		try {
+-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
++			DocumentBuilderFactory docFactory = createDocumentBuilderFactory();
+ 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+ 			doc = docBuilder.parse(new FileInputStream(fileName));
+ 		} catch (Exception e) {
+@@ -88,4 +89,11 @@ public class PATHL7Handler implements MessageHandler {
+ 
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/main/java/oscar/oscarLab/ca/bc/PathNet/Connection.java b/src/main/java/oscar/oscarLab/ca/bc/PathNet/Connection.java
+index 1bee2914a5..44d98939e1 100644
+--- a/src/main/java/oscar/oscarLab/ca/bc/PathNet/Connection.java
++++ b/src/main/java/oscar/oscarLab/ca/bc/PathNet/Connection.java
+@@ -22,7 +22,8 @@
+  */
+ 
+ 
+-package oscar.oscarLab.ca.bc.PathNet;
++package oscar.oscarLab.ca.bc.PathNet;
++import javax.xml.XMLConstants;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.util.ArrayList;
+@@ -56,14 +57,19 @@ public class Connection {
+     private static Logger logger=MiscUtils.getLogger();
+ 
+     private boolean secure;
+-   private String url;
+-   private static final
+-   String LoginQuery      = "Page=Login&Mode=Silent&UserID=@username&Password=@password",
+-   RequestNewQuery        = "Page=HL7&Query=NewRequests",
+-   RequestNewPendingQuery = "Page=HL7&Query=NewRequests&Pending=Yes",
+-   PositiveAckQuery       = "Page=HL7&ACK=Positive",
+-   NegativeAckQuery       = "Page=HL7&ACK=Negative",
+-   LogoutQuery            = "Logout=Yes";
++   private String url;
++
++    private static final String LoginQuery = "Page=Login&Mode=Silent&UserID=@username&Password=@password";
++
++    private static final String RequestNewQuery = "Page=HL7&Query=NewRequests";
++
++    private static final String RequestNewPendingQuery = "Page=HL7&Query=NewRequests&Pending=Yes";
++
++    private static final String PositiveAckQuery = "Page=HL7&ACK=Positive";
++
++    private static final String NegativeAckQuery = "Page=HL7&ACK=Negative";
++
++    private static final String LogoutQuery = "Logout=Yes";
+    private HTTP http;
+ 
+    public Connection() {
+@@ -147,7 +153,7 @@ public class Connection {
+       }
+    }
+    public Document CreateDocument(InputStream input) throws SAXException, IOException, ParserConfigurationException {
+-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++      DocumentBuilderFactory factory = createDocumentBuilderFactory();
+       DocumentBuilder builder = factory.newDocumentBuilder();
+       return builder.parse(input);
+    }
+@@ -156,5 +162,12 @@ public class Connection {
+    }
+    private String CreateString(String queryString) throws HttpException, IOException {
+       return this.http.GetString(queryString);
+-   }
++   }
++
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
+ }
+diff --git a/src/main/java/oscar/oscarMessenger/docxfer/util/MsgCommxml.java b/src/main/java/oscar/oscarMessenger/docxfer/util/MsgCommxml.java
+index f0c59bea8d..6c31a28b7e 100644
+--- a/src/main/java/oscar/oscarMessenger/docxfer/util/MsgCommxml.java
++++ b/src/main/java/oscar/oscarMessenger/docxfer/util/MsgCommxml.java
+@@ -24,6 +24,7 @@
+ 
+ 
+ package oscar.oscarMessenger.docxfer.util;
++import javax.xml.XMLConstants;
+ 
+ import java.io.StringReader;
+ import java.io.StringWriter;
+@@ -44,7 +45,7 @@ import org.xml.sax.InputSource;
+ public class MsgCommxml {
+     public static Document newDocument() {
+         try {
+-            return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
++            return createDocumentBuilderFactory().newDocumentBuilder().newDocument();
+         }
+         catch (Exception e) {
+             return null;
+@@ -79,7 +80,7 @@ public class MsgCommxml {
+         StreamResult rslt = new StreamResult(ret);
+ 
+         try {
+-            Transformer trans = TransformerFactory.newInstance().newTransformer();
++            Transformer trans = createTransformerFactory().newTransformer();
+             trans.transform(src, rslt);
+         }
+         catch (Exception e) {
+@@ -93,7 +94,7 @@ public class MsgCommxml {
+         try {
+             InputSource is = new InputSource(new StringReader(xmlInput));
+ 
+-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
++            Document doc = createDocumentBuilderFactory().newDocumentBuilder().parse(is);
+ 
+             return doc;
+         }
+@@ -105,7 +106,7 @@ public class MsgCommxml {
+     public static Document parseXMLFile(String fileName) throws java.io.FileNotFoundException, javax.xml.parsers.ParserConfigurationException, java.io.IOException, org.xml.sax.SAXException {
+         InputSource is = new InputSource(new java.io.FileReader(fileName));
+ 
+-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
++        Document doc = createDocumentBuilderFactory().newDocumentBuilder().parse(is);
+ 
+         return doc;
+     }
+@@ -136,4 +137,18 @@ public class MsgCommxml {
+     public static String decode64(String encodedText) {
+         return(new String(Base64.decodeBase64(encodedText.getBytes())));
+     }
++
++    private static TransformerFactory createTransformerFactory() {
++        TransformerFactory factory = TransformerFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
++        return factory;
++    }
++
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
+ }
+diff --git a/src/main/java/oscar/oscarMessenger/util/Msgxml.java b/src/main/java/oscar/oscarMessenger/util/Msgxml.java
+index 1660066293..6995e98cb1 100644
+--- a/src/main/java/oscar/oscarMessenger/util/Msgxml.java
++++ b/src/main/java/oscar/oscarMessenger/util/Msgxml.java
+@@ -24,6 +24,7 @@
+ 
+ 
+ package oscar.oscarMessenger.util;
++import javax.xml.XMLConstants;
+ 
+ import java.io.StringReader;
+ import java.io.StringWriter;
+@@ -46,7 +47,7 @@ public class Msgxml
+     {
+         try
+         {
+-            return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
++            return createDocumentBuilderFactory().newDocumentBuilder().newDocument();
+         }
+         catch (Exception e)
+         {
+@@ -89,7 +90,7 @@ public class Msgxml
+ 
+         try
+         {
+-            Transformer trans = TransformerFactory.newInstance().newTransformer();
++            Transformer trans = createTransformerFactory().newTransformer();
+             trans.transform(src, rslt);
+         } catch (Exception e)
+         {
+@@ -105,7 +106,7 @@ public class Msgxml
+         {
+             InputSource is = new InputSource(new StringReader(xmlInput));
+ 
+-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
++            Document doc = createDocumentBuilderFactory().newDocumentBuilder().parse(is);
+ 
+             return doc;
+         }
+@@ -135,4 +136,18 @@ public class Msgxml
+ 
+         return ret;
+     }
++
++    private static TransformerFactory createTransformerFactory() {
++        TransformerFactory factory = TransformerFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
++        return factory;
++    }
++
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
+ }
+diff --git a/src/main/java/oscar/oscarRx/util/xml.java b/src/main/java/oscar/oscarRx/util/xml.java
+index 33b0971b6d..9a84f3ad25 100644
+--- a/src/main/java/oscar/oscarRx/util/xml.java
++++ b/src/main/java/oscar/oscarRx/util/xml.java
+@@ -24,6 +24,7 @@
+ 
+ 
+ package oscar.oscarRx.util;
++import javax.xml.XMLConstants;
+ 
+ import java.io.StringReader;
+ import java.io.StringWriter;
+@@ -44,7 +45,7 @@ public class xml {
+     
+     public static Document newDocument() {
+         try {
+-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
++            Document document = createDocumentBuilderFactory().newDocumentBuilder().newDocument();
+             return document;
+         }
+         catch(Exception e) {
+@@ -73,7 +74,7 @@ public class xml {
+         DOMSource src = new DOMSource(xmlDoc);
+         StreamResult rslt = new StreamResult(ret);
+         try {
+-            Transformer trans = TransformerFactory.newInstance().newTransformer();
++            Transformer trans = createTransformerFactory().newTransformer();
+             trans.transform(src, rslt);
+         }
+         catch(Exception e) {
+@@ -86,7 +87,7 @@ public class xml {
+         Document document;
+         try {
+             InputSource is = new InputSource(new StringReader(xmlInput));
+-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
++            Document doc = createDocumentBuilderFactory().newDocumentBuilder().parse(is);
+             Document document1 = doc;
+             return document1;
+         }
+@@ -108,4 +109,18 @@ public class xml {
+         }
+         return ret;
+     }
++
++    private static TransformerFactory createTransformerFactory() {
++        TransformerFactory factory = TransformerFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
++        return factory;
++    }
++
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
+ }
+diff --git a/src/main/java/oscar/util/JDBCUtil.java b/src/main/java/oscar/util/JDBCUtil.java
+index 3d0b1fcd67..26caf235f3 100644
+--- a/src/main/java/oscar/util/JDBCUtil.java
++++ b/src/main/java/oscar/util/JDBCUtil.java
+@@ -24,6 +24,7 @@
+ 
+ 
+ package oscar.util;
++import javax.xml.XMLConstants;
+ 
+ import java.io.File;
+ import java.io.FileOutputStream;
+@@ -55,7 +56,7 @@ public class JDBCUtil
+     public static Document toDocument(ResultSet rs)
+        throws ParserConfigurationException, SQLException
+     {
+-       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++       DocumentBuilderFactory factory = createDocumentBuilderFactory();
+        DocumentBuilder builder        = factory.newDocumentBuilder();
+        Document doc                   = builder.newDocument();
+ 
+@@ -87,7 +88,7 @@ public class JDBCUtil
+     public static void saveAsXML(Document doc, String fileName)
+     {
+         try{
+-            TransformerFactory transFactory = TransformerFactory.newInstance();
++            TransformerFactory transFactory = createTransformerFactory();
+             Transformer transformer = transFactory.newTransformer();
+             DOMSource source = new DOMSource(doc);
+             File newXML = new File(fileName);
+@@ -185,4 +186,18 @@ public class JDBCUtil
+ 
+     }
+ 
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
++
++    private static TransformerFactory createTransformerFactory() {
++        TransformerFactory factory = TransformerFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
++        return factory;
++    }
++
+ }
+diff --git a/src/main/java/oscar/util/UtilXML.java b/src/main/java/oscar/util/UtilXML.java
+index 523f3be7ea..1dd842a0fe 100644
+--- a/src/main/java/oscar/util/UtilXML.java
++++ b/src/main/java/oscar/util/UtilXML.java
+@@ -24,6 +24,7 @@
+ 
+ 
+ package oscar.util;
++import javax.xml.XMLConstants;
+ 
+ import java.io.FileNotFoundException;
+ import java.io.FileReader;
+@@ -51,7 +52,7 @@ public class UtilXML {
+    
+    public static Document newDocument() {
+       try {
+-         Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
++         Document document = createDocumentBuilderFactory().newDocumentBuilder().newDocument();
+          return document;
+       }
+       catch(Exception e) {
+@@ -80,7 +81,7 @@ public class UtilXML {
+       DOMSource src = new DOMSource(xmlDoc);
+       StreamResult rslt = new StreamResult(ret);
+       try {
+-         Transformer trans = TransformerFactory.newInstance().newTransformer();
++         Transformer trans = createTransformerFactory().newTransformer();
+          //trans.setOutputProperty(OutputKeys.INDENT, "yes");
+          //trans.setOutputProperty("{http://xml.apache.org/xslt}baseIndent-amount", "1");
+          trans.transform(src, rslt);
+@@ -95,7 +96,7 @@ public class UtilXML {
+       DOMSource src = new DOMSource(xmlDoc);
+       StreamResult rslt = new StreamResult(ret);
+       try {
+-         Transformer trans = TransformerFactory.newInstance().newTransformer();
++         Transformer trans = createTransformerFactory().newTransformer();
+          trans.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
+          trans.setOutputProperty(javax.xml.transform.OutputKeys.DOCTYPE_SYSTEM, dtdname);
+          //trans.setOutputProperty("{http://xml.apache.org/xslt}baseIndent-amount", "1");
+@@ -112,7 +113,7 @@ public class UtilXML {
+       DOMSource src = new DOMSource(xmlDoc);
+       StreamResult rslt = new StreamResult(ret);
+       try {
+-         Transformer trans = TransformerFactory.newInstance().newTransformer();
++         Transformer trans = createTransformerFactory().newTransformer();
+          trans.transform(src, rslt);
+       }
+       catch(Exception e) {
+@@ -125,7 +126,7 @@ public class UtilXML {
+       Document document;
+       try {
+          InputSource is = new InputSource(new StringReader(xmlInput));
+-         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
++         Document doc = createDocumentBuilderFactory().newDocumentBuilder().parse(is);
+          Document document1 = doc;
+          return document1;
+       }
+@@ -137,7 +138,7 @@ public class UtilXML {
+    public static Document parseXMLFile(String fileName)
+    throws  IOException,  FileNotFoundException, Exception {
+       InputSource is = new InputSource(new FileReader(fileName));
+-      Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
++      Document doc = createDocumentBuilderFactory().newDocumentBuilder().parse(is);
+       return doc;
+    }
+    
+@@ -358,5 +359,19 @@ public class UtilXML {
+        xml = xml.replaceAll("&gt;", ">");
+        return xml;
+    }
++
++    private static TransformerFactory createTransformerFactory() {
++        TransformerFactory factory = TransformerFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
++        return factory;
++    }
++
++    private static DocumentBuilderFactory createDocumentBuilderFactory() {
++        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++        return factory;
++    }
+    
+ }
+diff --git a/src/test/java/org/oscarehr/dashboard/handler/IndicatorTemplateXMLTest.java b/src/test/java/org/oscarehr/dashboard/handler/IndicatorTemplateXMLTest.java
+index 55fbc6d5bd..52544355c6 100644
+--- a/src/test/java/org/oscarehr/dashboard/handler/IndicatorTemplateXMLTest.java
++++ b/src/test/java/org/oscarehr/dashboard/handler/IndicatorTemplateXMLTest.java
+@@ -22,6 +22,8 @@
+  * Ontario, Canada
+  */
+ package org.oscarehr.dashboard.handler;
++import javax.xml.XMLConstants;
++import org.junit.Assert.Assert;
+ 
+ import static org.junit.Assert.*;
+ import  org.junit.Assert;
+@@ -50,7 +52,7 @@ public class IndicatorTemplateXMLTest {
+ 	@BeforeClass
+ 	public static void setUpBeforeClass() {
+ 		URL url = Thread.currentThread().getContextClassLoader().getResource("indicatorXMLTemplates/diabetes_hba1c_test.xml");
+-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		DocumentBuilderFactory factory = createDocumentBuilderFactory();
+ 	    factory.setNamespaceAware(true);
+ 	    
+ 	    try {
+@@ -237,4 +239,11 @@ public class IndicatorTemplateXMLTest {
+ 		assertEquals(  3, indicatorTemplateXML.getDrilldownActions().size() );
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ }
+diff --git a/src/test/java/oscar/oscarLab/ca/all/parsers/IHAPOIHandlerTest.java b/src/test/java/oscar/oscarLab/ca/all/parsers/IHAPOIHandlerTest.java
+index ca6bef8a6c..e9496103a1 100644
+--- a/src/test/java/oscar/oscarLab/ca/all/parsers/IHAPOIHandlerTest.java
++++ b/src/test/java/oscar/oscarLab/ca/all/parsers/IHAPOIHandlerTest.java
+@@ -22,6 +22,7 @@
+  * Ontario, Canada
+  */
+ package oscar.oscarLab.ca.all.parsers;
++import javax.xml.XMLConstants;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
+@@ -155,7 +156,7 @@ public class IHAPOIHandlerTest {
+ 	
+ 	public Document buildDocumentObject( String xml ) {
+ 		Document document = null;
+-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		DocumentBuilderFactory factory = createDocumentBuilderFactory();
+ 
+ 	    try {
+ 			DocumentBuilder builder = factory.newDocumentBuilder();
+@@ -930,5 +931,12 @@ public class IHAPOIHandlerTest {
+ 		logger.info("testGetDiagnosticServiceId() " + handler.getDiagnosticServiceId() );
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ 
+ }
+diff --git a/src/test/java/oscar/oscarLab/ca/all/parsers/MEDITECHHandlerTest.java b/src/test/java/oscar/oscarLab/ca/all/parsers/MEDITECHHandlerTest.java
+index 68c2f84ef2..2fcdba2cf2 100644
+--- a/src/test/java/oscar/oscarLab/ca/all/parsers/MEDITECHHandlerTest.java
++++ b/src/test/java/oscar/oscarLab/ca/all/parsers/MEDITECHHandlerTest.java
+@@ -23,6 +23,7 @@
+  */
+ 
+ package oscar.oscarLab.ca.all.parsers;
++import javax.xml.XMLConstants;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
+@@ -157,7 +158,7 @@ public class MEDITECHHandlerTest {
+ 	
+ 	public Document buildDocumentObject( String xml ) {
+ 		Document document = null;
+-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		DocumentBuilderFactory factory = createDocumentBuilderFactory();
+ 
+ 	    try {
+ 			DocumentBuilder builder = factory.newDocumentBuilder();
+@@ -880,5 +881,12 @@ public class MEDITECHHandlerTest {
+ 		Assert.assertEquals( sortStringToList( getElement("OBR.3", "EI.1") ), sortStringToList( handler.getFillerOrderNumber() ) );
+ 	}
+ 
++	private static DocumentBuilderFactory createDocumentBuilderFactory() {
++		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
++		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
++		return factory;
++	}
++
+ 
+ }

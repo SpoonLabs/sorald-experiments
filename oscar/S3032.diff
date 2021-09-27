@@ -1,0 +1,391 @@
+diff --git a/src/main/java/org/oscarehr/PMmodule/streethealth/ReportElementTag.java b/src/main/java/org/oscarehr/PMmodule/streethealth/ReportElementTag.java
+index e2de07b466..0f3f9ce273 100644
+--- a/src/main/java/org/oscarehr/PMmodule/streethealth/ReportElementTag.java
++++ b/src/main/java/org/oscarehr/PMmodule/streethealth/ReportElementTag.java
+@@ -57,12 +57,12 @@ public class ReportElementTag extends TagSupport {
+ 		Map<StreetHealthReportKey,Integer> results = (Map<StreetHealthReportKey,Integer>) req.getAttribute("results");
+ 		
+ 		
+-		String answerArray[] = null;
++		String answerArray = null;
+ 		
+ 		if(getAnswerProps() != null && getAnswerProps().length()>0) {
+ 			Properties p = new Properties();
+ 			try {
+-				p.load(getClass().getClassLoader().getResourceAsStream("streethealth_report.properties"));
++				p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("streethealth_report.properties"));
+ 			}catch(IOException e) {logger.warn(e);}
+ 			String temp=null;
+ 			int idx=1;
+@@ -128,12 +128,12 @@ public class ReportElementTag extends TagSupport {
+ 		Map<StreetHealthReportKey,Integer> results = (Map<StreetHealthReportKey,Integer>) req.getAttribute("results");
+ 		
+ 		
+-		String answerArray[] = null;
++		String answerArray = null;
+ 		
+ 		if(getAnswerProps() != null && getAnswerProps().length()>0) {
+ 			Properties p = new Properties();
+ 			try {
+-				p.load(getClass().getClassLoader().getResourceAsStream("streethealth_report.properties"));
++				p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("streethealth_report.properties"));
+ 			}catch(IOException e) {logger.warn(e);}
+ 			String temp=null;
+ 			int idx=1;
+diff --git a/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java b/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java
+index f26089fb5b..7142795a20 100644
+--- a/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java
+@@ -227,7 +227,7 @@ public class StreetHealthIntakeReportAction extends DispatchAction {
+ 	public void loadNodeIdsWithNoLabels() {
+ 		Properties p = new Properties();
+ 		try {
+-			p.load(getClass().getClassLoader().getResourceAsStream("streethealth_report.properties"));
++			p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("streethealth_report.properties"));
+ 		}catch(IOException e) {log.warn(e);}
+ 		
+ 		try {
+diff --git a/src/main/java/org/oscarehr/common/ISO36612.java b/src/main/java/org/oscarehr/common/ISO36612.java
+index 7b5dbfd550..7afad987b4 100644
+--- a/src/main/java/org/oscarehr/common/ISO36612.java
++++ b/src/main/java/org/oscarehr/common/ISO36612.java
+@@ -51,7 +51,7 @@ public class ISO36612 {
+ 		InputStream in = null;
+ 		JSONObject topLevelObj = null;
+ 		try {
+-			in = this.getClass().getClassLoader().getResourceAsStream("iso-3166-2.json");
++			in = Thread.currentThread().getContextClassLoader().getResourceAsStream("iso-3166-2.json");
+ 			String theString = IOUtils.toString(in, "UTF-8");
+ 			topLevelObj = new JSONObject(theString);
+ 		}catch(Exception e) {
+diff --git a/src/main/java/org/oscarehr/common/dao/ISO36612Dao.java b/src/main/java/org/oscarehr/common/dao/ISO36612Dao.java
+index 39379a80c6..8a422d3652 100644
+--- a/src/main/java/org/oscarehr/common/dao/ISO36612Dao.java
++++ b/src/main/java/org/oscarehr/common/dao/ISO36612Dao.java
+@@ -71,7 +71,7 @@ public class ISO36612Dao  extends AbstractDao<ISO36612>{
+ 		InputStream in = null;
+ 		JSONObject topLevelObj = null;
+ 		try {
+-			in = this.getClass().getClassLoader().getResourceAsStream("iso-3166-2.json");
++			in = Thread.currentThread().getContextClassLoader().getResourceAsStream("iso-3166-2.json");
+ 			String theString = IOUtils.toString(in, "UTF-8");
+ 			topLevelObj = new JSONObject(theString);
+ 		}catch(Exception e) {
+diff --git a/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java b/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
+index 4490e1ad73..eb07545698 100644
+--- a/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
++++ b/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
+@@ -110,7 +110,10 @@ public class PdfRecordPrinter {
+     private Document document;
+     //private PdfContentByte cb;
+     private BaseFont bf;
+-    private Font font, boldFont;
++
++  private Font font;
++
++  private Font boldFont;
+     private boolean newPage = false;
+ 
+     private SimpleDateFormat formatter;
+@@ -297,7 +300,7 @@ public class PdfRecordPrinter {
+             String templateFilepath = props.getProperty("billing_template_file","");
+             //look for custom billing template file, otherwise use default.
+             if (templateFilepath.isEmpty())
+-                is = this.getClass().getClassLoader().getResourceAsStream(BILLING_INVOICE_TEMPLATE_FILE);
++                is = Thread.currentThread().getContextClassLoader().getResourceAsStream(BILLING_INVOICE_TEMPLATE_FILE);
+             else 
+                 is = new FileInputStream(templateFilepath);
+             //get Jasper Report
+diff --git a/src/main/java/org/oscarehr/common/web/DemographicAction.java b/src/main/java/org/oscarehr/common/web/DemographicAction.java
+index d022ac6b2b..4c62a8b561 100644
+--- a/src/main/java/org/oscarehr/common/web/DemographicAction.java
++++ b/src/main/java/org/oscarehr/common/web/DemographicAction.java
+@@ -74,7 +74,7 @@ public class DemographicAction extends DispatchAction  {
+ 		org.codehaus.jettison.json.JSONObject obj = null;
+ 		
+ 		try {
+-			InputStream  in = this.getClass().getClassLoader()
++			InputStream  in = Thread.currentThread().getContextClassLoader()
+                     .getResourceAsStream("iso-3166-2.json");
+ 			String theString = IOUtils.toString(in, "UTF-8");
+ 			obj = new org.codehaus.jettison.json.JSONObject(theString);
+@@ -122,7 +122,7 @@ public class DemographicAction extends DispatchAction  {
+ 		
+ 		org.codehaus.jettison.json.JSONObject obj = null;
+ 		try {
+-			InputStream  in = this.getClass().getClassLoader()
++			InputStream  in = Thread.currentThread().getContextClassLoader()
+                     .getResourceAsStream("iso-3166-2.json");
+ 			String theString = IOUtils.toString(in, "UTF-8");
+ 			obj = new org.codehaus.jettison.json.JSONObject(theString);
+diff --git a/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java b/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java
+index 9b3e4af6fd..d706810fc2 100644
+--- a/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java
++++ b/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java
+@@ -132,7 +132,7 @@ public class DxresearchReportAction extends DispatchAction {
+         reportParams.put("provider", providerNo);
+         reportParams.put("mode", mode);
+ 
+-        InputStream reportInstream = this.getClass().getClassLoader().getResourceAsStream(REPORTS_PATH);
++        InputStream reportInstream = Thread.currentThread().getContextClassLoader().getResourceAsStream(REPORTS_PATH);
+ 
+     	response.setContentType("application/excel");
+     	response.setHeader( "Content-disposition", "inline; filename=dxResearchReport.xls");
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/W3CDocumentHandler.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/W3CDocumentHandler.java
+index 0f07a99ba3..dd439b0c59 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/W3CDocumentHandler.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/W3CDocumentHandler.java
+@@ -187,7 +187,7 @@ public class W3CDocumentHandler {
+ 
+ 		InputStream is = null;
+ 		if(documentPath != null) {
+-			is = this.getClass().getClassLoader().getResourceAsStream(documentPath);
++			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(documentPath);
+ 		}
+ 		return parse(is);
+ 	}
+diff --git a/src/main/java/org/oscarehr/managers/MeasurementManager.java b/src/main/java/org/oscarehr/managers/MeasurementManager.java
+index 9299d3c23e..390aa0d180 100644
+--- a/src/main/java/org/oscarehr/managers/MeasurementManager.java
++++ b/src/main/java/org/oscarehr/managers/MeasurementManager.java
+@@ -139,7 +139,7 @@ public class MeasurementManager {
+ 			}
+ 		}
+ 		
+-		URL path_of_resource = MeasurementFlowSheet.class.getClassLoader().getResource("/oscar/oscarEncounter/oscarMeasurements/flowsheets/html/");
++		URL path_of_resource = Thread.currentThread().getContextClassLoader().getResource("/oscar/oscarEncounter/oscarMeasurements/flowsheets/html/");
+ 		File[] files2 = new File(path_of_resource.getPath()).listFiles();
+ 		
+ 		for (File file2 : files2) {
+diff --git a/src/main/java/org/oscarehr/study/decisionSupport/StudyGuidelines.java b/src/main/java/org/oscarehr/study/decisionSupport/StudyGuidelines.java
+index ac2f66d2b1..5d580588b0 100644
+--- a/src/main/java/org/oscarehr/study/decisionSupport/StudyGuidelines.java
++++ b/src/main/java/org/oscarehr/study/decisionSupport/StudyGuidelines.java
+@@ -86,7 +86,7 @@ public class StudyGuidelines  {
+         try{
+         	String streamToGet = "org/oscarehr/study/decisionSupport/"+studyFileName;
+             log.debug("Trying to get "+streamToGet);
+-            BufferedReader in = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(streamToGet)));
++            BufferedReader in = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(streamToGet)));
+             String str;
+             while ((str = in.readLine()) != null) {
+             	sb.append(str+"\n");
+diff --git a/src/main/java/oscar/OscarDocumentCreator.java b/src/main/java/oscar/OscarDocumentCreator.java
+index f3f9da6884..1c9669d53d 100644
+--- a/src/main/java/oscar/OscarDocumentCreator.java
++++ b/src/main/java/oscar/OscarDocumentCreator.java
+@@ -36,7 +36,7 @@ public class OscarDocumentCreator {
+ 
+   public InputStream getDocumentStream(String path) {
+     InputStream reportInstream = null;
+-    reportInstream = getClass().getClassLoader().getResourceAsStream(path);
++    reportInstream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+     return reportInstream;
+   }
+ 
+diff --git a/src/main/java/oscar/eform/EFormLoader.java b/src/main/java/oscar/eform/EFormLoader.java
+index 9b3306bf4c..d4eb54e39d 100644
+--- a/src/main/java/oscar/eform/EFormLoader.java
++++ b/src/main/java/oscar/eform/EFormLoader.java
+@@ -173,7 +173,7 @@ public class EFormLoader {
+           InputStream fs = null;
+           if (configpath == null) {
+              EFormLoader eLoader = new EFormLoader();
+-             ClassLoader loader = eLoader.getClass().getClassLoader();
++             ClassLoader loader = Thread.currentThread().getContextClassLoader();
+              fs = loader.getResourceAsStream("/oscar/eform/apconfig.xml");
+           }else{
+              fs = new FileInputStream(configpath);
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/MspErrorCodes.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/MspErrorCodes.java
+index 0464bc76e9..e1753d8480 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/MspErrorCodes.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/MspErrorCodes.java
+@@ -46,7 +46,7 @@ public class MspErrorCodes extends Properties{
+    public MspErrorCodes() {
+       super();                  
+       try {
+-         InputStream is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarBilling/ca/bc/MSP/mspEditCodes.properties");                  
++         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar/oscarBilling/ca/bc/MSP/mspEditCodes.properties");                  
+          if (OscarProperties.getInstance().getProperty("msp_error_codes") != null){
+             String filename = OscarProperties.getInstance().getProperty("msp_error_codes");
+             is = new FileInputStream(filename) ;
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/decisionSupport/BillingGuidelines.java b/src/main/java/oscar/oscarBilling/ca/bc/decisionSupport/BillingGuidelines.java
+index 2ff72d63d3..2c6c7018dd 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/decisionSupport/BillingGuidelines.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/decisionSupport/BillingGuidelines.java
+@@ -145,7 +145,7 @@ public class BillingGuidelines  {
+                     log.debug("Trying to get "+ streamToGet);
+ 
+                     if (isDefaultFileLocation){
+-                        is = this.getClass().getClassLoader().getResourceAsStream(streamToGet);
++                        is = Thread.currentThread().getContextClassLoader().getResourceAsStream(streamToGet);
+                     } else {
+                         is = new FileInputStream(streamToGet);
+                     }
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java b/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java
+index 9063384485..7315747829 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java
+@@ -3125,7 +3125,7 @@ import oscar.util.UtilDateUtilities;
+ 		if(map == null) {
+ 			JSONObject obj = null;
+ 			try {
+-				InputStream  in = getClass().getClassLoader()
++				InputStream  in = Thread.currentThread().getContextClassLoader()
+ 	                    .getResourceAsStream("iso-3166-2.json");
+ 				String theString = IOUtils.toString(in, "UTF-8");
+ 				obj = new org.codehaus.jettison.json.JSONObject(theString);
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/Factory.java b/src/main/java/oscar/oscarLab/ca/all/parsers/Factory.java
+index 9a893eaa01..643616504a 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/Factory.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/Factory.java
+@@ -108,7 +108,7 @@ public final class Factory {
+ 				type = type.trim();
+  			}
+ 			
+-			InputStream is = Factory.class.getClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
++			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
+ 
+ 			if (OscarProperties.getInstance().getProperty("LAB_TYPES") != null) {
+ 				String filename = OscarProperties.getInstance().getProperty("LAB_TYPES");
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/HandlerClassFactory.java b/src/main/java/oscar/oscarLab/ca/all/upload/HandlerClassFactory.java
+index 0cee0de42b..9779f19f42 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/HandlerClassFactory.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/HandlerClassFactory.java
+@@ -66,7 +66,7 @@ public final class HandlerClassFactory {
+             return( new DefaultHandler());
+         }
+         try{
+-            InputStream is = HandlerClassFactory.class.getClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
++            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
+             SAXBuilder parser = new SAXBuilder();
+             doc = parser.build(is);
+             
+diff --git a/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java b/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java
+index 6452415a2f..f03f584172 100644
+--- a/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java
++++ b/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java
+@@ -104,13 +104,13 @@ public class PreventionDisplayConfig {
+ 			if (OscarProperties.getInstance().getProperty("PREVENTION_ITEMS") != null) {
+ 				String filename = OscarProperties.getInstance().getProperty("PREVENTION_ITEMS");
+ 				if(filename.startsWith("classpath:")) {
+-					is = this.getClass().getClassLoader().getResourceAsStream(filename.substring(10));
++					is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename.substring(10));
+ 				} else {
+ 					is = new FileInputStream(filename);
+ 				}
+ 			}
+ 			else {
+-				is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionItems.xml");
++				is = Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionItems.xml");
+ 			}
+ 
+ 			List<String> addedSnomeds = new ArrayList<String>();
+@@ -201,12 +201,12 @@ public class PreventionDisplayConfig {
+ 			if (OscarProperties.getInstance().getProperty("PREVENTION_CONFIG_SETS") != null) {
+ 				String filename = OscarProperties.getInstance().getProperty("PREVENTION_CONFIG_SETS");
+ 				if(filename.startsWith("classpath:")) {
+-					is = this.getClass().getClassLoader().getResourceAsStream(filename.substring(10));
++					is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename.substring(10));
+ 				} else {
+ 					is = new FileInputStream(filename);
+ 				}
+ 			} else {
+-				is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionConfigSets.xml");
++				is = Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionConfigSets.xml");
+ 			}
+ 
+ 			SAXBuilder parser = new SAXBuilder();
+diff --git a/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java b/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java
+index 3cbd67b8ac..63882fca31 100644
+--- a/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java
++++ b/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java
+@@ -207,7 +207,7 @@ public class ClinicalReportManager {
+                 }
+ 
+                 if( is == null ) {
+-                    is = this.getClass().getClassLoader().getResourceAsStream(flowsheetsArray[i]);
++                    is = Thread.currentThread().getContextClassLoader().getResourceAsStream(flowsheetsArray[i]);
+                 }
+ 
+                 try{
+diff --git a/src/main/java/oscar/oscarRx/util/LimitedUseLookup.java b/src/main/java/oscar/oscarRx/util/LimitedUseLookup.java
+index d8a5fcd42f..6fc50bd67d 100644
+--- a/src/main/java/oscar/oscarRx/util/LimitedUseLookup.java
++++ b/src/main/java/oscar/oscarRx/util/LimitedUseLookup.java
+@@ -111,7 +111,7 @@ public class LimitedUseLookup {
+ 		        	}else{
+ 						String dosing = "oscar/oscarRx/data_extract_20181217.xml";
+ 						log.info("loading odb file from internal resource "+dosing);
+-						is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
++						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(dosing);
+ 		        	}
+ 				}
+ 
+diff --git a/src/main/java/oscar/oscarRx/util/RenalDosingFactory.java b/src/main/java/oscar/oscarRx/util/RenalDosingFactory.java
+index 366d749fb0..06fb39ae70 100644
+--- a/src/main/java/oscar/oscarRx/util/RenalDosingFactory.java
++++ b/src/main/java/oscar/oscarRx/util/RenalDosingFactory.java
+@@ -61,7 +61,7 @@ public class RenalDosingFactory {
+         if(!loaded){
+             String dosing = "oscar/oscarRx/RenalDosing.xml";
+             RenalDosingFactory rdf  = new RenalDosingFactory();
+-            InputStream is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
++            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(dosing);
+ 
+             try{
+                 SAXBuilder parser = new SAXBuilder();
+diff --git a/src/test/java/org/oscarehr/common/dao/utils/DataUtils.java b/src/test/java/org/oscarehr/common/dao/utils/DataUtils.java
+index cdc5b49685..4ee4027843 100644
+--- a/src/test/java/org/oscarehr/common/dao/utils/DataUtils.java
++++ b/src/test/java/org/oscarehr/common/dao/utils/DataUtils.java
+@@ -196,7 +196,7 @@ public class DataUtils {
+ 	}
+ 	
+ 	public static void populateDemographicsAndProviders() {
+-		InputStream is = DataUtils.class.getClassLoader().getResourceAsStream("demographicsAndProviders.xml");
++		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("demographicsAndProviders.xml");
+ 		populateDemographicsAndProviders(is);
+ 	}
+ 	
+diff --git a/src/test/java/oscar/form/pharmaForms/formBPMH/pdf/PDFControllerTest.java b/src/test/java/oscar/form/pharmaForms/formBPMH/pdf/PDFControllerTest.java
+index b0640c4c9d..245b7c7137 100644
+--- a/src/test/java/oscar/form/pharmaForms/formBPMH/pdf/PDFControllerTest.java
++++ b/src/test/java/oscar/form/pharmaForms/formBPMH/pdf/PDFControllerTest.java
+@@ -58,7 +58,7 @@ public class PDFControllerTest {
+ 	
+ 	@Before
+ 	public void setUp() {
+-		ClassLoader loader = PDFController.class.getClassLoader();
++		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+ 		url = loader.getResource("oscar/form/prop/bpmh_template_marked.pdf");
+ 
+ 		pdfController = new PDFController(url.getPath());			
+diff --git a/src/test/java/oscar/util/QuickTest.java b/src/test/java/oscar/util/QuickTest.java
+index f2ee172eb6..887abdc4fc 100644
+--- a/src/test/java/oscar/util/QuickTest.java
++++ b/src/test/java/oscar/util/QuickTest.java
+@@ -42,7 +42,7 @@ public class QuickTest {
+ 		InputStream is = null;
+ 		try {
+ 			
+-			is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionItems.xml");
++			is = Thread.currentThread().getContextClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionItems.xml");
+ 			
+ 			SAXBuilder parser = new SAXBuilder();
+ 			Document doc = parser.build(is);
+@@ -61,9 +61,11 @@ public class QuickTest {
+ 				
+ 			}
+ 
+-			//for each item, make a hashmap, and add all attributes to it.
+-			//add hashmap to prevList
+-			//add hashmap to another map by name attribute
++			// for each item, make a hashmap, and add all attributes to it.
++
++			// add hashmap to prevList
++
++			// add hashmap to another map by name attribute
+ 
+ 		} catch (Exception e) {
+ 			MiscUtils.getLogger().error("Error", e);

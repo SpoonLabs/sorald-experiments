@@ -1,0 +1,3527 @@
+diff --git a/database/mysql/importCPP.java b/database/mysql/importCPP.java
+index aa6bb8fe8c..f0e9dba487 100755
+--- a/database/mysql/importCPP.java
++++ b/database/mysql/importCPP.java
+@@ -1,3 +1,8 @@
++import java.sql.DriverManager;
++import java.sql.PreparedStatement;
++import java.sql.Statement;
++import java.sql.ResultSet;
++import java.sql.Connection;
+ import java.sql.*;
+ import java.util.UUID;
+ import java.util.Properties;
+@@ -33,17 +38,18 @@ public class importCPP {
+                         
+                         String passwd = prop.getProperty("db_password");
+                         System.out.println("DB PASSWD " + passwd);
+-                        
+-			Statement stmt, stmtUpdate;
+-			ResultSet rs, rsUpdate;
++            Statement stmt;
++            Statement stmtUpdate;
++            ResultSet rs;
++            ResultSet rsUpdate;
+ 
+ 			Class.forName(driver);
+ 			
+                         uri += dbName;
+ 			Connection con = DriverManager.getConnection(uri, user, passwd);
+ 
+-			stmt = con.createStatement();	
+-                        stmtUpdate = con.createStatement();
++			stmt = con.createStatement();
++            con.createStatement();
+                         
+                         System.out.println("Grabbing cpp issues from issue table");
+                         PreparedStatement pstmt = con.prepareStatement("select issue_id from issue where code =?");
+@@ -82,7 +88,9 @@ public class importCPP {
+                                 "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,true,'doctor doe'," +
+                                 "false,?,'1','0',?,'','0',?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+                         PreparedStatement pstmt5 = con.prepareStatement("insert into casemgmt_issue_notes Values(?,?)");
+-                        ResultSet rs2,rs3,rs4;
++            ResultSet rs2;
++            ResultSet rs3;
++            ResultSet rs4;
+                         long cIssueId;
+                         UUID uuid;
+                         ArrayList<Integer> clients = new ArrayList<Integer>();
+diff --git a/database/mysql/importCasemgmt.java b/database/mysql/importCasemgmt.java
+index d636d57f2d..1992e11979 100644
+--- a/database/mysql/importCasemgmt.java
++++ b/database/mysql/importCasemgmt.java
+@@ -1,3 +1,10 @@
++import java.sql.DriverManager;
++import java.sql.PreparedStatement;
++import java.sql.SQLException;
++import java.sql.Statement;
++import java.sql.Date;
++import java.sql.ResultSet;
++import java.sql.Connection;
+ /*n
+  * 
+  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+@@ -70,26 +77,26 @@ public class importCasemgmt {
+                         
+                         String passwd = prop.getProperty("db_password");
+                         System.out.println("DB PASSWD " + passwd);
+-                        
+-			Statement stmt, stmtUpdate;
+-			ResultSet rs, rs1, rsUpdate;
++			Statement stmt;
++			Statement stmtUpdate;
++			ResultSet rs;
++			ResultSet rs1;
++			ResultSet rsUpdate;
+ 
+ 			Class.forName(driver);
+ 			
+                         uri += dbName;
+ 			Connection con = DriverManager.getConnection(uri, user, passwd);
+ 
+-			stmt = con.createStatement();	
+-                        stmtUpdate = con.createStatement();
++			stmt = con.createStatement();
++			con.createStatement();
+                         System.out.println("Checking for OSCAR program");
+                         String sql = "select id from program where name = 'OSCAR'";
+                         rs1 = stmt.executeQuery(sql);
+                         String programId;
+                         if( !rs1.next() ) {
+                             System.out.println("Creating OSCAR program");
+-                        
+-                            int result = stmt.executeUpdate("insert into program (facilityId, name,emergencyNumber,maxAllowed,holdingTank,type,programStatus,allowBatchAdmission,allowBatchDischarge,hic,exclusiveView,defaultServiceRestrictionDays,userDefined,enableEncounterTime,enableEncounterTransportationTime) " +
+-                                "Values(1,'OSCAR','','99999',0,'Bed','active',0,0,0,'',0,0,0,0)", Statement.RETURN_GENERATED_KEYS);
++				stmt.executeUpdate("insert into program (facilityId, name,emergencyNumber,maxAllowed,holdingTank,type,programStatus,allowBatchAdmission,allowBatchDischarge,hic,exclusiveView,defaultServiceRestrictionDays,userDefined,enableEncounterTime,enableEncounterTransportationTime) " + "Values(1,'OSCAR','','99999',0,'Bed','active',0,0,0,'',0,0,0,0)", Statement.RETURN_GENERATED_KEYS);
+                         
+                             rs = stmt.getGeneratedKeys();
+                         
+@@ -141,11 +148,8 @@ public class importCasemgmt {
+                         
+                         sql += " order by role_name";
+                         rs = stmt.executeQuery(sql);
+-                        
+-                        //we got to watch out for duplicate entries
+-                        //right now we default to first record as they are alpha sorted i.e. doctor locum nurse
+-                        ArrayList<String> providers = new ArrayList<String>();
+-                        String role_name, prov;
++			String role_name;
++			String prov;
+                         int role_id;
+                         PreparedStatement insert = con.prepareStatement("insert into program_provider (program_id,provider_no,role_id) Values('" + programId + "',?,?)");
+                         PreparedStatement pcheck = con.prepareStatement("select id from program_provider where provider_no = ?");
+@@ -290,9 +294,11 @@ public class importCasemgmt {
+                                 "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
+                         pcheck = con.prepareStatement("select note_id from casemgmt_note where demographic_no = ? and (signing_provider_no = '000000' or (note = ? and update_date = ?))");
+                         UUID uuid;
+-                        String note;                        
+-                        ResultSet rs3,rs4;
+-                        long cIssueId, msecs;
++                        String note;
++			ResultSet rs3;
++			ResultSet rs4;
++			long cIssueId;
++			long msecs;
+                         Date d;
+                         while( rs.next() ) {
+                             pcheck.setString(1, rs.getString("demographicNo"));
+diff --git a/src/main/java/com/quatro/dao/LookupDao.java b/src/main/java/com/quatro/dao/LookupDao.java
+index 460947d402..148958e701 100644
+--- a/src/main/java/com/quatro/dao/LookupDao.java
++++ b/src/main/java/com/quatro/dao/LookupDao.java
+@@ -508,7 +508,6 @@ public class LookupDao extends HibernateDaoSupport {
+ 		String fullCode = "P" + program.getId();
+ 
+ 		String facilityId = "0000000" + String.valueOf(program.getFacilityId());
+-		facilityId = "F" + facilityId.substring(facilityId.length() - 7);
+ 
+ 		LookupCodeValue fcd = GetCode("ORG", "F" + program.getFacilityId());
+ 		fullCode = fcd.getBuf1() + fullCode;
+@@ -591,7 +590,6 @@ public class LookupDao extends HibernateDaoSupport {
+ 		String fullCode = "F" + facility.getId();
+ 
+ 		String orgId = "0000000" + String.valueOf(facility.getOrgId());
+-		orgId = "S" + orgId.substring(orgId.length() - 7);
+ 
+ 		LookupCodeValue ocd = GetCode("ORG", "S" + facility.getOrgId());
+ 		fullCode = ocd.getBuf1() + fullCode;
+diff --git a/src/main/java/com/quatro/util/Utility.java b/src/main/java/com/quatro/util/Utility.java
+index 28874bab01..22f3d66099 100644
+--- a/src/main/java/com/quatro/util/Utility.java
++++ b/src/main/java/com/quatro/util/Utility.java
+@@ -96,7 +96,8 @@ public class Utility {
+     public static Date GetSysDate(String pDate) // throws Exception
+     {
+         Date date;
+-        String sTemp1, sTemp2;
++        String sTemp1;
++        String sTemp2;
+         int day = 31;
+         int month = 12;
+         int year = 2999;
+@@ -125,7 +126,7 @@ public class Utility {
+                 month = Integer.parseInt(sTemp1.substring(0, idx))-1;
+ 
+                 sTemp2 = sTemp1.substring(idx + 1);
+-                idx = sTemp2.indexOf(delim);
++                sTemp2.indexOf(delim);
+                 year = Integer.parseInt(sTemp2.substring(0, 4));
+ 
+                 date = SetDate(year, month, day);
+diff --git a/src/main/java/org/caisi/tickler/web/UnreadTicklerAction.java b/src/main/java/org/caisi/tickler/web/UnreadTicklerAction.java
+index ba9e65075f..f14fa34de4 100644
+--- a/src/main/java/org/caisi/tickler/web/UnreadTicklerAction.java
++++ b/src/main/java/org/caisi/tickler/web/UnreadTicklerAction.java
+@@ -141,7 +141,7 @@ public class UnreadTicklerAction extends DispatchAction {
+         HttpSession session = request.getSession(false);
+         if (session != null) {
+           session.invalidate();
+-          session = request.getSession(); // Create a new session for this user
++			request.getSession();
+         }
+ 
+         request.getSession().setAttribute("user",strAuth[0]);
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemoteDrugAllergyHelper.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemoteDrugAllergyHelper.java
+index e022068b6d..b9de7952f7 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemoteDrugAllergyHelper.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemoteDrugAllergyHelper.java
+@@ -108,7 +108,6 @@ public class RemoteDrugAllergyHelper {
+ 			List<CachedDemographicAllergy> remoteAllergies  = null;
+ 			try {
+ 				if (!CaisiIntegratorManager.isIntegratorOffline(loggedInInfo.getSession())){
+-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
+ 					remoteAllergies = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility()).getLinkedCachedDemographicAllergies(localDemographicId);
+ 				}
+ 			} catch (Exception e) {
+diff --git a/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java b/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java
+index f26089fb5b..7d247070c0 100644
+--- a/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java
+@@ -462,13 +462,10 @@ public class StreetHealthIntakeReportAction extends DispatchAction {
+         int avgAgeSize=0;
+         
+         for (int x = 0; x < cohortList.size(); x++) {
+-        	Intake intake = new Intake();
+-            Demographic demographic = new Demographic();
+             Object[] cohort = (Object[]) cohortList.get(x);            
+             boolean preAdmission = false;
+-
+-            demographic = (Demographic) cohort[1];           
+-            intake = (Intake) cohort[0];
++			Demographic demographic = ((Demographic) (cohort[1]));
++			Intake intake = ((Intake) (cohort[0]));
+             
+             //pre-admission
+             String strPreAdmission =  intake.getAnswerKeyValues().get("Pre-Admission");
+@@ -542,7 +539,6 @@ public class StreetHealthIntakeReportAction extends DispatchAction {
+             String languageOther = getIntakeAnswer(intake,"If No, Service Recipient Preferred Language");
+             String language="";
+             if(languageEnglish!=null && languageEnglish.equalsIgnoreCase("yes")) {
+-            	language="English";
+             }
+             if(languageOther!=null && languageOther.indexOf("french") != -1) {
+             	language="French";
+diff --git a/src/main/java/org/oscarehr/PMmodule/utility/DateUtils.java b/src/main/java/org/oscarehr/PMmodule/utility/DateUtils.java
+index bd65c043b4..c4c7207525 100644
+--- a/src/main/java/org/oscarehr/PMmodule/utility/DateUtils.java
++++ b/src/main/java/org/oscarehr/PMmodule/utility/DateUtils.java
+@@ -133,9 +133,7 @@ public class DateUtils {
+ 	  {
+ 		  return null;
+ 	  }
+-	  
+-	  String[] dateParams = new String[3];
+-	  dateParams = Utility.separateStrComponentsIntoStrArray(dateStr,delimiter);
++    String[] dateParams = Utility.separateStrComponentsIntoStrArray(dateStr, delimiter);
+ 	  
+ 	  
+ 	  if(dateParams[0].length() <= 1)
+diff --git a/src/main/java/org/oscarehr/admin/job/AuditLogPurgeJob.java b/src/main/java/org/oscarehr/admin/job/AuditLogPurgeJob.java
+index ba04dd3210..4b9d709424 100644
+--- a/src/main/java/org/oscarehr/admin/job/AuditLogPurgeJob.java
++++ b/src/main/java/org/oscarehr/admin/job/AuditLogPurgeJob.java
+@@ -91,7 +91,7 @@ public class AuditLogPurgeJob implements OscarRunnable {
+ 		logger.info("Calling AuditLogManager.purgeAuditLog with date " + endDateToPurge);
+ 		
+ 		try {
+-			int numRecordsDeleted = manager.purgeAuditLog(loggedInInfo, endDateToPurge);
++			manager.purgeAuditLog(loggedInInfo, endDateToPurge);
+ 		}catch(Exception e) {
+ 			logger.error("Error", e);
+ 		}
+diff --git a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
+index 61a70e5cf2..269f41b734 100644
+--- a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
++++ b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
+@@ -1171,9 +1171,6 @@ public class CaseManagementManager {
+ 			String noteRoleName = RoleCache.getRole(Long.valueOf(noteRole)).getName().toLowerCase();
+ 			ProgramAccess pa = null;
+ 			boolean add = false;
+-
+-			// write
+-			pa = null;
+ 			// read
+ 			pa = (ProgramAccess) programAccessMap.get("read " + noteRoleName + " notes");
+ 			if (pa != null) {
+@@ -1260,9 +1257,6 @@ public class CaseManagementManager {
+ 			}
+ 			ProgramAccess pa = null;
+ 			boolean add = false;
+-
+-			// write
+-			pa = null;
+ 			// read
+ 			pa = (ProgramAccess) programAccessMap.get("read " + noteRoleName + " notes");
+ 			if (pa != null) {
+@@ -1338,9 +1332,6 @@ public class CaseManagementManager {
+ 		if (noteRoleName != null) noteRoleName = noteRoleName.toLowerCase();
+ 		ProgramAccess pa = null;
+ 		boolean add = false;
+-
+-		// write
+-		pa = null;
+ 		// read
+ 		pa = (ProgramAccess) programAccessMap.get("read " + noteRoleName + " notes");
+ 		if (pa != null) {
+@@ -1546,8 +1537,6 @@ public class CaseManagementManager {
+ 			if (roleProgramAccessDAO.hasAccess(accessName, role.getId())) {
+ 				add = true;
+ 			}
+-
+-			pa = null;
+ 			// read
+ 			pa = programAccessMap.get("read " + issueRole + " issues");
+ 			if (pa != null) {
+@@ -2217,9 +2206,7 @@ private String updateApptStatus(String status, String type) {
+ 		} else revision = 1;
+ 
+ 		note.setRevision(String.valueOf(revision));
+-		
+-		/* save note including add signature */
+-		String savedStr = saveNote(cpp, note, note.getProviderNo(), userName, lastSavedNoteString, roleName);
++		saveNote(cpp, note, note.getProviderNo(), userName, lastSavedNoteString, roleName);
+ 		addNewNoteLink(note.getId());
+ 
+ 		try {
+diff --git a/src/main/java/org/oscarehr/casemgmt/web/CaseManagementEntryAction.java b/src/main/java/org/oscarehr/casemgmt/web/CaseManagementEntryAction.java
+index be5b8663c1..30bf7aa027 100644
+--- a/src/main/java/org/oscarehr/casemgmt/web/CaseManagementEntryAction.java
++++ b/src/main/java/org/oscarehr/casemgmt/web/CaseManagementEntryAction.java
+@@ -319,7 +319,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 
+ 			resetTemp(providerNo, demono, programIdString);
+ 
+-		}
++		} else
+ 		// get the last temp note?
+ 		else if (tmpsavenote != null && !forceNote.equals("true")) {
+ 			logger.debug("tempsavenote is NOT NULL");
+@@ -384,7 +384,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 		this.caseManagementMgr.getEditors(note);
+ 		current = System.currentTimeMillis();
+ 		logger.debug("Populate Note with editors " + String.valueOf(current - start));
+-		start = current;
+ 
+ 		// put the new/retrieved not in the form object for rendering on page
+ 		cform.setCaseNote(note);
+@@ -432,8 +431,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 			}
+ 		}
+ 
+-		current = System.currentTimeMillis();
+-
+ 		cform.setIssueCheckList(checkedList);
+ 
+ 		cform.setSign("off");
+@@ -445,7 +442,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 
+ 		current = System.currentTimeMillis();
+ 		logger.debug("The End of Edit " + String.valueOf(current - beginning));
+-		start = current;
+ 
+ 		LogAction.addLog((String) session.getAttribute("user"), LogConst.EDIT, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demono, note.getAuditString());
+ 
+@@ -466,8 +462,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 		logger.debug("Setting session form - " + frmName + " - " + String.valueOf(cform != null));
+ 		logger.debug("note in cform " + cform.getCaseNote_note());
+ 		session.setAttribute(frmName, cform);
+-
+-		ActionForward fwd, finalFwd = null;
++		ActionForward fwd;
++		ActionForward finalFwd = null;
+ 		if (chain != null && chain.length() > 0) {
+ 			session.setAttribute("passwordEnabled", passwd);
+ 			fwd = mapping.findForward(chain);
+@@ -867,14 +863,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 		note.setSigned(true);
+ 
+ 		note.setProvider(loggedInInfo.getLoggedInProvider());
+-
+-		String logAction = new String();
+ 		if (archived == null || archived.equalsIgnoreCase("false")) {
+ 			note.setArchived(false);
+ 		} else {
+ 			note.setArchived(true);
+ 			logger.debug("Setting archived to true");
+-			logAction = LogConst.ARCHIVE;
+ 		}
+ 
+ 		logger.debug("Note archived " + note.isArchived());
+@@ -1179,6 +1172,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 			}
+ 		}
+ 		caseManagementMgr.getEditors(note);
++		String logAction;
+ 
+ 		if (newNote) {
+ 			logAction = LogConst.ADD;
+@@ -1374,9 +1368,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 		} else {
+ 			note.setIncludeissue(true);
+ 			/* add the related issues to note */
+-
+-			String issueString = new String();
+-			issueString = createIssueString(issueset);
++			String issueString = createIssueString(issueset);
+ 			// insert the string before signiture
+ 
+ 			int index = noteString.indexOf("\n[[");
+@@ -1892,7 +1884,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 		String noteId = request.getParameter("noteId");
+ 		String forceRelease = request.getParameter("force");
+ 		HttpSession session = request.getSession();
+-		String sessionFrmName = "caseManagementEntryForm" + demoNo;
+ 
+ 		try {
+ 			CasemgmtNoteLock casemgmtNoteLockSession = (CasemgmtNoteLock) session.getAttribute("casemgmtNoteLock" + demoNo);
+@@ -3177,7 +3168,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 	 */
+ 	public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
+ 		HttpSession session = request.getSession();
+-		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+ 		String programId = (String) session.getAttribute("case_program_id");
+ 		Map unlockedNotesMap = this.getUnlockedNotesMap(request);
+ 		return caseManagementMgr.getLastSaved(programId, demono, providerNo, unlockedNotesMap);
+diff --git a/src/main/java/org/oscarehr/common/DemographicSearchResultTransformer.java b/src/main/java/org/oscarehr/common/DemographicSearchResultTransformer.java
+index 7bb0afb876..210d289618 100644
+--- a/src/main/java/org/oscarehr/common/DemographicSearchResultTransformer.java
++++ b/src/main/java/org/oscarehr/common/DemographicSearchResultTransformer.java
+@@ -87,7 +87,6 @@ public class DemographicSearchResultTransformer implements ResultTransformer{
+ 	    		hin = d.getHin();
+ 	    		providerLastName = (d.getProvider()!=null)?d.getProvider().getLastName():"";
+ 	    		providerFirstName = (d.getProvider()!=null)?d.getProvider().getFirstName():"";
+-	    		mergedTo = null;
+ 	    	}
+ 	    }
+ 	    
+diff --git a/src/main/java/org/oscarehr/common/dao/ProfessionalSpecialistDao.java b/src/main/java/org/oscarehr/common/dao/ProfessionalSpecialistDao.java
+index e155b8905f..c3b8b6e6c6 100644
+--- a/src/main/java/org/oscarehr/common/dao/ProfessionalSpecialistDao.java
++++ b/src/main/java/org/oscarehr/common/dao/ProfessionalSpecialistDao.java
+@@ -190,7 +190,7 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
+ 			query.setParameter(index++, "%" + specialty +"%");
+ 		}
+ 		if(!StringUtils.isEmpty(address)) {
+-			query.setParameter(index++, "%" + address +"%");
++			query.setParameter(index, "%" + address +"%");
+ 		}
+ 		
+ 		@SuppressWarnings("unchecked")
+diff --git a/src/main/java/org/oscarehr/common/dao/QueueDao.java b/src/main/java/org/oscarehr/common/dao/QueueDao.java
+index 23d8c0b4f2..4abd8b4dc1 100644
+--- a/src/main/java/org/oscarehr/common/dao/QueueDao.java
++++ b/src/main/java/org/oscarehr/common/dao/QueueDao.java
+@@ -55,8 +55,7 @@ public class QueueDao extends AbstractDao<Queue>{
+     public HashMap getHashMapOfQueues(){
+         String q="select q from Queue q";
+         Query query=entityManager.createQuery(q);
+-        List<Queue> result=new ArrayList<Queue>();
+-        result=query.getResultList();
++        List<Queue> result = query.getResultList();
+         HashMap<Integer,String> hm=new HashMap<Integer,String>();
+         for(Queue que:result){
+             hm.put(que.getId(),que.getName());
+@@ -66,8 +65,7 @@ public class QueueDao extends AbstractDao<Queue>{
+     public List<Hashtable> getQueues(){
+         String q="select q from Queue q";
+         Query query=entityManager.createQuery(q);
+-        List<Queue> result=new ArrayList<Queue>();
+-        result=query.getResultList();
++        List<Queue> result = query.getResultList();
+         List<Hashtable> r=new ArrayList();
+         for(Queue que:result){
+             Hashtable ht=new Hashtable();
+diff --git a/src/main/java/org/oscarehr/common/hl7/v2/oscar_to_oscar/DynamicHapiLoaderUtils.java b/src/main/java/org/oscarehr/common/hl7/v2/oscar_to_oscar/DynamicHapiLoaderUtils.java
+index 86697dc2f8..3fa307c6b9 100644
+--- a/src/main/java/org/oscarehr/common/hl7/v2/oscar_to_oscar/DynamicHapiLoaderUtils.java
++++ b/src/main/java/org/oscarehr/common/hl7/v2/oscar_to_oscar/DynamicHapiLoaderUtils.java
+@@ -173,8 +173,6 @@ public final class DynamicHapiLoaderUtils {
+ 		
+ 		logger.error("--------------------");
+ 		logger.error(result.replace("\r", "\n"));
+-
+-		Object terser=getMdsTerser(msg);
+ 		logger.error("--------------------");		
+ 	
+ 	}
+diff --git a/src/main/java/org/oscarehr/common/web/BillingreferralEditAction.java b/src/main/java/org/oscarehr/common/web/BillingreferralEditAction.java
+index 5e9246e5e0..56af779024 100644
+--- a/src/main/java/org/oscarehr/common/web/BillingreferralEditAction.java
++++ b/src/main/java/org/oscarehr/common/web/BillingreferralEditAction.java
+@@ -155,7 +155,6 @@ public class BillingreferralEditAction extends DispatchAction{
+     }
+   
+     public ActionForward advancedSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+-    	List<ProfessionalSpecialist> referrals = new ArrayList<ProfessionalSpecialist>();
+     	
+     	String name = request.getParameter("nameQuery");
+     	String specialty = request.getParameter("specialtyQuery");
+@@ -177,8 +176,9 @@ public class BillingreferralEditAction extends DispatchAction{
+     			//MiscUtils.getLogger().error("Error",e);
+     		}
+     	}
+-    	
+-    	String last_name="",first_name="";
++        String last_name = "";
++        String first_name = "";
++        List<ProfessionalSpecialist> referrals;
+     	
+     	if(referralNo != null) {
+     		//referral no search
+diff --git a/src/main/java/org/oscarehr/common/web/HealthCardSearchAction.java b/src/main/java/org/oscarehr/common/web/HealthCardSearchAction.java
+index b0c5af13a7..b33154b154 100644
+--- a/src/main/java/org/oscarehr/common/web/HealthCardSearchAction.java
++++ b/src/main/java/org/oscarehr/common/web/HealthCardSearchAction.java
+@@ -36,9 +36,9 @@ public class HealthCardSearchAction extends DispatchAction {
+ 	
+ 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+ 		String hin = request.getParameter("hin");
+-		String ver = request.getParameter("ver");
+-		String issueDate = request.getParameter("issueDate");
+-		String hinExp = request.getParameter("hinExp");
++		request.getParameter("ver");
++		request.getParameter("issueDate");
++		request.getParameter("hinExp");
+ 		
+ 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", null)) {
+         	throw new SecurityException("missing required security object (_demographic)");
+diff --git a/src/main/java/org/oscarehr/hospitalReportManager/HRMModifyDocumentAction.java b/src/main/java/org/oscarehr/hospitalReportManager/HRMModifyDocumentAction.java
+index 490e94254c..145e4cf87a 100644
+--- a/src/main/java/org/oscarehr/hospitalReportManager/HRMModifyDocumentAction.java
++++ b/src/main/java/org/oscarehr/hospitalReportManager/HRMModifyDocumentAction.java
+@@ -354,8 +354,7 @@ public class HRMModifyDocumentAction extends DispatchAction {
+ 	public ActionForward setDescription(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+ 		String documentId = request.getParameter("reportId");
+ 		String descriptionString = request.getParameter("description");
+-
+-		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
++		LoggedInInfo.getLoggedInInfoFromSession(request);
+ 
+ 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_hrm", "w", null)) {
+         	throw new SecurityException("missing required security object (_hrm)");
+diff --git a/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java b/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
+index 623f8474ce..12f5dc3aa3 100644
+--- a/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
++++ b/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
+@@ -375,10 +375,6 @@ public class HRMReportParser {
+ 			}
+ 		}
+ 		
+-		// Check #2, If this is a changed report, then we need to re-adjust the group (by key) so that
+-		// the parent is the best version, and the children are the other versions.
+-		String key =report.getSendingFacilityId()+':'+report.getSendingFacilityReportNo()+':'+report.getDeliverToUserId();
+-		
+ 		//search DB for records this patient has that match this key. need to export reportNo or save this key
+ 		List<HRMDocument> documentsWithSameKey = hrmDocumentDao.findByKey(mergedDocument.getSourceFacility(), mergedDocument.getSourceFacilityReportNo(), mergedDocument.getRecipientId());
+ 		
+@@ -414,56 +410,54 @@ public class HRMReportParser {
+ 			}
+ 		}
+ 		
+-		/*
+-
+-		// Load all the reports for this demographic into memory -- check by name only
++		/* // Load all the reports for this demographic into memory -- check by name only
+ 		List<HRMReport> thisDemoHrmReportList = HRMReportParser.loadAllReportsRoutedToDemographic(loggedInInfo, report.getLegalName());
+ 
+ 		for (HRMReport loadedReport : thisDemoHrmReportList) {
+-			boolean hasSameReportContent = report.getFirstReportTextContent().equalsIgnoreCase(loadedReport.getFirstReportTextContent());
+-			boolean hasSameStatus = hasSameStatus(report,loadedReport);
+-			boolean hasSameClass = report.getFirstReportClass().equalsIgnoreCase(loadedReport.getFirstReportClass());
+-			boolean hasSameDate = false;
+-
+-			hasSameDate = HRMReportParser.getAppropriateDateFromReport(report).equals(HRMReportParser.getAppropriateDateFromReport(loadedReport));
+-
+-			Integer threshold = 0;
+-
+-			if (hasSameReportContent)
+-				threshold += 100;
+-			else
+-				threshold += 10;
+-
+-			if (hasSameStatus)
+-				threshold += 5;
+-			else
+-				threshold += 10;
+-
+-			if (hasSameClass)
+-				threshold += 10;
+-			else
+-				threshold += 10;
+-
+-			if (hasSameDate)
+-				threshold += 20;
+-			else
+-				threshold += 5;
+-
+-			if (threshold >= 45) {
+-				// This is probably a changed report addressed to the same demographic, so set the parent id (as long as this isn't the same report) and we're done!
+-				if (loadedReport.getHrmParentDocumentId() != null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
+-					mergedDocument.setParentReport(loadedReport.getHrmParentDocumentId());
+-					hrmDocumentDao.merge(mergedDocument);
+-					return;
+-				} else if (loadedReport.getHrmParentDocumentId() == null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
+-					mergedDocument.setParentReport(loadedReport.getHrmDocumentId());
+-					hrmDocumentDao.merge(mergedDocument);
+-					return;
+-				}
+-			}
+-			
++		boolean hasSameReportContent = report.getFirstReportTextContent().equalsIgnoreCase(loadedReport.getFirstReportTextContent());
++		boolean hasSameStatus = hasSameStatus(report,loadedReport);
++		boolean hasSameClass = report.getFirstReportClass().equalsIgnoreCase(loadedReport.getFirstReportClass());
++		boolean hasSameDate = false;
++
++		hasSameDate = HRMReportParser.getAppropriateDateFromReport(report).equals(HRMReportParser.getAppropriateDateFromReport(loadedReport));
++
++		Integer threshold = 0;
++
++		if (hasSameReportContent)
++		threshold += 100;
++		else
++		threshold += 10;
++
++		if (hasSameStatus)
++		threshold += 5;
++		else
++		threshold += 10;
++
++		if (hasSameClass)
++		threshold += 10;
++		else
++		threshold += 10;
++
++		if (hasSameDate)
++		threshold += 20;
++		else
++		threshold += 5;
++
++		if (threshold >= 45) {
++		// This is probably a changed report addressed to the same demographic, so set the parent id (as long as this isn't the same report) and we're done!
++		if (loadedReport.getHrmParentDocumentId() != null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
++		mergedDocument.setParentReport(loadedReport.getHrmParentDocumentId());
++		hrmDocumentDao.merge(mergedDocument);
++		return;
++		} else if (loadedReport.getHrmParentDocumentId() == null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
++		mergedDocument.setParentReport(loadedReport.getHrmDocumentId());
++		hrmDocumentDao.merge(mergedDocument);
++		return;
++		}
++		}
++
+ 		}
+-		*/
++		 */
+ 	}
+ 
+ /*
+diff --git a/src/main/java/org/oscarehr/integration/born/BORNWBJob.java b/src/main/java/org/oscarehr/integration/born/BORNWBJob.java
+index 7819617dea..a79ce5bbcf 100644
+--- a/src/main/java/org/oscarehr/integration/born/BORNWBJob.java
++++ b/src/main/java/org/oscarehr/integration/born/BORNWBJob.java
+@@ -331,7 +331,7 @@ public class BORNWBJob implements OscarRunnable {
+ 	}
+ 
+ 	protected void markAsSent(BORNWbXmlGenerator xml, Integer demographicNo) {
+-		String val = formatter.format(new Date());
++		formatter.format(new Date());
+ 
+ 		for (String name : xml.getEformMap().keySet()) {
+ 			Integer fdid = xml.getEformFdidMap().get(name);
+diff --git a/src/main/java/org/oscarehr/integration/born/BORNWbXmlGenerator.java b/src/main/java/org/oscarehr/integration/born/BORNWbXmlGenerator.java
+index 0f2ba32206..41681aa114 100644
+--- a/src/main/java/org/oscarehr/integration/born/BORNWbXmlGenerator.java
++++ b/src/main/java/org/oscarehr/integration/born/BORNWbXmlGenerator.java
+@@ -255,7 +255,6 @@ public class BORNWbXmlGenerator {
+ 		if (!bornBatchDocument.validate(m_validationOptions)) {
+ 			MiscUtils.getLogger().warn("BORN WB validation failed");
+ 			for (Object o : validationErrors) {
+-				XmlValidationError xve = (XmlValidationError) o;
+ 				MiscUtils.getLogger().warn(o);
+ 			}
+ 		}
+diff --git a/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java b/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java
+index b65ddbc13d..697c139baf 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java
++++ b/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java
+@@ -61,12 +61,13 @@ public class OscarFhirResourceManager {
+ 	 * @return List< org.oscarehr.integration.fhir.model.Immunization<Prevention> >
+ 	 */
+ 	public static final List< org.oscarehr.integration.fhir.model.Immunization<Prevention> > getImmunizationsByDemographicNo( OscarFhirConfigurationManager configurationManager, int demographicNo ) {
+-		PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
+ 		
+ 		//TODO what kind of security check goes here?
+ 		
+ 		List< org.oscarehr.integration.fhir.model.Immunization<Prevention> > immunizations = null;
+-		List<Prevention> preventions = preventionManager.getPreventionsByDemographicNo( configurationManager.getLoggedInInfo(), demographicNo );
++		PreventionManager preventionManager;
++		preventionManager.getPreventionsByDemographicNo(configurationManager.getLoggedInInfo(), demographicNo);
++		List<Prevention> preventions;
+ 		
+ 		if( preventions != null ) {
+ 			LogAction.addLogSynchronous( configurationManager.getLoggedInInfo(), "OscarFhirResourceManager.getImmunizationsByDemographicNo", "Retrieved Immunization list for FHIR transport "  );
+@@ -94,8 +95,7 @@ public class OscarFhirResourceManager {
+ 	 * @param preventionId
+ 	 * @return org.oscarehr.integration.fhir.model.Immunization<Prevention>
+ 	 */
+-	public static final org.oscarehr.integration.fhir.model.Immunization<Prevention> getImmunizationById( OscarFhirConfigurationManager configurationManager, int preventionId) {
+-		PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
++	public static final org.oscarehr.integration.fhir.model.Immunization<Prevention> getImmunizationById( OscarFhirConfigurationManager configurationManager, int preventionId) {PreventionManager preventionManager;
+ 		Prevention prevention = preventionManager.getPrevention(configurationManager.getLoggedInInfo(), preventionId);
+ 	
+ 		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = null;
+@@ -304,18 +304,15 @@ public class OscarFhirResourceManager {
+ 			OscarFhirConfigurationManager configurationManager, 
+ 			org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization, 
+ 			org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList) {
+-		
+-		String performingProviderNo = immunization.getOscarResource().getProviderNo();
+-		if(performingProviderNo != null && !"-1".equals(performingProviderNo) ) {
+-			PerformingPractitioner performingPractitioner = OscarFhirResourceManager.getPerformingPractitionerByProviderNumber( configurationManager, performingProviderNo );
++		immunization.getOscarResource().getProviderNo();String performingProviderNo;
++		if(performingProviderNo != null && !"-1".equals(performingProviderNo) ) {PerformingPractitioner performingPractitioner;
+ 			if( performingPractitioner != null ) {
+ 				immunization.addPerformingPractitioner( performingPractitioner.getReference() );
+ 				resourceList.add( performingPractitioner );
+ 			}	
+-		} else if (performingProviderNo != null && "-1".equals(performingProviderNo)) {
+-			Provider provider = new Provider();
++		} else if (performingProviderNo != null && "-1".equals(performingProviderNo)) {Provider provider;
+ 			provider.setProviderNo(UUID.randomUUID().toString().substring(0,8));
+-			PerformingPractitioner performingPractitioner = new org.oscarehr.integration.fhir.model.PerformingPractitioner( provider, configurationManager );
++				PerformingPractitioner performingPractitioner;
+ 			immunization.addPerformingPractitioner( performingPractitioner.getReference() );
+ 			resourceList.add( performingPractitioner );
+ 		}
+diff --git a/src/main/java/org/oscarehr/integration/surveillance/FTPSJob.java b/src/main/java/org/oscarehr/integration/surveillance/FTPSJob.java
+index d7f0986076..453873b6bc 100644
+--- a/src/main/java/org/oscarehr/integration/surveillance/FTPSJob.java
++++ b/src/main/java/org/oscarehr/integration/surveillance/FTPSJob.java
+@@ -112,7 +112,6 @@ public class FTPSJob implements OscarRunnable {
+ 							logger.error("File for "+data.getSurveyId()+" id "+data.getId()+" was not sent "+ftps.getReplyString());
+ 						}
+ 						is.close();
+-						is = null;
+ 					}
+ 				}else{
+ 					logger.error("ERROR : failed to login to domain "+domain+ " port "+port);
+diff --git a/src/main/java/org/oscarehr/managers/DrugDispensingManager.java b/src/main/java/org/oscarehr/managers/DrugDispensingManager.java
+index 1b98f1c1c3..7bf84b5383 100644
+--- a/src/main/java/org/oscarehr/managers/DrugDispensingManager.java
++++ b/src/main/java/org/oscarehr/managers/DrugDispensingManager.java
+@@ -71,7 +71,7 @@ public class DrugDispensingManager {
+ 		try {
+ 			int quantity = Integer.parseInt(drug.getQuantity());
+ 			totalDosesAvailable  = quantity + (quantity * drug.getRepeat());
+-			strTotalDosesAvailable = totalDosesAvailable.toString();
++			totalDosesAvailable.toString();
+ 		}catch(NumberFormatException e){
+ 			MiscUtils.getLogger().error("Error",e);
+ 			return null;
+@@ -94,7 +94,7 @@ public class DrugDispensingManager {
+ 		}
+ 		
+ 		int totalDosesDispensed = 0;
+-		int totalDispensingEvents = dispensingEvents.size();
++		dispensingEvents.size();
+ 		int totalQuantitiesDispensed = 0;
+ 		
+ 		for(DrugDispensing dd:dispensingEvents) {
+@@ -103,7 +103,6 @@ public class DrugDispensingManager {
+ 		}
+ 		
+ 		Integer totalDosesRemaining = (totalDosesAvailable==null)?null:new Integer(totalDosesAvailable-totalDosesDispensed);
+-		String strTotalDosesRemaining = (totalDosesRemaining==null)?"<Unknown>":String.valueOf(totalDosesRemaining);
+ 		
+ 		String status = null;
+ 		if(totalDosesRemaining != null && totalDosesRemaining > 0) {
+diff --git a/src/main/java/org/oscarehr/managers/TicklerManager.java b/src/main/java/org/oscarehr/managers/TicklerManager.java
+index 81e0f2a461..3df3555860 100644
+--- a/src/main/java/org/oscarehr/managers/TicklerManager.java
++++ b/src/main/java/org/oscarehr/managers/TicklerManager.java
+@@ -274,7 +274,7 @@ public class TicklerManager {
+ 
+     public List<Tickler> getTicklerByLabIdAnyProvider(LoggedInInfo loggedInInfo, int labId, Integer demoNo){
+     	checkPrivilege(loggedInInfo, PRIVILEGE_READ);
+-    	String providerNo = loggedInInfo.getLoggedInProviderNo();
++		loggedInInfo.getLoggedInProviderNo();
+     	
+     	List<TicklerLink> links = ticklerLinkDao.getLinkByTableId("HL7", Long.valueOf(labId));
+     	
+@@ -316,8 +316,7 @@ public class TicklerManager {
+ 	    //iterate through the tickler list
+ 	    for (Iterator<Tickler> iter = ticklers.iterator(); iter.hasNext();) {
+ 	        Tickler t =iter.next();
+-	        boolean add = false;	        
+-	        List<ProgramProvider> ppList = new ArrayList<ProgramProvider>();
++	        boolean add = false;
+ 	        
+ 	        programId = String.valueOf(t.getProgramId());
+ 	        
+@@ -327,9 +326,7 @@ public class TicklerManager {
+ 	        	filteredTicklers.add(t);
+ 	        	continue;
+ 	        }
+-	        
+-	        //load up the program_provider entry to get the role for this provider in the tickler's program
+-	        ppList = programProviderDAO.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
++			List<ProgramProvider> ppList = programProviderDAO.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
+ 	        if (ppList == null || ppList.isEmpty()) {
+ 	        	continue;
+ 	        }
+@@ -338,8 +335,7 @@ public class TicklerManager {
+ 		    
+ 	        //Get the tickler assigned to provider's role in the tickler's program
+ 		    String ticklerRole = null;
+-	        List<ProgramProvider> ppList2 = new  ArrayList<ProgramProvider>();
+-        	ppList2 = this.programProviderDAO.getProgramProviderByProviderProgramId(t.getTaskAssignedTo(), new Long(t.getProgramId()));
++			List<ProgramProvider> ppList2 = this.programProviderDAO.getProgramProviderByProviderProgramId(t.getTaskAssignedTo(), new Long(t.getProgramId()));
+         	if (ppList2 != null && !ppList2.isEmpty()) {
+         		ticklerRole = ppList2.get(0).getRole().getRoleName().toLowerCase();
+         	}
+@@ -365,7 +361,6 @@ public class TicklerManager {
+ 	                add = true;
+ 	            }
+ 	        }
+-	        pa = null;
+ 	        
+ 	        //if this provider wrote the tickler, they should see it..doesn't matter
+ 	        //about the role based access
+@@ -625,8 +620,7 @@ public class TicklerManager {
+     public void addTickler(String demographic_no,String message,Tickler.STATUS status,String service_date,String creator,Tickler.PRIORITY priority,String task_assigned_to){
+         
+         String date = service_date;
+-        if ( date != null && !date.equals("now()")){          //Just a hack for now.
+-           date = "'"+StringEscapeUtils.escapeSql(service_date)+"'";
++        if ( date != null && !date.equals("now()")){
+         }
+         
+         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+diff --git a/src/main/java/org/oscarehr/myoscar/utils/MedicalDataManager2.java b/src/main/java/org/oscarehr/myoscar/utils/MedicalDataManager2.java
+index ea2397a160..ebbebd8b82 100644
+--- a/src/main/java/org/oscarehr/myoscar/utils/MedicalDataManager2.java
++++ b/src/main/java/org/oscarehr/myoscar/utils/MedicalDataManager2.java
+@@ -124,7 +124,6 @@ public final class MedicalDataManager2 {
+ 		byte[] dataBytes = medicalDataTransfer.getData();
+ 
+ 		if (dataBytes == null && medicalDataTransfer.getId() != null) {
+-			medicalDataTransfer = getMedicalData(credentials, medicalDataTransfer.getId(), true, true);
+ 		}
+ 
+ 		if (dataBytes == null) return (null);
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPrescriptionTranslator.java b/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPrescriptionTranslator.java
+index 42af136297..cfcb0719f4 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPrescriptionTranslator.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPrescriptionTranslator.java
+@@ -24,6 +24,10 @@
+ 
+ 
+ package org.oscarehr.oscarRx.erx.controller;
++import static org.oscarehr.oscarRx.erx.model.PrescriptionTimeUnit.DAY;
++import static org.oscarehr.oscarRx.erx.model.PrescriptionTimeUnit.WEEK;
++import static org.oscarehr.oscarRx.erx.model.PrescriptionTimeUnit.YEAR;
++import static org.oscarehr.oscarRx.erx.model.PrescriptionTimeUnit.MONTH;
+ 
+ import java.text.ParseException;
+ import java.text.SimpleDateFormat;
+@@ -259,7 +263,6 @@ public class ERxPrescriptionTranslator {
+         SimpleDateFormat df = new SimpleDateFormat();
+         StringBuilder commentBuilder = new StringBuilder();
+         StringBuilder specialInstructionsBuilder = new StringBuilder();
+-        RxDrugRef drugLookup = new RxDrugRef();
+ 
+         // Prepare comment fields so we can log non-critical import failures to them
+         commentBuilder.append(in.getPrescriptionToString());
+diff --git a/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java b/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java
+index 41932cae43..acd2edd1eb 100644
+--- a/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java
++++ b/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java
+@@ -113,9 +113,7 @@ public class DrugrefUtil {
+ 		        		String significanceStr = (String)ht.get("significance");
+ 		        		int significance = 0;
+ 		        		try {
+-		        			significance = Integer.valueOf(significanceStr);
+ 		        		}catch(Exception e) {
+-		        			significance = 0;
+ 		        		}
+ 	        		
+ 	        		
+@@ -227,7 +225,7 @@ public class DrugrefUtil {
+ 	        		    dsMessage.setSignificance(significance);
+ 	        		
+ 		        		String effect=(String)ht.get("effect");
+-		        		String effectStr=(String)ht.get("effect");
++                    ((String) (ht.get("effect")));
+ 		        		String interactStr = "";
+ 		        		if(effect!=null){
+ 		        			if(effect.equals("a"))
+diff --git a/src/main/java/org/oscarehr/sharingcenter/SharingCenterUtil.java b/src/main/java/org/oscarehr/sharingcenter/SharingCenterUtil.java
+index 3024d38f26..ca2b2f507f 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/SharingCenterUtil.java
++++ b/src/main/java/org/oscarehr/sharingcenter/SharingCenterUtil.java
+@@ -1440,9 +1440,7 @@ public class SharingCenterUtil {
+ 
+     public static boolean submitFolder(FolderMetaData folder, AffinityDomainDataObject domain) {
+         boolean retVal = false;
+-
+-        // create the affinity domain object
+-        ClinicInfoDataObject clinicData = clinicInfoDao.getClinic();
++        clinicInfoDao.getClinic();
+ 
+         IheConfiguration iheConfig = convertAffinityDomainDataObject(domain);
+ 
+@@ -1458,9 +1456,7 @@ public class SharingCenterUtil {
+ 
+     public static boolean submitDocumentContainer(DocumentContainerMetaData container, AffinityDomainDataObject domain) {
+         boolean retVal = false;
+-
+-        // create the affinity domain object
+-        ClinicInfoDataObject clinicData = clinicInfoDao.getClinic();
++        clinicInfoDao.getClinic();
+ 
+         IheConfiguration iheConfig = convertAffinityDomainDataObject(domain);
+ 
+@@ -1476,9 +1472,7 @@ public class SharingCenterUtil {
+ 
+     public static boolean submitSingleDocument(DocumentMetaData document, AffinityDomainDataObject domain) {
+         boolean retVal = false;
+-
+-        // create the affinity domain object
+-        ClinicInfoDataObject clinicData = clinicInfoDao.getClinic();
++        clinicInfoDao.getClinic();
+ 
+         IheConfiguration iheConfig = convertAffinityDomainDataObject(domain);
+ 
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/AffinityDomainDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/AffinityDomainDataObject.java
+index a34afa467a..3dfacd1915 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/AffinityDomainDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/AffinityDomainDataObject.java
+@@ -270,7 +270,7 @@ public class AffinityDomainDataObject extends AbstractModel<Integer> implements
+ 			if (this.actors == null) {
+ 				this.actors = new HashSet<ActorDataObject>();
+ 			}
+-			int one = actor.hashCode();
++			actor.hashCode();
+ 			this.actors.add(actor);
+ 			actor.affinityDomain = this;
+ 		}
+diff --git a/src/main/java/org/oscarehr/survey/web/SurveyManagerAction.java b/src/main/java/org/oscarehr/survey/web/SurveyManagerAction.java
+index 8777a4e86b..d2ccaf5ce0 100644
+--- a/src/main/java/org/oscarehr/survey/web/SurveyManagerAction.java
++++ b/src/main/java/org/oscarehr/survey/web/SurveyManagerAction.java
+@@ -799,7 +799,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
+     	}
+ 		
+ 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+-		String providerNo=loggedInInfo.getLoggedInProviderNo();
++		loggedInInfo.getLoggedInProviderNo();
+ 	
+ 		DynaActionForm surveyForm = (DynaActionForm)form;
+ 		Survey survey = (Survey)surveyForm.get("survey");
+diff --git a/src/main/java/org/oscarehr/web/OcanReportUIBean.java b/src/main/java/org/oscarehr/web/OcanReportUIBean.java
+index 068c0659f4..21932da57d 100644
+--- a/src/main/java/org/oscarehr/web/OcanReportUIBean.java
++++ b/src/main/java/org/oscarehr/web/OcanReportUIBean.java
+@@ -22,6 +22,10 @@
+  */
+ 
+ package org.oscarehr.web;
++import OCANv2SubmissionFileDocument;
++import ca.ehealthontario.ccim.ApplyToDocument.ApplyTo.Assessment;
++import org.oscarehr.ocan.ImmigExpListDocument.ImmigExpList.Value;
++import org.oscarehr.ocan.ReasonConsumerSelfAxNotCompletedListDocument.ReasonConsumerSelfAxNotCompletedList.Value;
+ 
+ import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
+@@ -1882,7 +1886,6 @@ public class OcanReportUIBean implements CallbackHandler {
+ 	}
+ 	public static List<OtherAgencyContact> convertOtherAgencyContact(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
+ 		List<OtherAgencyContact> list = new ArrayList<OtherAgencyContact>();
+-		String contact = getStaffAnswer("otherAgency",ocanStaffFormData);
+ 		for(int index=1; index<=3; index++) {
+ 				OtherAgencyContact otherAgencyContact = OtherAgencyContact.Factory.newInstance();
+ 				otherAgencyContact.setOtherAgency(OtherAgencyContact.OtherAgency.Enum.forString(getStaffAnswer("otherAgency",ocanStaffFormData)));
+diff --git a/src/main/java/org/oscarehr/ws/rest/AppService.java b/src/main/java/org/oscarehr/ws/rest/AppService.java
+index 747831d9a1..551e81c960 100644
+--- a/src/main/java/org/oscarehr/ws/rest/AppService.java
++++ b/src/main/java/org/oscarehr/ws/rest/AppService.java
+@@ -204,7 +204,6 @@ public class AppService extends AbstractServiceImpl {
+ 	@Path("/PHRActive/consentGiven/{demographicNo}")
+ 	@Produces("application/json")
+ 	public GenericRESTResponse isPHRActiveAndConsentGiven(@Context HttpServletRequest request,@PathParam("demographicNo") Integer demographicNo){
+-		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+     	
+ 		GenericRESTResponse response = null;
+ 		Integer id = appManager.getAppDefinitionConsentId(getLoggedInInfo(), "PHR");
+@@ -346,11 +345,8 @@ public class AppService extends AbstractServiceImpl {
+ 		
+ 		try {
+ 			Response reps = callPHR("configurEMRConnection",getLoggedInInfo().getLoggedInProviderNo(),jojb.toString());
+-			//InputStream in = (InputStream) reps.getEntity();
+-			//BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+-			//String response = IOUtils.toString(bufferedReader);
+-			String response = (String)  reps.getEntity();
+-			//bufferedReader.close();
++			((String) (reps.getEntity()));
++			// bufferedReader.close();
+ 		}catch(Exception e) {
+ 			logger.error("error",e);
+ 			return new GenericRESTResponse(false,"ERROR connecting to PHR");
+@@ -435,11 +431,8 @@ public class AppService extends AbstractServiceImpl {
+ 		
+ 		try {
+ 			Response reps = callPHR("configurEMRConnection",getLoggedInInfo().getLoggedInProviderNo(),jojb.toString());
+-			//InputStream in = (InputStream) reps.getEntity();
+-			//BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+-			//String response = IOUtils.toString(bufferedReader);
+-			String response = (String)  reps.getEntity();
+-			//bufferedReader.close();
++			((String) (reps.getEntity()));
++			// bufferedReader.close();
+ 		}catch(Exception e) {
+ 			logger.error("error",e);
+ 			return new GenericRESTResponse(false,"ERROR connecting to PHR");
+diff --git a/src/main/java/org/oscarehr/ws/rest/NotesService.java b/src/main/java/org/oscarehr/ws/rest/NotesService.java
+index 3b90a9b373..a33dc4d292 100644
+--- a/src/main/java/org/oscarehr/ws/rest/NotesService.java
++++ b/src/main/java/org/oscarehr/ws/rest/NotesService.java
+@@ -99,7 +99,7 @@ import oscar.oscarEncounter.pageUtil.EctSessionBean;
+ @Component("notesService")
+ public class NotesService extends AbstractServiceImpl {
+ 
+-	public static String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
++	public static String cppCodes = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
+ 	
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+@@ -393,7 +393,6 @@ public class NotesService extends AbstractServiceImpl {
+ 		String programIdString = getProgram(loggedInInfo,providerNo); //might not to convert it.
+ 		Integer programId = null;
+ 		try {
+-			programId = Integer.parseInt(programIdString);
+ 		} catch (Exception e) {
+ 			logger.warn("Error parsing programId:" + programIdString, e);
+ 		}
+@@ -547,46 +546,44 @@ public class NotesService extends AbstractServiceImpl {
+ 		return note;
+ 		
+ 		
+-		/*
+-		//update lock to new note id
++		/* //update lock to new note id
+ 		casemgmtNoteLockSession.setNoteId(note.getId());
+ 		logger.info("UPDATING NOTE ID in LOCK");
+ 		casemgmtNoteLockDao.merge(casemgmtNoteLockSession);
+-		session.setAttribute("casemgmtNoteLock"+demo, casemgmtNoteLockSession);	
+-		*/
+-
+-
+-		/*
+-		String sessionFrmName = "caseManagementEntryForm" + demo;
+-		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
++		session.setAttribute("casemgmtNoteLock"+demo, casemgmtNoteLockSession);
++		 */
+ 		
+-		CasemgmtNoteLock casemgmtNoteLockSession = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demo);				
+ 		
++		/* String sessionFrmName = "caseManagementEntryForm" + demo;
++		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
++
++		CasemgmtNoteLock casemgmtNoteLockSession = (CasemgmtNoteLock)session.getAttribute("casemgmtNoteLock"+demo);				
++
+ 		try {
+-			
+-			if(casemgmtNoteLockSession == null) {
+-				throw new Exception("SESSION CASEMANAGEMENT NOTE LOCK OBJECT IS NULL");
+-			}
+-			
+-			CasemgmtNoteLock casemgmtNoteLock = casemgmtNoteLockDao.find(casemgmtNoteLockSession.getId());
+-			//if other window has acquired lock we reject save									
+-			if( !casemgmtNoteLock.getSessionId().equals(casemgmtNoteLockSession.getSessionId()) || !request.getRequestedSessionId().equals(casemgmtNoteLockSession.getSessionId()) ) {
+-				logger.info("DO NOT HAVE LOCK FOR " + demo + " PROVIDER " + providerNo + " CONTINUE SAVING LOCAL SESSION " + request.getRequestedSessionId() + " LOCAL IP " + request.getRemoteAddr() + " LOCK SESSION " + casemgmtNoteLockSession.getSessionId() + " LOCK IP " + casemgmtNoteLockSession.getIpAddress());
+-				return -1L;
+-			}
++
++		if(casemgmtNoteLockSession == null) {
++		throw new Exception("SESSION CASEMANAGEMENT NOTE LOCK OBJECT IS NULL");
++		}
++
++		CasemgmtNoteLock casemgmtNoteLock = casemgmtNoteLockDao.find(casemgmtNoteLockSession.getId());
++		//if other window has acquired lock we reject save									
++		if( !casemgmtNoteLock.getSessionId().equals(casemgmtNoteLockSession.getSessionId()) || !request.getRequestedSessionId().equals(casemgmtNoteLockSession.getSessionId()) ) {
++		logger.info("DO NOT HAVE LOCK FOR " + demo + " PROVIDER " + providerNo + " CONTINUE SAVING LOCAL SESSION " + request.getRequestedSessionId() + " LOCAL IP " + request.getRemoteAddr() + " LOCK SESSION " + casemgmtNoteLockSession.getSessionId() + " LOCK IP " + casemgmtNoteLockSession.getIpAddress());
++		return -1L;
++		}
+ 		}
+ 		catch(Exception e ) {
+-			//Exception thrown if other window has saved and exited so lock is gone
+-			logger.error("Lock not found for " + demo + " provider " + providerNo + " IP " + request.getRemoteAddr(), e);
+-			return -1L;
++		//Exception thrown if other window has saved and exited so lock is gone
++		logger.error("Lock not found for " + demo + " provider " + providerNo + " IP " + request.getRemoteAddr(), e);
++		return -1L;
+ 		}
+ 		String lastSavedNoteString = (String) session.getAttribute("lastSavedNoteString");
+-		
++
+ 		String strBeanName = "casemgmt_oscar_bean" + demo;
+ 		EctSessionBean sessionBean = (EctSessionBean) session.getAttribute(strBeanName);
+ 
+ 		return note.getId();
+-		*/
++		 */
+ 		
+ 		
+ 	}
+@@ -895,12 +892,9 @@ public class NotesService extends AbstractServiceImpl {
+ 		
+ 		//String ongoing = null; // figure out this
+ 		String lastSavedNoteString = null;
+-		String user = loggedInInfo.getLoggedInProvider().getProviderNo();
++		loggedInInfo.getLoggedInProvider().getProviderNo();
+ 		String remoteAddr = 	""; // Not sure how to get this	
+-		
+-		//caseMangementNote = caseManagementMgr.saveCaseManagementNote(caseMangementNote,issuelist, cpp, ongoing,verify, loggedInInfo.getLocale(),now,annotationNote,userName,user,remoteAddr, lastSavedNoteString) ;
+-		
+-		String savedStr = caseManagementMgr.saveNote(cpp, caseMangementNote, providerNo, userName, null, note.getRoleName());
++		caseManagementMgr.saveNote(cpp, caseMangementNote, providerNo, userName, null, note.getRoleName());
+ 		caseManagementMgr.saveCPP(cpp, providerNo);
+ 		
+ 		caseManagementMgr.getEditors(caseMangementNote);
+@@ -1193,9 +1187,8 @@ public class NotesService extends AbstractServiceImpl {
+ 
+ //			resetTemp(providerNo, ""+demographicNo, programIdString);
+ 
+-		}
+-		// get the last temp note?
+-		else if (tmpsavenote != null && !forceNote.equals("true")) {
++		} else
++		 if (tmpsavenote != null && !forceNote.equals("true")) {
+ 			logger.debug("tempsavenote is NOT NULL == noteId :"+tmpsavenote.getNoteId());
+ 			if (tmpsavenote.getNoteId() > 0) {
+ //				session.setAttribute("newNote", "false");
+@@ -1216,9 +1209,8 @@ public class NotesService extends AbstractServiceImpl {
+ 			note.setNote(tmpsavenote.getNote());
+ 			logger.debug("Setting note to " + note.getNote());
+ 
+-		}
+-		// get an existing non-temp note?
+-		else if (nId != null && Integer.parseInt(nId) > 0) {
++		} else
++		 if (nId != null && Integer.parseInt(nId) > 0) {
+ 			logger.debug("Using nId " + nId + " to fetch note");
+ //			session.setAttribute("newNote", "false");
+ 			note = caseManagementMgr.getNote(nId);
+@@ -1231,25 +1223,20 @@ public class NotesService extends AbstractServiceImpl {
+ //				addNewNoteLink(Long.parseLong(nId));
+ 			}
+ 
+-		}
+-		// no note specified, get last unsigned
+-		else {
++		} else
++		 {
+ 			logger.debug("in empty else");
+ 			// A hack to load last unsigned note when not specifying a particular note to edit
+ 			// if there is no unsigned note load a new one
+ 			
+ 			Map unlockedNotesMap = null; //NEED THIS ??
+ 			if ((note = caseManagementMgr.getLastSaved(""+programId, ""+demographicNo, providerNo,unlockedNotesMap)) == null) {
+-//				session.setAttribute("newNote", "true");
+-//				//session.setAttribute("issueStatusChanged", "false");
+-			
+-				//String encType 
+-				String apptDate = getString(jsonobject,"apptDate");
+-				String reason = getString(jsonobject,"reason");
++						getString(jsonobject, "apptDate");
++						getString(jsonobject, "reason");
+ 				String appointmentNo = getString(jsonobject,"appointmentNo");
+ 				note = caseManagementMgr.makeNewNote(providerNo, ""+demographicNo, encType, appointmentNo,loggedInInfo.getLocale());
+-				//note = caseManagementMgr.makeNewNote(providerNo, ""+demographicNo, bean, encType, apptDate, reason,loggedInInfo.locale);
+-//				note = this.makeNewNote(providerNo, demono, request);				
++				// note = caseManagementMgr.makeNewNote(providerNo, ""+demographicNo, bean, encType, apptDate, reason,loggedInInfo.locale);
++				// note = this.makeNewNote(providerNo, demono, request);
+ 			}
+ 		}
+ 		
+diff --git a/src/main/java/org/oscarehr/ws/rest/conversion/summary/RxSummary.java b/src/main/java/org/oscarehr/ws/rest/conversion/summary/RxSummary.java
+index 8e125c61ec..eebca0dc75 100644
+--- a/src/main/java/org/oscarehr/ws/rest/conversion/summary/RxSummary.java
++++ b/src/main/java/org/oscarehr/ws/rest/conversion/summary/RxSummary.java
+@@ -77,11 +77,8 @@ public class RxSummary implements Summary{
+ 
+             String styleColor = "";
+             if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
+-                styleColor="style=\"color:orange;font-weight:bold;\"";
+             }else if (drug.isCurrent() )  {
+-                styleColor="style=\"color:blue;\"";
+             }else if (drug.isLongTerm() )  {
+-                styleColor="style=\"color:grey;\"";
+             }else
+                 continue;
+             
+diff --git a/src/main/java/oscar/OscarPingTalk.java b/src/main/java/oscar/OscarPingTalk.java
+index 585c5032d0..b23eea2278 100644
+--- a/src/main/java/oscar/OscarPingTalk.java
++++ b/src/main/java/oscar/OscarPingTalk.java
+@@ -99,12 +99,12 @@ public class OscarPingTalk {
+         List dataList = bodyType.getData();
+         dataList.add(dataType);
+         MiscUtils.getLogger().debug(actorTicket + " " + pingId + " " + cddmType);
+-        AddCddmResultType adrt = client.addCddm(actorTicket, pingId, cddmType);
++        client.addCddm(actorTicket, pingId, cddmType);
+         return true;
+     }
+ 
+     public boolean sendCddm(String actorTicket, String pingId, CddmType cddmType) throws Exception {
+-        AddCddmResultType adrt = client.addCddm(actorTicket, pingId, cddmType);
++        client.addCddm(actorTicket, pingId, cddmType);
+         return true;
+     }
+ 
+diff --git a/src/main/java/oscar/appt/web/AppointmentTypeAction.java b/src/main/java/oscar/appt/web/AppointmentTypeAction.java
+index 404215f6ec..648556f745 100644
+--- a/src/main/java/oscar/appt/web/AppointmentTypeAction.java
++++ b/src/main/java/oscar/appt/web/AppointmentTypeAction.java
+@@ -70,7 +70,6 @@ public class AppointmentTypeAction extends OscarAction  {
+ 		    }   
+ 
+ 		    if(sOper==null) {
+-		    	formBean = new AppointmentTypeForm();
+ 		    }  else {
+ 		    	if(sOper.equals("save")) {
+ 		    		if(formBean.getName() == null || formBean.getName().length()==0 || formBean.getName().length()>50) {
+diff --git a/src/main/java/oscar/dms/EDocUtil.java b/src/main/java/oscar/dms/EDocUtil.java
+index 278180d3da..2306c5eb06 100644
+--- a/src/main/java/oscar/dms/EDocUtil.java
++++ b/src/main/java/oscar/dms/EDocUtil.java
+@@ -525,9 +525,7 @@ public final class EDocUtil {
+ 	public static ArrayList<EDoc> listDocsPreviewInbox(List<String> docIds) {
+ 
+ 		ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
+-		for (String docId : docIds) {
+-			EDoc currentdoc = new EDoc();
+-			currentdoc = getEDocFromDocId(docId);
++		for (String docId : docIds) {EDoc currentdoc = getEDocFromDocId(docId);
+ 			resultDocs.add(currentdoc);
+ 		}
+ 		return resultDocs;
+diff --git a/src/main/java/oscar/dms/actions/DocumentUploadAction.java b/src/main/java/oscar/dms/actions/DocumentUploadAction.java
+index c0f99d2578..afaaba50fb 100644
+--- a/src/main/java/oscar/dms/actions/DocumentUploadAction.java
++++ b/src/main/java/oscar/dms/actions/DocumentUploadAction.java
+@@ -104,7 +104,6 @@ public class DocumentUploadAction extends DispatchAction {
+                         request.getSession().setAttribute("preferredQueue", queueId);
+                         if (docFile != null) {
+                             docFile.destroy();
+-                            docFile = null;
+                         }
+ 
+                     }
+@@ -166,7 +165,6 @@ public class DocumentUploadAction extends DispatchAction {
+ 	        
+ 			if (docFile != null) {
+ 				docFile.destroy();
+-				docFile = null;
+ 			}
+ 		}
+ 		JSONArray jsonArray = new JSONArray();
+diff --git a/src/main/java/oscar/eform/EFormUtil.java b/src/main/java/oscar/eform/EFormUtil.java
+index 61ce43a60d..3215469e20 100644
+--- a/src/main/java/oscar/eform/EFormUtil.java
++++ b/src/main/java/oscar/eform/EFormUtil.java
+@@ -854,7 +854,7 @@ public class EFormUtil {
+ 		text = putTemplateEformValues(eForm, fdid, context_path, text);
+ 		String[] template_echart = { "EncounterNote", "SocialHistory", "FamilyHistory", "MedicalHistory", "OngoingConcerns", "RiskFactors", "Reminders", "OtherMeds" };
+ 		String[] code = { "", "SocHistory", "FamHistory", "MedHistory", "Concerns", "RiskFactors", "Reminders", "OMeds" };
+-		ArrayList<String> templates = new ArrayList<String>();
++		ArrayList<String> templates;
+ 		
+ 		/* write to echart
+ 		 * <EncounterNote {or another template_echart}>
+@@ -1509,7 +1509,6 @@ public class EFormUtil {
+ 		while (search) {
+ 			begin = findIgnoreCase(sBegin, s, begin + 1);
+ 			if (begin == -1) {
+-				search = false;
+ 				break;
+ 			}
+ 			int end = findIgnoreCase(sEnd, s, begin);
+diff --git a/src/main/java/oscar/eform/actions/AddEFormAction.java b/src/main/java/oscar/eform/actions/AddEFormAction.java
+index 93f9c0568a..53e57bfb60 100644
+--- a/src/main/java/oscar/eform/actions/AddEFormAction.java
++++ b/src/main/java/oscar/eform/actions/AddEFormAction.java
+@@ -99,17 +99,13 @@ public class AddEFormAction extends Action {
+ 
+ 		boolean doDatabaseUpdate = false;
+ 
+-		List<String> oscarUpdateFields = new ArrayList<String>();
+-
+ 		if (request.getParameter("_oscardodatabaseupdate") != null && request.getParameter("_oscardodatabaseupdate").equalsIgnoreCase("on"))
+ 			doDatabaseUpdate = true;
+ 
+ 		ActionMessages updateErrors = new ActionMessages();
+ 
+ 		// The fields in the _oscarupdatefields parameter are separated by %s.
+-		if (!print && !fax && doDatabaseUpdate && request.getParameter("_oscarupdatefields") != null) {
+-
+-			oscarUpdateFields = Arrays.asList(request.getParameter("_oscarupdatefields").split("%"));
++		if (!print && !fax && doDatabaseUpdate && request.getParameter("_oscarupdatefields") != null) {List<String> oscarUpdateFields = Arrays.asList(request.getParameter("_oscarupdatefields").split("%"));
+ 
+ 			boolean validationError = false;
+ 
+@@ -142,8 +138,6 @@ public class AddEFormAction extends Action {
+ 						inSQL = DatabaseAP.parserReplace("provider", providerNo, inSQL);
+ 						inSQL = DatabaseAP.parserReplace("fid", fid, inSQL);
+ 
+-						inSQL = DatabaseAP.parserReplace("value", request.getParameter(field), inSQL);
+-
+ 						//if(currentAP.getArchive() != null && currentAP.getArchive().equals("demographic")) {
+ 						//	demographicArchiveDao.archiveRecord(demographicManager.getDemographic(loggedInInfo,demographic_no));
+ 						//}
+diff --git a/src/main/java/oscar/eform/util/EFormPDFServlet.java b/src/main/java/oscar/eform/util/EFormPDFServlet.java
+index 6b0d163338..82d892adc7 100644
+--- a/src/main/java/oscar/eform/util/EFormPDFServlet.java
++++ b/src/main/java/oscar/eform/util/EFormPDFServlet.java
+@@ -413,9 +413,7 @@ public class EFormPDFServlet extends HttpServlet {
+     
+     private void getPrintPropValues(Properties props, HttpServletRequest req, String suffix) {
+ 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(req);
+-        StringBuilder temp = new StringBuilder("");
+-        for (Enumeration<String> e = req.getParameterNames(); e.hasMoreElements();) {
+-            temp = new StringBuilder(e.nextElement().toString());
++        for (Enumeration<String> e = req.getParameterNames(); e.hasMoreElements();) {StringBuilder temp = new StringBuilder(e.nextElement().toString());
+             props.setProperty(temp.toString(), req.getParameter(temp.toString()));
+         }
+         
+diff --git a/src/main/java/oscar/form/FrmBCINRRecord.java b/src/main/java/oscar/form/FrmBCINRRecord.java
+index 8368622460..19903ed045 100644
+--- a/src/main/java/oscar/form/FrmBCINRRecord.java
++++ b/src/main/java/oscar/form/FrmBCINRRecord.java
+@@ -53,7 +53,6 @@ public class FrmBCINRRecord extends FrmRecord {
+ 
+ 			sql = "SELECT last_name, first_name, address, city, province, postal, phone,phone2, hin FROM demographic WHERE demographic_no = "
+ 					+ demographicNo;
+-			DBHelp db = new DBHelp();
+ 			ResultSet rs = DBHelp.searchDBRecord(sql);
+ 			if (rs.next()) {
+ 				props.setProperty("c_surname_cur", oscar.Misc.getString(rs, "last_name"));
+@@ -72,7 +71,6 @@ public class FrmBCINRRecord extends FrmRecord {
+ 
+ 	public String getLastLabDate(int demographicNo, int existingID) throws SQLException {
+ 		String ret = "20/04/2002";
+-		Properties props = new Properties();
+ 		int cId = 0;
+ 		if(existingID == 0) {
+ 			String sql = "SELECT ID FROM formBCINR WHERE demographic_no = " + demographicNo + " order by ID desc";
+@@ -88,7 +86,7 @@ public class FrmBCINRRecord extends FrmRecord {
+ 			String sql = "SELECT * FROM formBCINR WHERE demographic_no = " + demographicNo + " AND ID = " + cId;
+ 			FrmRecordHelp frh = new FrmRecordHelp();
+ 			frh.setDateFormat(_dateFormat);
+-			props = (frh).getFormRecord(sql);
++			Properties props = frh.getFormRecord(sql);
+ 			
+ 			for(int i=21; i>=1; i--) {
+ 				String labDate = props.getProperty("date"+i, "");
+diff --git a/src/main/java/oscar/form/FrmMentalHealthForm14Record.java b/src/main/java/oscar/form/FrmMentalHealthForm14Record.java
+index be24f332fc..314b079400 100644
+--- a/src/main/java/oscar/form/FrmMentalHealthForm14Record.java
++++ b/src/main/java/oscar/form/FrmMentalHealthForm14Record.java
+@@ -38,8 +38,6 @@ public class FrmMentalHealthForm14Record extends FrmRecord {
+ 	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
+         Properties props = new Properties();
+         if (existingID <= 0) {
+-            
+-            String demoProvider = "000000";
+             String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, provider_no FROM demographic WHERE demographic_no = "
+                     + demographicNo;
+             ResultSet rs = DBHandler.GetSQL(sql);
+@@ -54,8 +52,6 @@ public class FrmMentalHealthForm14Record extends FrmRecord {
+                 props.setProperty("clientName", oscar.Misc.getString(rs, "clientName"));
+                 props.setProperty("demoProvider", oscar.Misc.getString(rs, "provider_no"));
+                 
+-                demoProvider = oscar.Misc.getString(rs, "provider_no");
+-                
+             }
+             rs.close();
+         } else {
+diff --git a/src/main/java/oscar/form/FrmMentalHealthForm42Record.java b/src/main/java/oscar/form/FrmMentalHealthForm42Record.java
+index a690416fd0..46e230117c 100644
+--- a/src/main/java/oscar/form/FrmMentalHealthForm42Record.java
++++ b/src/main/java/oscar/form/FrmMentalHealthForm42Record.java
+@@ -38,8 +38,6 @@ public class FrmMentalHealthForm42Record extends FrmRecord {
+ 	public Properties getFormRecord(LoggedInInfo loggedInInfo, int demographicNo, int existingID) throws SQLException {
+         Properties props = new Properties();
+         if (existingID <= 0) {
+-            
+-            String demoProvider = "000000";
+             String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, provider_no FROM demographic WHERE demographic_no = "
+                     + demographicNo;
+             ResultSet rs = DBHandler.GetSQL(sql);
+@@ -54,8 +52,6 @@ public class FrmMentalHealthForm42Record extends FrmRecord {
+                 props.setProperty("clientName", oscar.Misc.getString(rs, "clientName"));
+                 props.setProperty("demoProvider", oscar.Misc.getString(rs, "provider_no"));
+                 
+-                demoProvider = oscar.Misc.getString(rs, "provider_no");
+-                
+             }
+             rs.close();
+         } else {
+diff --git a/src/main/java/oscar/form/data/FrmData.java b/src/main/java/oscar/form/data/FrmData.java
+index 7d40986483..0e4c4794ff 100644
+--- a/src/main/java/oscar/form/data/FrmData.java
++++ b/src/main/java/oscar/form/data/FrmData.java
+@@ -121,7 +121,6 @@ public class FrmData {
+         while(rs.next()) {
+             table = oscar.Misc.getString(rs, "form_table");
+         }
+-        rs = null;
+ 
+         sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC limit 0,1";
+         rs = DBHandler.GetSQL(sql);
+diff --git a/src/main/java/oscar/form/pageUtil/FrmFormAction.java b/src/main/java/oscar/form/pageUtil/FrmFormAction.java
+index dac8cdaa6f..9ff2a47556 100755
+--- a/src/main/java/oscar/form/pageUtil/FrmFormAction.java
++++ b/src/main/java/oscar/form/pageUtil/FrmFormAction.java
+@@ -130,7 +130,6 @@ public class FrmFormAction extends Action {
+         logger.debug("current mem 3 "+currentMem());
+ 
+         errors.clear();
+-        valid = true;
+ 
+         logger.debug("current mem 4 "+currentMem());
+ 
+@@ -157,9 +156,7 @@ public class FrmFormAction extends Action {
+ 
+             //parse the checkbox value
+             inputValue = parseCheckBoxValue(inputValue, validation.getName());
+-
+-            //validate
+-            valid = validate( inputValue, observationDate, mt, validation, request,errors);
++            validate(inputValue, observationDate, mt, validation, request, errors);
+         }
+         valid = ectValidation.isDate((String) frm.getValue("visitCod"));
+ 
+diff --git a/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java b/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java
+index f69fddc436..a1c50acbcc 100644
+--- a/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java
++++ b/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java
+@@ -135,7 +135,7 @@ public class FrmFormRHPreventionAction extends Action{
+             MiscUtils.getLogger().debug("size of current workflows "+currentWorkFlows.size());
+             request.setAttribute("currentWorkFlow",currentWorkFlows.get(0));
+              Hashtable h = (Hashtable) currentWorkFlows.get(0);
+-             String currentId = (String) h.get("ID");
++            ((String) (h.get("ID")));
+              if (workflowId != null ){
+             //LOG CHANGE NOW
+                 MiscUtils.getLogger().debug("Changing workflow for  "+demographicNo+ " to "+state);
+diff --git a/src/main/java/oscar/form/pageUtil/FrmSetupFormAction.java b/src/main/java/oscar/form/pageUtil/FrmSetupFormAction.java
+index ca8ab5c45a..32a7cae29f 100755
+--- a/src/main/java/oscar/form/pageUtil/FrmSetupFormAction.java
++++ b/src/main/java/oscar/form/pageUtil/FrmSetupFormAction.java
+@@ -112,8 +112,6 @@ public final class FrmSetupFormAction extends Action {
+ 		if (demo != null) {
+ 			chartBean.setEChartBean(demo);
+ 		}
+-
+-		String ongoingConcern = chartBean.ongoingConcerns;
+ 		String formName = request.getParameter("formName");
+ 		String today = UtilDateUtilities.DateToString(new Date(), _dateFormat);
+ 		String visitCod = UtilDateUtilities.DateToString(new Date(), "yyyy-MM-dd");
+@@ -147,7 +145,6 @@ public final class FrmSetupFormAction extends Action {
+ 
+ 			//Get URL from Miles
+ 			Properties props = new Properties();
+-			Properties nameProps = new Properties();
+ 			props.setProperty("demographic_no", demo);
+ 			props.setProperty("provider_no", providerNo);
+ 			//String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
+@@ -157,7 +154,7 @@ public final class FrmSetupFormAction extends Action {
+ 
+ 			//Get the most updated data from Miles"
+ 			String xmlStr = getMostRecentRecord(demo);
+-			nameProps = convertName(formName);
++			Properties nameProps = convertName(formName);
+ 			FrmXml2VTData xml2VTData = new FrmXml2VTData();
+ 			Class vtDataC = null;
+ 			FrmVTData vtData = null;
+diff --git a/src/main/java/oscar/form/pharmaForms/formBPMH/business/BpmhFormHandler.java b/src/main/java/oscar/form/pharmaForms/formBPMH/business/BpmhFormHandler.java
+index d37a60cb3d..04a5d9cd62 100644
+--- a/src/main/java/oscar/form/pharmaForms/formBPMH/business/BpmhFormHandler.java
++++ b/src/main/java/oscar/form/pharmaForms/formBPMH/business/BpmhFormHandler.java
+@@ -472,7 +472,6 @@ public class BpmhFormHandler {
+ 			if( (drugList != null) && (drugList.size() > 0) ) {
+ 				
+ 				bpmhDrugBeans = getBpmhFormBean().getDrugs();
+-				drugFetch = new RxDrugData();
+ 				
+ 				for(BpmhDrug bpmhDrugItem: bpmhDrugBeans) {
+ 					logger.debug("BPMH DRUG: " + bpmhDrugItem.toString());
+@@ -483,7 +482,7 @@ public class BpmhFormHandler {
+ 					
+ 					drug = drugListIterator.next();
+ 					drugId = drug.getId()+"";
+-					drugDIN = drug.getRegionalIdentifier();
++					drug.getRegionalIdentifier();
+ 					BpmhDrug bpmhDrugBean;
+ 					BpmhDrug bpmhDrug = null;
+ 					RxDrugData.DrugMonograph drugData = null;
+@@ -519,62 +518,69 @@ public class BpmhFormHandler {
+ 					// sources. 
+ 					bpmhDrug.setWhy( getDrugReason( drug.getId() ) );					
+ 					
+-					// Oscar's Drug table does not (or did not) hold accurate 
+-					// drug ingredient information. 
+-					// this block is added to ensure proper ingredient info is 
+-					// retrieved from DrugRef.
+-					// using this uses wayyyy too many resources, but it is the only way to 
+-					// ensure this form is extensible with other Oscar changes.
+-					//TODO: fix once othe parts merged in
+-					/*
+-					if( ! StringUtils.isBlank(drugDIN) ) {
+-						
+-						stringBuilder = new StringBuilder();
+-						try {
+-							drugData = drugFetch.getDrugByDIN(drugDIN);
+-                        } catch (Exception e) {
+-                        	logger.fatal("Failed to fetch Drug from DrugRef with DIN " + drugDIN, e); 
+-                        } 
+-
+-						if( drugData != null ) {	
+-							
+-							drugName = drugData.getName();
+-							drugProduct = drugData.getProduct();
+-							drugComponents = drugData.getDrugComponentList();							
+-						}
+-						
+-						if( drugComponents != null && drugComponents.size() > 0 ) {
+-							
+-							int count = 0;
+-							for( RxDrugData.DrugMonograph.DrugComponent drugComponent : drugComponents ) {
+-								
+-								stringBuilder.append( drugComponent.getName() );
+-								stringBuilder.append(" ");
+-								stringBuilder.append( drugComponent.getStrength() );
+-								stringBuilder.append( drugComponent.getUnit() );
+-								
+-								count++;
+-								if( count > 0 && count != drugComponents.size() ) {
+-									stringBuilder.append( " / " );
+-								}
+-							}
+-							
+-							stringBuilder.append(" " + drugData.getDrugForm());
+-							
+-							bpmhDrug.setWhat( stringBuilder.toString() );
+-						
+-						} else if( ! StringUtils.isBlank( drugName ) ) {
+-							
+-							bpmhDrug.setGenericName( drugName );
+-							
+-						} else if( ! StringUtils.isBlank( drugProduct ) ) {
+-							
+-							bpmhDrug.setGenericName( drugProduct );
+-							
+-						} else {
+-							// do nothing
+-						}												
+-					}*/
++					// Oscar's Drug table does not (or did not) hold accurate					
++					
++					// drug ingredient information.					
++					
++					// this block is added to ensure proper ingredient info is					
++					
++					// retrieved from DrugRef.					
++					
++					// using this uses wayyyy too many resources, but it is the only way to					
++					
++					// ensure this form is extensible with other Oscar changes.					
++					
++					// TODO: fix once othe parts merged in					
++					
++					/* if( ! StringUtils.isBlank(drugDIN) ) {
++
++					stringBuilder = new StringBuilder();
++					try {
++					drugData = drugFetch.getDrugByDIN(drugDIN);
++					} catch (Exception e) {
++					logger.fatal("Failed to fetch Drug from DrugRef with DIN " + drugDIN, e); 
++					} 
++
++					if( drugData != null ) {	
++
++					drugName = drugData.getName();
++					drugProduct = drugData.getProduct();
++					drugComponents = drugData.getDrugComponentList();							
++					}
++
++					if( drugComponents != null && drugComponents.size() > 0 ) {
++
++					int count = 0;
++					for( RxDrugData.DrugMonograph.DrugComponent drugComponent : drugComponents ) {
++
++					stringBuilder.append( drugComponent.getName() );
++					stringBuilder.append(" ");
++					stringBuilder.append( drugComponent.getStrength() );
++					stringBuilder.append( drugComponent.getUnit() );
++
++					count++;
++					if( count > 0 && count != drugComponents.size() ) {
++					stringBuilder.append( " / " );
++					}
++					}
++
++					stringBuilder.append(" " + drugData.getDrugForm());
++
++					bpmhDrug.setWhat( stringBuilder.toString() );
++
++					} else if( ! StringUtils.isBlank( drugName ) ) {
++
++					bpmhDrug.setGenericName( drugName );
++
++					} else if( ! StringUtils.isBlank( drugProduct ) ) {
++
++					bpmhDrug.setGenericName( drugProduct );
++
++					} else {
++					// do nothing
++					}												
++					}
++					 */
+ 				}
+ 				
+ 				SortDrugList.byPositionOrder( bpmhDrugBeans );
+diff --git a/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java b/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java
+index 28887a80cd..3e9e9b339d 100644
+--- a/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java
++++ b/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java
+@@ -170,7 +170,7 @@ public class FrmStudyXMLClientSend {
+ 			message.addAttachmentPart(ap1);
+ 
+ 			URLEndpoint endPoint = new URLEndpoint (URLService);  //"https://67.69.12.115:8443/OscarComm/DummyReceiver");
+-			SOAPMessage reply = connection.call(message, endPoint);
++			connection.call(message, endPoint);
+ 
+ 			connection.close();
+ 		} catch (Exception e)	{
+diff --git a/src/main/java/oscar/form/study/HSFO/pageUtil/ManageHSFOAction.java b/src/main/java/oscar/form/study/HSFO/pageUtil/ManageHSFOAction.java
+index 621d31aae2..447ecd6ccb 100644
+--- a/src/main/java/oscar/form/study/HSFO/pageUtil/ManageHSFOAction.java
++++ b/src/main/java/oscar/form/study/HSFO/pageUtil/ManageHSFOAction.java
+@@ -140,14 +140,14 @@ public class ManageHSFOAction extends Action{
+ 
+ 
+             //////
+-            Hashtable SBPHash[] = new Hashtable[size];
+-            Hashtable DBPHash[] = new Hashtable[size];
+-            Hashtable BMIHash[] = new Hashtable[size];
+-            Hashtable WaistHash[] = new Hashtable[size];
+-            Hashtable TCHDLHash[] = new Hashtable[size];
+-            Hashtable LDLHash[]  = new Hashtable[size];
+-            Hashtable importanceHash[] = new Hashtable[size];
+-            Hashtable confidenceHash[] = new Hashtable[size];
++            Hashtable SBPHash = new Hashtable[size];
++            Hashtable DBPHash = new Hashtable[size];
++            Hashtable BMIHash = new Hashtable[size];
++            Hashtable WaistHash = new Hashtable[size];
++            Hashtable TCHDLHash = new Hashtable[size];
++            Hashtable LDLHash  = new Hashtable[size];
++            Hashtable importanceHash = new Hashtable[size];
++            Hashtable confidenceHash = new Hashtable[size];
+             //////
+ 
+             //If patientHistory is greater than 1 than fill the graphing arrays
+@@ -155,7 +155,14 @@ public class ManageHSFOAction extends Action{
+                 ArrayList<String> visitDateArray = new ArrayList<String>();
+                 ArrayList<String> visitIdArray = new ArrayList<String>();
+                 ListIterator i = patientHistory.listIterator();
+-                int a = 0, b=0, c=0, d=0, e=0, f=0, g=0, h=0;
++                int a = 0;
++                int b = 0;
++                int c = 0;
++                int d = 0;
++                int e = 0;
++                int f = 0;
++                int g = 0;
++                int h = 0;
+                 while (i.hasNext() ) {
+                     VisitData visitdata = (VisitData) i.next();
+                     visitDateArray.add(setDateFull(visitdata.getVisitDate_Id()));
+@@ -215,7 +222,7 @@ public class ManageHSFOAction extends Action{
+                             if (visitdata.getWaist() != 0 && visitdata.getWaist_unit()!=null) {
+                                 double waistv = visitdata.getWaist();
+                                 String waistunit = visitdata.getWaist_unit();
+-                                double waist=0.0;
++                            double waist;
+                                 if (waistunit.equals("cm")) {
+                                     waist = waistv;
+                                 } else {
+diff --git a/src/main/java/oscar/form/study/HSFO/pageUtil/SaveRegistrationAction.java b/src/main/java/oscar/form/study/HSFO/pageUtil/SaveRegistrationAction.java
+index a5e832cff4..8e86c4f570 100644
+--- a/src/main/java/oscar/form/study/HSFO/pageUtil/SaveRegistrationAction.java
++++ b/src/main/java/oscar/form/study/HSFO/pageUtil/SaveRegistrationAction.java
+@@ -484,13 +484,9 @@ public class SaveRegistrationAction extends DispatchAction{
+ 
+         MiscUtils.getLogger().debug("Record ID received: " + ID);
+         String Patient_Id = request.getParameter("Patient_Id").toString().trim();
+-
+-
+-
+-
+-        /////NEW DATA
+-        String SiteCode = request.getParameter("SiteCode");
+-        SiteCode = "20";
++    request.getParameter("SiteCode");
++    // /NEW DATA
++    String SiteCode = "20";
+ 
+         //Not needed now String Patient_Id = request.getParameter("Patient_Id").toString().trim();
+         String FName = request.getParameter("FName").toString().trim();
+diff --git a/src/main/java/oscar/form/study/hsfo2/pageUtil/ManageHSFOAction.java b/src/main/java/oscar/form/study/hsfo2/pageUtil/ManageHSFOAction.java
+index a68544f253..fdf4d109b5 100644
+--- a/src/main/java/oscar/form/study/hsfo2/pageUtil/ManageHSFOAction.java
++++ b/src/main/java/oscar/form/study/hsfo2/pageUtil/ManageHSFOAction.java
+@@ -70,7 +70,7 @@ public class ManageHSFOAction extends Action
+ 
+   public static enum FORM
+   {
+-    registration, flowsheet, graphs
++    registration, flowsheet, graphs;
+   }
+ 
+   /** Creates a new instance of ManageHSFOAction */
+@@ -98,10 +98,6 @@ public class ManageHSFOAction extends Action
+   {
+     logger.info( "ContextPath: " + request.getContextPath() );
+     logger.info( "pathInfo: " + request.getPathInfo() );
+-   // Map< String, String[] > params = request.getParameterMap();
+-
+-
+-    Hsfo2Visit latestHsfo2Visit = new Hsfo2Visit();
+     PatientList historyList = new PatientList();
+     // RecordList record = new RecordList();
+     //List recordList = new LinkedList();
+@@ -169,6 +165,8 @@ public class ManageHSFOAction extends Action
+       if( patientHistory.size() > 0 )
+         formHsfo2Visit = (Hsfo2Visit)patientHistory.get( patientHistory.size() - 1 );
+     }
++    // Map< String, String[] > params = request.getParameterMap();
++    Hsfo2Visit latestHsfo2Visit;
+     
+     if( isHistoryForm )
+     {
+@@ -297,7 +295,7 @@ public class ManageHSFOAction extends Action
+               {
+                 double waistv = Hsfo2Visit.getWaist();
+                 String waistunit = Hsfo2Visit.getWaist_unit();
+-                double waist = 0.0;
++                  double waist;
+                 if ( waistunit.equals( "cm" ) )
+                 {
+                   waist = waistv;
+@@ -342,7 +340,7 @@ public class ManageHSFOAction extends Action
+         
+         //generate the graph and export as picture.
+         generateGraphs( request, response, graphDescSeriesMap );
+-        forwardToForm = FORM.graphs;;
++        forwardToForm = FORM.graphs;
+       }
+       
+     }
+diff --git a/src/main/java/oscar/form/study/hsfo2/pageUtil/SaveRegistrationAction.java b/src/main/java/oscar/form/study/hsfo2/pageUtil/SaveRegistrationAction.java
+index f2de809ba5..8490e7edff 100644
+--- a/src/main/java/oscar/form/study/hsfo2/pageUtil/SaveRegistrationAction.java
++++ b/src/main/java/oscar/form/study/hsfo2/pageUtil/SaveRegistrationAction.java
+@@ -191,10 +191,9 @@ public class SaveRegistrationAction extends DispatchAction
+     boolean isRegistrationForm = ConvertUtil.toBoolean( request.getParameter( "isFromRegistrationForm" ) );
+    
+     String Patient_Id = request.getParameter( "Patient_Id" ).toString().trim();
+-    
+-    // ///NEW DATA
+-    String SiteCode = request.getParameter( "SiteCode" );
+-    SiteCode = "20";
++      request.getParameter("SiteCode");
++      // /NEW DATA
++      String SiteCode = "20";
+     
+     SimpleDateFormat formater = new SimpleDateFormat( "yyyy-MM-dd" );
+     HSFODAO dao = new HSFODAO();
+@@ -209,9 +208,7 @@ public class SaveRegistrationAction extends DispatchAction
+     //save only or submit, it's for registration form and stay in that form
+       boolean isSaveRegistrationFormOnly = "Save".equalsIgnoreCase( request.getParameter( "Save" ) );
+       isLastBaseLineRecord = !isSaveRegistrationFormOnly;
+-      
+-      Hsfo2Patient patientData = new Hsfo2Patient();
+-      patientData = hsfo2PatientDao.getHsfoPatientByPatientId(Patient_Id);
++        Hsfo2Patient patientData = hsfo2PatientDao.getHsfoPatientByPatientId(Patient_Id);
+       if(patientData == null)
+     	  patientData = new Hsfo2Patient();
+       
+diff --git a/src/main/java/oscar/login/SSOLoginAction.java b/src/main/java/oscar/login/SSOLoginAction.java
+index 262cb1dd01..2b431930bb 100644
+--- a/src/main/java/oscar/login/SSOLoginAction.java
++++ b/src/main/java/oscar/login/SSOLoginAction.java
+@@ -278,7 +278,6 @@ public final class SSOLoginAction extends MappingDispatchAction {
+     	String ip = request.getRemoteAddr();
+     	//Gets the isMobileOptimized attribute
+     	Boolean isMobileOptimized = request.getSession().getAttribute("mobileOptimized") != null;
+-    	String destination = "failure";
+     	//Declares providerInformation String Array
+     	String[] providerInformation;
+     	String providerNumber = "";
+@@ -370,6 +369,7 @@ public final class SSOLoginAction extends MappingDispatchAction {
+         }
+     	
+         logger.error("providerInformation : " + Arrays.toString(providerInformation));
++        String destination;
+         if (providerInformation != null && providerInformation.length != 1) {
+         	providerNumber = providerInformation[0];
+         	//Checks if the provider is inactive
+diff --git a/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java b/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java
+index 913b1be1a2..b8b1c24ec8 100644
+--- a/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java
++++ b/src/main/java/oscar/oscarBilling/MSP/MSPReconcile.java
+@@ -221,7 +221,6 @@ public class MSPReconcile {
+ 	}
+ 
+ 	public ArrayList<Bill> getBillsMaster(String statusType) {
+-		BillingDao dao = SpringUtils.getBean(BillingDao.class);
+ 
+ 		ArrayList<Bill> list = new ArrayList<Bill>();
+ 
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java
+index 9942ef1059..db5edcbbea 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/TeleplanFileWriter.java
+@@ -144,7 +144,6 @@ public class TeleplanFileWriter {
+         
+         appendToHTML(HtmlTeleplanHelper.htmlHeaderGen(errorMsg));
+         appendToFile(headerLine);
+-        errorMsg = "";
+         
+         
+         List<String> providerBillingNumbers = new ArrayList();
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingReProcessBillAction.java b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingReProcessBillAction.java
+index 7333b77961..51c82a93bb 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingReProcessBillAction.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingReProcessBillAction.java
+@@ -119,7 +119,7 @@ public class BillingReProcessBillAction extends Action {
+     String billingUnit = frm.getBillingUnit(); ///f
+ 
+     String billingServiceCode = frm.getService_code(); //f
+-    String billingServicePrice = frm.getBillingAmount(); //f
++    frm.getBillingAmount();
+     String payment_mode = frm.getPaymentMode(); //f
+     String serviceDate = frm.getServiceDate(); //f
+     String serviceToDate = frm.getServiceToDay(); //f
+@@ -235,7 +235,6 @@ public class BillingReProcessBillAction extends Action {
+           String[] privateCodeRecord = getServiceCodePrice(billingServiceCode,true);
+           if (privateCodeRecord != null && privateCodeRecord.length == 1) {
+             billingServiceCode = "A" + billingServiceCode;
+-            billingServicePrice = privateCodeRecord[0];
+ 
+           }
+         }
+@@ -243,6 +242,8 @@ public class BillingReProcessBillAction extends Action {
+     } else {
+       throw new RuntimeException("BILLING BC - " + new java.util.Date().toString() + " - billingmaster_no " + billingmasterNo + " doesnt't seem to have a type");
+     }
++    String billingServicePrice;// f
++
+ 
+     //Multiply the bill amount by the units - Fixes bug where wrong amount being sent to MSP
+ 
+@@ -414,9 +415,11 @@ public class BillingReProcessBillAction extends Action {
+    * @param s String
+    * @return String
+    */
+-  public String convertDate8Char(String s) {
+-    String sdate = "00000000", syear = "", smonth = "", sday = "";
++  public String convertDate8Char(String s) {String syear = "";
++    String smonth = "";
++    String sday = "";
+     logger.debug("s=" + s);
++    String sdate;
+     if (s != null) {
+ 
+       if (s.indexOf("-") != -1) {
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java b/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java
+index 57ab672f60..ed38a15b4c 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java
+@@ -195,9 +195,7 @@ public class JdbcBillingReviewImpl {
+ 					}
+ 				}
+ 				retval.add(ch1Obj);
+-				
+-				prevId = ch1Obj.getId();
+-				prevPaid = b[11];
++				ch1Obj.getId();
+ 			}
+ 
+ 		}
+@@ -319,7 +317,6 @@ public class JdbcBillingReviewImpl {
+ 
+ 			BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+ 			BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
+-			BillingONExtDao billingOnExtDao = SpringUtils.getBean(BillingONExtDao.class);
+ 			BillingPaymentTypeDao billingPaymentTypeDao = SpringUtils.getBean(BillingPaymentTypeDao.class);
+ 			ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+ 			
+@@ -461,9 +458,6 @@ public class JdbcBillingReviewImpl {
+ 				Set<String> serviceCodeSet = new HashSet<String>();
+ 			
+ 				String strServiceDate = "";
+-				BigDecimal paid = new BigDecimal("0.00");
+-				BigDecimal refund = new BigDecimal("0.00");
+-				BigDecimal discount = new BigDecimal("0.00");
+ 
+ 
+ 				for (BillingONItem i : itemDao.findByCh1IdAndStatusNotEqual(h.getId(), "D")) {
+@@ -485,8 +479,7 @@ public class JdbcBillingReviewImpl {
+ 				itObj.setService_code(codeBuf.toString());
+ 				itObj.setDx(dx);
+ 				itObj.setService_date(strServiceDate);
+-				
+-				List<BillingONPayment> payment = payDao.find3rdPartyPaymentsByBillingNo(h.getId());
++				payDao.find3rdPartyPaymentsByBillingNo(h.getId());
+ 				itObj.setPaid(payDao.getTotalSumByBillingNoWeb(h.getId().toString()));
+ 				itObj.setRefund(payDao.getPaymentsRefundByBillingNoWeb(h.getId().toString()));
+ 				BigDecimal discount_total = payDao.getPaymentsDiscountByBillingNo(h.getId());
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/Billing3rdPartPrep.java b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/Billing3rdPartPrep.java
+index 3ddf3bd46c..b4c112d99d 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/Billing3rdPartPrep.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/Billing3rdPartPrep.java
+@@ -26,34 +26,24 @@ public class Billing3rdPartPrep {
+ 	JdbcBilling3rdPartImpl dbObj = new JdbcBilling3rdPartImpl();
+ 
+ 	// get 3rd billing data
+-	public Properties get3rdPartBillProp(String invNo) {
+-		Properties ret = new Properties();
+-		ret = dbObj.get3rdPartBillProp(invNo);
++	public Properties get3rdPartBillProp(String invNo) {Properties ret = dbObj.get3rdPartBillProp(invNo);
+ 		return ret;
+ 	}
+ 	
+-	public Properties get3rdPartBillPropInactive(String invNo) {
+-		Properties ret = new Properties();
+-		ret = dbObj.get3rdPartBillPropInactive(invNo);
++	public Properties get3rdPartBillPropInactive(String invNo) {Properties ret = dbObj.get3rdPartBillPropInactive(invNo);
+ 		return ret;
+ 	}
+ 
+ 
+-	public Properties getLocalClinicAddr() {
+-		Properties ret = new Properties();
+-		ret = dbObj.getLocalClinicAddr();
++	public Properties getLocalClinicAddr() {Properties ret = dbObj.getLocalClinicAddr();
+ 		return ret;
+ 	}
+ 
+-	public Properties get3rdPayMethod() {
+-		Properties ret = new Properties();
+-		ret = dbObj.get3rdPayMethod();
++	public Properties get3rdPayMethod() {Properties ret = dbObj.get3rdPayMethod();
+ 		return ret;
+ 	}
+         
+-    public Properties getGst(String invNo) {
+-         Properties ret = new Properties();
+-         ret = dbObj.getGstTotal(invNo);
++    public Properties getGst(String invNo) {Properties ret = dbObj.getGstTotal(invNo);
+          return ret;
+     }
+ 
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java
+index db6f3a811d..67e6cdaa14 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingCorrectionPrep.java
+@@ -157,12 +157,12 @@ public class BillingCorrectionPrep {
+ 		// 3rd party elements
+ 		if (payProgram.matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
+ 			if (requestData.getParameter("payment") != null) {
+-				ret = update3rdPartyItem(BillingONExtDao.KEY_DISCOUNT, requestData);
+-				ret = update3rdPartyItem(BillingONExtDao.KEY_TOTAL, requestData);
+-				ret = update3rdPartyItem(BillingONExtDao.KEY_PAYMENT, requestData);
+-				ret = update3rdPartyItem(BillingONExtDao.KEY_REFUND, requestData);
+-				ret = update3rdPartyItem(BillingONExtDao.KEY_PAY_DATE, requestData);
+-				ret = update3rdPartyItem(BillingONExtDao.KEY_CREDIT, requestData);
++				update3rdPartyItem(BillingONExtDao.KEY_DISCOUNT, requestData);
++				update3rdPartyItem(BillingONExtDao.KEY_TOTAL, requestData);
++				update3rdPartyItem(BillingONExtDao.KEY_PAYMENT, requestData);
++				update3rdPartyItem(BillingONExtDao.KEY_REFUND, requestData);
++				update3rdPartyItem(BillingONExtDao.KEY_PAY_DATE, requestData);
++				update3rdPartyItem(BillingONExtDao.KEY_CREDIT, requestData);
+ 				ch1Obj.setPaid(requestData.getParameter("payment"));
+ 				ret = dbObj.updateBillingClaimHeader(ch1Obj);
+ 			}
+@@ -258,9 +258,6 @@ public class BillingCorrectionPrep {
+ 			}
+ 			
+ 		}
+-
+-		// update item first
+-		String claimId = "0";
+ 		for (int i = 0; i < lItemObj.size(); i++) {
+ 			BillingItemData iObj = (BillingItemData) lItemObj.get(i);
+ 			BillingONItem billOnItem = changeItem(ch1Obj, iObj, updateProviderNo, dx, serviceDate,
+@@ -568,7 +565,7 @@ public class BillingCorrectionPrep {
+ 			}
+ 		} else {
+ 			oldObj.setStatus("D");
+-			ret = dbObj.updateBillingOneItem(oldObj);
++			dbObj.updateBillingOneItem(oldObj);
+ 			// add one transaction: delete a service code			
+ 			BillingONCHeader1 billCheader1 = cheader1Dao.find(Integer.parseInt(oldObj.getCh1_id()));
+ 			BillingOnTransactionDao billOnTransDao = (BillingOnTransactionDao)SpringUtils.getBean(BillingOnTransactionDao.class);
+diff --git a/src/main/java/oscar/oscarBilling/pageUtil/BillingReProcessBillAction.java b/src/main/java/oscar/oscarBilling/pageUtil/BillingReProcessBillAction.java
+index faea7284da..69f8f85b91 100644
+--- a/src/main/java/oscar/oscarBilling/pageUtil/BillingReProcessBillAction.java
++++ b/src/main/java/oscar/oscarBilling/pageUtil/BillingReProcessBillAction.java
+@@ -66,7 +66,6 @@ public class BillingReProcessBillAction extends Action {
+         int curYear = now.get(Calendar.YEAR);
+         int curMonth = (now.get(Calendar.MONTH)+1);
+         int curDay = now.get(Calendar.DAY_OF_MONTH);
+-        String curDate = String.valueOf(curYear) + "-" + String.valueOf(curMonth) + "-" + String.valueOf(curDay);
+ 
+         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
+ 
+@@ -100,8 +99,8 @@ public class BillingReProcessBillAction extends Action {
+         String billingServicePrice =frm.getBillingAmount();//f
+         String payment_mode = frm.getPaymentMode();//f
+         String serviceDate = frm.getServiceDate();//f
+-        String serviceToDate = frm.getServiceToDay();//f
+-        String submissionCode = frm.getSubmissionCode();//f
++		frm.getServiceToDay();
++		frm.getSubmissionCode();
+         String exSubmissionCode ="";//f
+         String dxCode1 = frm.getDx1();//f
+         String dxCode2= frm.getDx2();//f
+@@ -116,22 +115,18 @@ public class BillingReProcessBillAction extends Action {
+         String timeCall =frm.getTimeCallRec();//f
+         String serviceStartTime =frm.getStartTime();//f
+         String serviceEndTime = frm.getFinishTime();//f
+-        String birthDate = DemographicData.getDob(demo);//d
+         String correspondenceCode = frm.getCorrespondenceCode();//f
+         String claimComment = frm.getShortComment();//f
+ 
+         String billingStatus =frm.getStatus();//f
+-
+-
+-
+-        String oinInsurerCode = frm.getInsurerCode();//f
++		frm.getInsurerCode();
+         String oinRegistrationNo = demo.getHin()+demo.getVer();//d
+         String oinBirthdate =DemographicData.getDob(demo);//d
+         String oinFirstName = demo.getFirstName();//d
+         String oinSecondName = "";//d
+         String oinSurname  = demo.getLastName();//d
+         String oinSexCode = demo.getSex() ;//d
+-        String oinAddress = demo.getAddress();//d
++		demo.getAddress();
+         String oinAddress2 = demo.getCity();//d
+         String oinAddress3 = "";//d
+         String oinAddress4 = "";//d
+@@ -150,6 +145,8 @@ public class BillingReProcessBillAction extends Action {
+         }else if (submit.equals("Settle Bill")){
+             billingStatus = "S";
+         }
++		String oinInsurerCode;// f
++
+ 
+         if (hcType.equals(billRegion) ){   //if its bc go on
+             oinInsurerCode = "";
+@@ -159,7 +156,6 @@ public class BillingReProcessBillAction extends Action {
+             oinSecondName = "";
+             oinSurname = "";
+             oinSexCode = "";
+-            oinAddress = "";
+             oinAddress2 = "";
+             oinAddress3 = "";
+             oinAddress4 = "";
+@@ -240,9 +236,11 @@ public class BillingReProcessBillAction extends Action {
+         return (mapping.findForward("success"));
+     }
+ 
+-    public String convertDate8Char(String s){
+-        String sdate = "00000000", syear="", smonth="", sday="";
++    public String convertDate8Char(String s){String syear = "";
++		String smonth = "";
++		String sday = "";
+         MiscUtils.getLogger().debug("s=" + s);
++		String sdate;
+         if (s != null){
+ 
+             if (s.indexOf("-") != -1){
+diff --git a/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java b/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java
+index 2b484b24c9..54272275a0 100644
+--- a/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java
++++ b/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java
+@@ -165,7 +165,7 @@ public class BillingSaveBillingAction extends Action {
+         	int billingMasterNo = bm.getBillingmasterNo();
+          
+             //ensure that this insert action is audited
+-            this.createBillArchive(billingMasterNo++, "O");
++            this.createBillArchive(billingMasterNo, "O");
+           
+         }
+         else {
+@@ -229,7 +229,7 @@ public class BillingSaveBillingAction extends Action {
+             int billingMasterNo = bm.getBillingmasterNo();
+             
+             //ensure that this insert action is audited
+-            this.createBillArchive(billingMasterNo++, "O");
++            this.createBillArchive(billingMasterNo, "O");
+         }
+       }
+     }
+@@ -237,9 +237,11 @@ public class BillingSaveBillingAction extends Action {
+     return (mapping.findForward("success"));
+   }
+ 
+-  public String convertDate8Char(String s) {
+-    String sdate = "00000000", syear = "", smonth = "", sday = "";
++  public String convertDate8Char(String s) {String syear = "";
++    String smonth = "";
++    String sday = "";
+     MiscUtils.getLogger().debug("s=" + s);
++    String sdate;
+     if (s != null) {
+ 
+       if (s.indexOf("-") != -1) {
+diff --git a/src/main/java/oscar/oscarBilling/pageUtil/BillingViewAction.java b/src/main/java/oscar/oscarBilling/pageUtil/BillingViewAction.java
+index 48ba9bc7af..f3fe3c591a 100644
+--- a/src/main/java/oscar/oscarBilling/pageUtil/BillingViewAction.java
++++ b/src/main/java/oscar/oscarBilling/pageUtil/BillingViewAction.java
+@@ -56,9 +56,8 @@ public final class BillingViewAction extends Action {
+         if(request.getSession().getAttribute("user") == null  ){
+             return (mapping.findForward("Logout"));
+         }
+-        // Extract attributes we will need
+-        Locale locale = getLocale(request);
+-        MessageResources messages = getResources(request);
++        getLocale(request);
++        getResources(request);
+ 
+         // Setup variables
+         Properties oscarVars = OscarProperties.getInstance();
+diff --git a/src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java b/src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java
+index 2e45d3ccc1..afd96fb9b8 100644
+--- a/src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java
++++ b/src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java
+@@ -106,7 +106,7 @@ public class PrintDemoLabelAction extends OscarAction {
+         }
+         if (ins == null){
+             try {
+-                ServletContext context = getServlet().getServletContext();
++                getServlet().getServletContext();
+                 ins = getClass().getResourceAsStream("/oscar/oscarDemographic/label.xml");
+                 logger.debug("loading from : /oscar/oscarDemographic/label.xml " + ins);
+             }
+diff --git a/src/main/java/oscar/oscarDemographic/data/DemographicData.java b/src/main/java/oscar/oscarDemographic/data/DemographicData.java
+index 99890dff68..e92a9701c0 100644
+--- a/src/main/java/oscar/oscarDemographic/data/DemographicData.java
++++ b/src/main/java/oscar/oscarDemographic/data/DemographicData.java
+@@ -395,18 +395,12 @@ public class DemographicData {
+ 		boolean duplicateRecord = false;
+ 		DemographicAddResult ret = new DemographicAddResult();
+ 
+-		end_date = StringUtils.trimToNull(end_date);
+-		eff_date = StringUtils.trimToNull(eff_date);
+-		hc_renew_date = StringUtils.trimToNull(hc_renew_date);
+-		patient_status_date = StringUtils.trimToNull(patient_status_date);
+-
+ 		ArrayList<Demographic> demos = new ArrayList<Demographic>();
+ 		if (hin != null && !hin.trim().equals("")) {
+ 			demos = getDemographicWithHIN(loggedInInfo, hin);
+ 		}
+ 
+-		if (demos.size() == 0) { // Unique HIN
+-			demos = null;
++		if (demos.size() == 0) {
+ 			demos = getDemographicWithLastFirstDOB(loggedInInfo, last_name, first_name, year_of_birth, month_of_birth, date_of_birth);
+ 			if (demos.size() != 0) {
+ 				duplicateRecord = true;
+@@ -423,13 +417,10 @@ public class DemographicData {
+ 				} else {// add without HIN
+ 
+ 					ret.addWarning("Patient " + last_name + ", " + first_name + " DOB (" + year_of_birth + "-" + month_of_birth + "-" + date_of_birth + ") added without HIN - HIN already in use");
+-					hin = "";
+ 				}
+ 			}
+ 		}
+ 
+-		demos = null;
+-
+ 		if (!duplicateRecord) {
+ 			demographicManager.addDemographic(loggedInInfo, demographic);
+ 			ret.setId(demographic.getDemographicNo().toString());
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/CreateHRMFile.java b/src/main/java/oscar/oscarDemographic/pageUtil/CreateHRMFile.java
+index 149c2de379..85fcd0702e 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/CreateHRMFile.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/CreateHRMFile.java
+@@ -443,7 +443,7 @@ public class CreateHRMFile {
+             if (report.getMessageUniqueID()!=null) transactionInfo.setMessageUniqueID(report.getMessageUniqueID());
+             else transactionInfo.setMessageUniqueID("");
+             transactionInfo.setDeliverToUserID("");
+-            PersonNameSimple physician = transactionInfo.addNewProvider();
++            transactionInfo.addNewProvider();
+            // PersonNameSimple physician = transactionInfo.addNewPhysician();
+         }
+     }
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java b/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java
+index 9063384485..be6d6eeaa1 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java
+@@ -545,26 +545,27 @@ import oscar.util.UtilDateUtilities;
+         //DEMOGRAPHICS
+         Demographics demo = patientRec.getDemographics();
+         cdsDt.PersonNameStandard.LegalName legalName = demo.getNames().getLegalName();
+-        String lastName="", firstName="";
+-        String lastNameQualifier=null, firstNameQualifier=null;
++    String lastName = "";
++    String firstName = "";
++    String lastNameQualifier = null;
++    String firstNameQualifier = null;
+         if (legalName!=null) {
+             if (legalName.getLastName()!=null) {
+             	lastName = StringUtils.noNull(legalName.getLastName().getPart());
+             	if (legalName.getLastName().getPartQualifier()!=null) {
+-            		lastNameQualifier = legalName.getLastName().getPartQualifier().toString();
++          legalName.getLastName().getPartQualifier().toString();
+             	}
+             }
+             if (legalName.getFirstName()!=null) {
+             	firstName = StringUtils.noNull(legalName.getFirstName().getPart());
+             	if (legalName.getFirstName().getPartQualifier()!=null) {
+-            		firstNameQualifier = legalName.getFirstName().getPartQualifier().toString();
++          legalName.getFirstName().getPartQualifier().toString();
+             	}
+             }
+             patientName = lastName+","+firstName;
+         }
+         
+         String birthDate = getCalDate(demo.getDateOfBirth(), timeShiftInDays);
+-        String sex = demo.getGender()!=null ? demo.getGender().toString() : "";
+         String hin = null;
+         cdsDt.HealthCard healthCard = demo.getHealthCard();
+         if (healthCard!=null) {
+@@ -588,17 +589,23 @@ import oscar.util.UtilDateUtilities;
+ 
+         
+         
+-        Demographics.Contact[] contt = demo.getContactArray();
++        cds.DemographicsDocument.Demographics[]contt = demo.getContactArray();
+         for (int i=0; i<contt.length; i++) {
+             HashMap<String,String> contactName = getPersonName(contt[i].getName());
+             String cFirstName = StringUtils.noNull(contactName.get("firstname"));
+             String cLastName  = StringUtils.noNull(contactName.get("lastname"));
+             String cEmail = StringUtils.noNull(contt[i].getEmailAddress());
+ 
+-            cdsDt.PhoneNumber[] pn = contt[i].getPhoneNumberArray();
+-            String workPhone="", workExt="", homePhone="", homeExt="", cellPhone="", ext="", patientPhone="";
++            oscar.oscarDemographic.pageUtil.cdsDt[]pn = contt[i].getPhoneNumberArray();
++      String workPhone = "";
++      String workExt = "";
++      String homePhone = "";
++      String homeExt = "";
++      String cellPhone = "";
++      String ext = "";
++      String patientPhone = "";
+             
+-            workPhone=""; workExt=""; homePhone=""; homeExt=""; cellPhone=""; ext="";
++            workPhone=""; homePhone=""; ext="";
+             for (int j=0; j<pn.length; j++) {
+                 String phone = pn[j].getPhoneNumber();
+                 if (phone==null) {
+@@ -613,12 +620,9 @@ import oscar.util.UtilDateUtilities;
+ 
+                     if (pn[j].getPhoneNumberType()==cdsDt.PhoneNumberType.W) {
+                         workPhone = phone;
+-                        workExt   = ext;
+                     } else if (pn[j].getPhoneNumberType()==cdsDt.PhoneNumberType.R) {
+                         homePhone = phone;
+-                        homeExt   = ext;
+                     } else if (pn[j].getPhoneNumberType()==cdsDt.PhoneNumberType.C) {
+-                        cellPhone = phone;
+                     }
+                 }
+             }
+@@ -629,8 +633,10 @@ import oscar.util.UtilDateUtilities;
+             logger.info("adding contacts: " + cLastName + "," + cFirstName + " = " + cDemoNo);
+             
+             
+-            cdsDt.PurposeEnumOrPlainText[] contactPurposes = contt[i].getContactPurposeArray();
+-            String sdm="", emc="", cPurpose=null;
++            oscar.oscarDemographic.pageUtil.cdsDt[]contactPurposes = contt[i].getContactPurposeArray();
++      String sdm = "";
++      String emc = "";
++      String cPurpose = null;
+             String[] rel = new String[contactPurposes.length];
+ 
+             for (int j=0; j<contactPurposes.length; j++) {
+@@ -778,8 +784,10 @@ import oscar.util.UtilDateUtilities;
+         //DEMOGRAPHICS
+         Demographics demo = patientRec.getDemographics();
+         cdsDt.PersonNameStandard.LegalName legalName = demo.getNames().getLegalName();
+-        String lastName="", firstName="";
+-        String lastNameQualifier=null, firstNameQualifier=null;
++    String lastName = "";
++    String firstName = "";
++    String lastNameQualifier = null;
++    String firstNameQualifier = null;
+         if (legalName!=null) {
+             if (legalName.getLastName()!=null) {
+             	lastName = StringUtils.noNull(legalName.getLastName().getPart());
+@@ -801,7 +809,7 @@ import oscar.util.UtilDateUtilities;
+         //other names
+         String  otherNameTxt=null;
+ 
+-        LegalName.OtherName[] legalOtherNames = legalName.getOtherNameArray();
++        cdsDt.PersonNameStandard.LegalName[]legalOtherNames = legalName.getOtherNameArray();
+         String middleNames = "";
+         
+         for (LegalName.OtherName otherName : legalOtherNames) {
+@@ -835,7 +843,10 @@ import oscar.util.UtilDateUtilities;
+             birthDate = null;
+             err_data.add("Error! No Date Of Birth");
+         }
+-        String versionCode="", hin="", hc_type="", hc_renew_date="";
++    String versionCode = "";
++    String hin = "";
++    String hc_type = "";
++    String hc_renew_date = "";
+         cdsDt.HealthCard healthCard = demo.getHealthCard();
+         if (healthCard!=null) {
+             hin = StringUtils.noNull(healthCard.getNumber());
+@@ -883,14 +894,15 @@ import oscar.util.UtilDateUtilities;
+         	enrolments = demo.getEnrolment().getEnrolmentHistoryArray(); 
+         }
+         int enrolTotal = enrolments.length;
+-        String[] roster_status=new String[enrolTotal],
+-        		 roster_date=new String[enrolTotal],
+-        		 term_date=new String[enrolTotal],
+-        		 term_reason=new String[enrolTotal],
+-        		 roster_enrolledTo = new String[enrolTotal];
++    String[] roster_status = new String[enrolTotal];
++    String[] roster_date = new String[enrolTotal];
++    String[] term_date = new String[enrolTotal];
++    String[] term_reason = new String[enrolTotal];
++    String[] roster_enrolledTo = new String[enrolTotal];
+         		
+         String rosterInfo = null;
+-        Calendar enrollDate=null, currentEnrollDate=null;
++    Calendar enrollDate = null;
++    Calendar currentEnrollDate = null;
+ 
+         for (int i=0; i<enrolTotal; i++) {
+             roster_status[i] = enrolments[i].getEnrollmentStatus()!=null ? enrolments[i].getEnrollmentStatus().toString() : "";
+@@ -931,8 +943,11 @@ import oscar.util.UtilDateUtilities;
+                 }
+             }
+         }
+-
+-        String rosterStatus=null, rosterDate=null, termDate=null, termReason=null, rosterEnrolledTo=null;
++    String rosterStatus = null;
++    String rosterDate = null;
++    String termDate = null;
++    String termReason = null;
++    String rosterEnrolledTo = null;
+         if (enrolTotal>0) {
+         	rosterStatus=roster_status[enrolTotal-1];
+         	rosterDate=roster_date[enrolTotal-1];
+@@ -983,9 +998,14 @@ import oscar.util.UtilDateUtilities;
+         } else {
+             err_data.add("Error! No Unique Vendor ID Sequence");
+         }
+-
+-        String address="", city="", province="", postalCode="";
+-        String residentialAddress="", residentialCity="",residentialProvince="",residentialPostalCode="";
++    String address = "";
++    String city = "";
++    String province = "";
++    String postalCode = "";
++    String residentialAddress = "";
++    String residentialCity = "";
++    String residentialProvince = "";
++    String residentialPostalCode = "";
+ 		
+         if(demo.getAddressArray()!= null) {
+ 	        for (cdsDt.Address addr :demo.getAddressArray()) {
+@@ -1030,8 +1050,14 @@ import oscar.util.UtilDateUtilities;
+ 	        	}   	
+ 	        }
+         }
+-        cdsDt.PhoneNumber[] pn = demo.getPhoneNumberArray();
+-        String workPhone="", workExt="", homePhone="", homeExt="", cellPhone="", ext="", patientPhone="";
++        oscar.oscarDemographic.pageUtil.cdsDt[]pn = demo.getPhoneNumberArray();
++    String workPhone = "";
++    String workExt = "";
++    String homePhone = "";
++    String homeExt = "";
++    String cellPhone = "";
++    String ext = "";
++    String patientPhone = "";
+         for (int i=0; i<pn.length; i++) {
+             String phone = pn[i].getPhoneNumber();
+             if (StringUtils.empty(phone)) {
+@@ -1098,7 +1124,7 @@ import oscar.util.UtilDateUtilities;
+ 
+         if(courseId == 0) {
+             demographicNo = dd.getDemoNoByNamePhoneEmail(loggedInInfo, firstName, lastName, homePhone, workPhone, email);
+-            demographic = dd.getDemographic(loggedInInfo, demographicNo);
++      dd.getDemographic(loggedInInfo, demographicNo);
+         }
+ /*
+         if (demographic!=null && StringUtils.nullSafeEqualsIgnoreCase(demographic.getPatientStatus(), "Contact-only")) {
+@@ -1829,7 +1855,8 @@ import oscar.util.UtilDateUtilities;
+ 
+                 //CLINICAL NOTES
+                 ClinicalNotes[] cNotes = patientRec.getClinicalNotesArray();
+-                Date observeDate = new Date(), createDate = new Date();
++      Date observeDate = new Date();
++      Date createDate = new Date();
+                 for (int i=0; i<cNotes.length; i++) {
+                     //encounter note
+                     String encounter = cNotes[i].getMyClinicalNotesContent();
+@@ -2270,9 +2297,9 @@ import oscar.util.UtilDateUtilities;
+ 
+                 //IMMUNIZATIONS
+                 Immunizations[] immuArray = patientRec.getImmunizationsArray();
+-                for (int i=0; i<immuArray.length; i++) {
+-                    String preventionDate="", refused="0";
+-                    String preventionType=null, immExtra=null;
++                for (int i=0; i<immuArray.length; i++) {String preventionDate = "";
++        String preventionType = null;
++        String immExtra = null;
+                     ArrayList<Map<String,String>> preventionExt = new ArrayList<Map<String,String>>();
+ 
+                     if (StringUtils.filled(immuArray[i].getImmunizationName())) {
+@@ -2334,10 +2361,7 @@ import oscar.util.UtilDateUtilities;
+                     
+ 
+                     preventionDate = dateFPtoString(immuArray[i].getDate(), timeShiftInDays);
+-                    
+-                   
+-                    
+-                    refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
++        String refused = (getYN(immuArray[i].getRefusedFlag()).equals("Yes")) ? "1" : "0";
+                     if (immuArray[i].getRefusedFlag()==null) err_data.add("Error! No Refused Flag for Immunizations ("+(i+1)+")");
+ 
+                     String din = null;
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConAddSpecialistAction.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConAddSpecialistAction.java
+index f409429494..3cf6c40650 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConAddSpecialistAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConAddSpecialistAction.java
+@@ -154,7 +154,7 @@ public class EctConAddSpecialistAction extends Action {
+ 				sb.append((char)a);
+ 			}
+ 		}
+-		address = sb.toString();
++		sb.toString();
+ 		professionalSpecialist.setStreetAddressFromForm(addSpecailistForm.getAddress());
+ 	
+ 		professionalSpecialist.setPhoneNumber(addSpecailistForm.getPhone());
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFaxAction.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFaxAction.java
+index 54b04383c1..ba6c242c3d 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFaxAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFaxAction.java
+@@ -83,8 +83,6 @@ public class EctConsultationFaxAction extends Action {
+       }
+ 
+       OscarProperties props = OscarProperties.getInstance();
+-      
+-      FaxJob faxJob = new FaxJob();
+       boolean errors = false;
+ 
+       FaxClientLog faxClientLog = new FaxClientLog();
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
+index 56ba162465..c9dd58ab23 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
+@@ -149,7 +149,7 @@ public class EctConsultationFormRequestPrintPdf {
+         dynamicHeight = addDynamicPositionedText("Pertinent Clinical Information: ", reqForm.clinicalInformation, dynamicHeight, reqForm);
+         dynamicHeight = addDynamicPositionedText("Significant Concurrent Problems: ", reqForm.concurrentProblems, dynamicHeight, reqForm);
+         dynamicHeight = addDynamicPositionedText("Current Medications: ", reqForm.currentMedications, dynamicHeight, reqForm);
+-        dynamicHeight = addDynamicPositionedText("Allergies: ", reqForm.allergies, dynamicHeight, reqForm);
++    addDynamicPositionedText("Allergies: ", reqForm.allergies, dynamicHeight, reqForm);
+ 
+         document.close();
+         reader.close();
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java
+index e5f6ff8a86..8c53488851 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java
+@@ -91,9 +91,11 @@ public class EctViewConsultationRequestsUtil {
+           Provider prov;
+           ProfessionalSpecialist specialist;
+           ConsultationServices services;
+-          Calendar cal = Calendar.getInstance();
+-          Date date1, date2;
+-          String providerId, providerName, specialistName;
++            Date date1;
++            Date date2;
++            String providerId;
++            String providerName;
++            String specialistName;
+           List consultList = consultReqDao.getConsults(team, showCompleted, startDate, endDate, orderby, desc, searchDate, offset, limit);
+ 
+           for( int idx = 0; idx < consultList.size(); ++idx ) {
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewRequestAction.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewRequestAction.java
+index ab20cd48c5..b25b7699cf 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewRequestAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewRequestAction.java
+@@ -102,13 +102,11 @@ public class EctViewRequestAction extends Action {
+ 			int hour = cal.get(Calendar.HOUR_OF_DAY);
+ 			if(cal.get(Calendar.AM_PM) == Calendar.AM) {
+ 				if( hour == 0 ) {
+-					hour = 12;
+ 				}
+ 				thisForm.setAppointmentPm("AM");				
+ 			}
+ 			else {
+ 				if( hour > 12 ) {
+-					hour -= 12;
+ 				}
+ 				thisForm.setAppointmentPm("PM");
+ 			}
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java
+index 0c5431ff19..e8f20ea992 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java
+@@ -534,9 +534,6 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
+             Document doc = parser.build(is);
+             Element root = doc.getRootElement();
+ 
+-            ///
+-            XMLOutputter outp = new XMLOutputter();
+-
+ 
+             ///
+             //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
+@@ -549,7 +546,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
+                 d.AddIndicator(e.getAttributeValue("key"), e.getAttributeValue("colour"));
+             }
+             List<Element> elements = root.getChildren();
+-            List<Element> items = root.getChildren("item");
++                root.getChildren("item");
+             List<Node> aItems = new ArrayList<Node>();
+ 
+             processItems(elements, aItems, null, d);
+@@ -615,8 +612,6 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
+             Document doc = parser.build(is);
+             Element root = doc.getRootElement();
+ 
+-            XMLOutputter outp = new XMLOutputter();
+-
+             //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
+             ImportMeasurementTypes importMeasurementTypes = new ImportMeasurementTypes();
+             importMeasurementTypes.importMeasurements(root);
+@@ -627,7 +622,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
+                 d.AddIndicator(e.getAttributeValue("key"), e.getAttributeValue("colour"));
+             }
+             List<Element> elements = root.getChildren();
+-            List<Element> items = root.getChildren("item");
++                root.getChildren("item");
+             List<Node> aItems = new ArrayList<Node>();
+ 
+                 processItems(elements, aItems, null, d);
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementStyleSheetAction.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementStyleSheetAction.java
+index fbbc7ea63e..362a9964d9 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementStyleSheetAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementStyleSheetAction.java
+@@ -132,12 +132,12 @@ public class EctAddMeasurementStyleSheetAction extends Action {
+ 
+             MiscUtils.getLogger().debug("File not found");
+             MiscUtils.getLogger().error("Error", fnfe);
+-            return isAdded=false;
++            return false;
+ 
+         }
+         catch (IOException ioe) {
+             MiscUtils.getLogger().error("Error", ioe);
+-            return isAdded=false;
++            return false;
+         }
+       
+         return isAdded;
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasuringInstructionAction.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasuringInstructionAction.java
+index 9cf68c30b1..d85f117757 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasuringInstructionAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasuringInstructionAction.java
+@@ -67,8 +67,6 @@ public class EctAddMeasuringInstructionAction extends Action {
+         if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
+         
+         request.getSession().setAttribute("EctAddMeasuringInstructionForm", frm);
+-        
+-        MsgStringQuote str = new MsgStringQuote();
+         String requestId = "";
+         List messages = new LinkedList();
+         
+@@ -120,8 +118,7 @@ public class EctAddMeasuringInstructionAction extends Action {
+         	m.setValidation(validation);
+         	
+         	dao.persist(m);
+-        	
+-        	requestId = m.getId().toString();
++				m.getId().toString();
+         }
+                
+         MessageResources mr = getResources(request);
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java
+index 007c7c5f06..f3d061d837 100755
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java
+@@ -93,8 +93,6 @@ public class EctFindMeasurementTypeUtil {
+      */
+     static public Vector checkMeasurmentTypes(InputStream is, String formName){
+ 
+-        EctFormProp formProp = getEctMeasurementsType(is);
+-
+         Vector measurementTypes = EctFormProp.getMeasurementTypes();
+ 
+         for(int i=0; i<measurementTypes.size(); i++){
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/WriteNewMeasurements.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/WriteNewMeasurements.java
+index 4ddd09d1a5..82d61aa488 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/WriteNewMeasurements.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/WriteNewMeasurements.java
+@@ -82,10 +82,7 @@ public class WriteNewMeasurements {
+         //--------All measurement values are organized in Hashtables in an arraylist
+         //--------validation......
+         preProcess(measures);
+-        ActionMessages errors = new ActionMessages();
+-        //errors.add("value",
+-           //new ActionError("errors.range", "value", "2", "3"));
+-        errors = validate(measures, demographicNo);
++        ActionMessages errors = validate(measures, demographicNo);
+         if (errors.isEmpty()) {
+             write(measures, demographicNo, providerNo);
+         }
+@@ -145,13 +142,11 @@ public class WriteNewMeasurements {
+             String inputValue = (String) measure.get("value");
+             String dateObserved = (String) measure.get("dateObserved");
+             String comments = (String) measure.get("comments");
+-            String mInstrc, regCharExp;
++            String mInstrc;
++            String regCharExp;
+             String regExp = null;
+-            Double dMax = 0.0;
+-            Double dMin = 0.0;
+             Integer iMax = 0;
+             Integer iMin = 0;
+-            org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+             if (GenericValidator.isBlankOrNull(inputValue)) {
+                 measures.removeElementAt(i);
+                 i--;
+@@ -159,7 +154,9 @@ public class WriteNewMeasurements {
+             }
+             mInstrc = (String) measure.get("measuringInstruction");
+             vs = ectValidation.getValidationType(inputType, mInstrc);
+-            regCharExp = ectValidation.getRegCharacterExp();
++            ectValidation.getRegCharacterExp();
++            Double dMax;
++            Double dMin;
+             if (!vs.isEmpty()) {
+     			Validations v = vs.iterator().next();
+     			dMax = v.getMaxValue();
+@@ -209,7 +206,6 @@ public class WriteNewMeasurements {
+             
+             if (!valid) continue;
+             inputValue = org.apache.commons.lang.StringEscapeUtils.escapeSql(inputValue);
+-            inputType = org.apache.commons.lang.StringEscapeUtils.escapeSql(inputType);
+             mInstrc = org.apache.commons.lang.StringEscapeUtils.escapeSql(mInstrc);
+             comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
+ 
+@@ -244,7 +240,7 @@ public class WriteNewMeasurements {
+             String mInstrc = (String) measure.get("measuringInstruction");
+             String comments = (String) measure.get("comments");
+             String dateObserved = (String) measure.get("dateObserved");
+-            String dateEntered = (String) measure.get("dateEntered");
++            ((String) (measure.get("dateEntered")));
+             //write....
+             Measurement m = new Measurement();
+             m.setType(inputType);
+@@ -266,7 +262,7 @@ public class WriteNewMeasurements {
+         String mInstrc = (String) measure.get("measuringInstruction");
+         String comments = (String) measure.get("comments");
+         String dateObserved = (String) measure.get("dateObserved");
+-        String dateEntered = (String) measure.get("dateEntered");
++        ((String) (measure.get("dateEntered")));
+         //write....
+         Measurement m = new Measurement();
+         m.setType(inputType);
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayHRMAction.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayHRMAction.java
+index 8d4f77370d..d5910ec237 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayHRMAction.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayHRMAction.java
+@@ -56,7 +56,6 @@ public class EctDisplayHRMAction extends EctDisplayAction {
+ 			StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
+ 			String js = "";
+ 			List<HRMDocumentToDemographic> hrmDocListDemographic = hrmDocumentToDemographicDao.findByDemographicNo(bean.demographicNo);
+-			String dbFormat = "yyyy-MM-dd";
+ 			String serviceDateStr = "";
+ 			String key;
+ 			String title;
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java
+index 59434ad0a3..a54b252656 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java
+@@ -51,17 +51,17 @@ public class EctDisplayPregnancyAction extends EctDisplayAction {
+     	boolean a = true;
+     	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.pregnancy");
+     	String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+-    	a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
+     	a=true;
+     	if(!a) {
+     		return true;
+     	} else {
+     		try {
+-    			String appointmentNo = request.getParameter("appointment_no");
++                request.getParameter("appointment_no");
+ 
+ 			    //Set lefthand module heading and link
+ 			    String winName = "pregnancy" + bean.demographicNo;
+-			    String pathview, pathedit;
++                String pathview;
++                String pathedit;
+ 
+ 			    pathview = request.getContextPath() + "/Pregnancy.do?method=list&demographicNo=" + bean.demographicNo;
+ 			    pathedit = request.getContextPath() + "/Pregnancy.do?method=edit&demographicNo=" + bean.demographicNo;
+@@ -78,7 +78,6 @@ public class EctDisplayPregnancyAction extends EctDisplayAction {
+ 		        Dao.setMenuHeader("Pregnancy Type");                
+ 		        
+ 		        winName = "AddPregnancy" + bean.demographicNo;
+-			    url = "popupPage(500,600,'" + winName + "','" + pathedit + "'); return false;";
+ 			          		       
+ 		        Dao.addPopUpUrl("popupPage(700,1000,'"+winName+"', '"+ request.getContextPath() +"/Pregnancy.do?method=create&code=72892002&codetype=SnomedCore&demographicNo="+bean.demographicNo+"&appointment="+bean.appointmentNo+"')");
+ 		        Dao.addPopUpText("Normal");
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayTicklerAction.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayTicklerAction.java
+index 568dee11f3..2a14bdb3a6 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayTicklerAction.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayTicklerAction.java
+@@ -56,7 +56,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
+ 
+     //Set lefthand module heading and link
+     String winName = "ViewTickler" + bean.demographicNo;
+-    String pathview, pathedit;
++			String pathview;
++			String pathedit;
+     if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
+     	pathview = request.getContextPath() + "/Tickler.do?filter.demographic_webName="+ encode(bean) +"&filter.demographicNo=" + bean.demographicNo +"&filter.assignee=";
+     	pathedit = request.getContextPath() + "/Tickler.do?method=edit&tickler.demographic_webName="+ encode(bean) +"&tickler.demographicNo=" + bean.demographicNo;
+@@ -77,9 +78,6 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
+     Dao.setRightURL(url);
+     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
+ 
+-    String dateBegin = "1900-01-01";
+-    String dateEnd = "8888-12-31";
+-
+     TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+     List<Tickler> ticklers = ticklerManager.findActiveByDemographicNo(loggedInInfo,Integer.parseInt(bean.demographicNo));
+ 
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctIncomingEncounterAction.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctIncomingEncounterAction.java
+index e5c9852868..3d1da72576 100755
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctIncomingEncounterAction.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctIncomingEncounterAction.java
+@@ -101,14 +101,12 @@ public class EctIncomingEncounterAction extends Action {
+ 				return mapping.findForward("domain-error");
+ 			}
+ 		}
+-		
+-
+-		EctSessionBean bean = new EctSessionBean();
+ 		String appointmentNo = null;
+ 
+ 		if (request.getSession().getAttribute("cur_appointment_no") != null) {
+ 			appointmentNo = (String) request.getSession().getAttribute("cur_appointment_no");
+ 		}
++		EctSessionBean bean;
+ 
+ 		if (request.getParameter("appointmentList") != null) {
+ 			bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
+diff --git a/src/main/java/oscar/oscarLab/ca/all/pageUtil/LabPDFCreator.java b/src/main/java/oscar/oscarLab/ca/all/pageUtil/LabPDFCreator.java
+index 573d255ec6..e1221a6e69 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/pageUtil/LabPDFCreator.java
++++ b/src/main/java/oscar/oscarLab/ca/all/pageUtil/LabPDFCreator.java
+@@ -1196,7 +1196,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
+             PdfContentByte cb = writer.getDirectContent();
+             BaseFont bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+             int pageNum = document.getPageNumber();
+-            float width = page.getWidth();
++   page.getWidth();
+             float height = page.getHeight();
+ 
+             //add patient name header for every page but the first.
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/BioTestHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/BioTestHandler.java
+index 82d2348f73..a5fe567d6f 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/BioTestHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/BioTestHandler.java
+@@ -431,7 +431,6 @@ public class BioTestHandler implements MessageHandler {
+                 l++;
+ 
+             }
+-            l--;
+ 
+             int k = 0;
+             String nextComment = Terser.get(obxSeg,5,k,1,1);
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/ExcellerisOntarioHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/ExcellerisOntarioHandler.java
+index 9fe9024abb..3a94f62331 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/ExcellerisOntarioHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/ExcellerisOntarioHandler.java
+@@ -70,7 +70,7 @@ public class ExcellerisOntarioHandler implements MessageHandler {
+ 			"MICROGCMT","MICROGRT", "MICROBCT","TRANSCRIP", "NOTIF");
+ 	
+ 	public static final String VIHARTF = "CELLPATHR";
+-	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT} // Numeric, String, Coded Element, Text, String
++	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT;} // Numeric, String, Coded Element, Text, String
+ 
+     /** Creates a new instance */
+     public ExcellerisOntarioHandler() {
+@@ -174,7 +174,7 @@ public class ExcellerisOntarioHandler implements MessageHandler {
+     	if(data.length>0) {
+     		CX cx = data[0];
+     		String hin = cx.getCx1_ID().getValue();
+-    		String type = cx.getCx5_IdentifierTypeCode().getValue();
++            cx.getCx5_IdentifierTypeCode().getValue();
+     		String ver = "";
+     		if(cx.getExtraComponents() != null && cx.getExtraComponents().numComponents() == 5) {
+     			Varies v = cx.getExtraComponents().getComponent(4);
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/HHSEmrDownloadHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/HHSEmrDownloadHandler.java
+index 5a5c1d6c8c..869d357420 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/HHSEmrDownloadHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/HHSEmrDownloadHandler.java
+@@ -138,8 +138,7 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
+         msg = p.parse(hl7Body.replaceAll( "\n", "\r\n"));
+ 
+         terser = new Terser(msg);
+-
+-        int obrCount = getOBRCount();
++  getOBRCount();
+ 
+         obrGroups = new ArrayList();
+ 
+@@ -170,43 +169,42 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
+ 
+ 
+ 
+-    /*
+-        logger.debug("obr Count "+obrCount);
+-        for (int i=0; i < obrCount; i++){
+-            ArrayList obxSegs = new ArrayList();
+-            count = 0;
+-
+-            obrNum = i+1;
+-            obrFlag = false;
+-            logger.debug("segment len "+segments.length);
+-
+-            for (int k=0; k < segments.length; k++){
+-
+-                segmentName = segments[k].substring(0, 3);
+-                logger.debug("Segment Name "+segmentName+"  OBR flag "+obrFlag);
+-                if (obrFlag && segmentName.equals("OBX")){
+-
+-                    // make sure to count all of the obx segments in the group
+-                    Structure[] segs = terser.getFinder().getRoot().getAll(segments[k]);
+-                    logger.debug("segment length "+segs.length);
+-                    for (int l=0; l < segs.length; l++){
+-                        Segment obxSeg = (Segment) segs[l];
+-                        obxSegs.add(obxSeg);
+-                    }
++    /* logger.debug("obr Count "+obrCount);
++  for (int i=0; i < obrCount; i++){
++  ArrayList obxSegs = new ArrayList();
++  count = 0;
+ 
+-                }else if (obrFlag && segmentName.equals("OBR")){
+-                    logger.debug("breaking");
+-                    break;
+-                }else if ( segments[k].equals("OBR"+obrNum) || ( obrNum==1 && segments[k].equals("OBR"))){
+-                    logger.debug("setting obr Flag true obrNum "+obrNum+" segment  "+segments[k]);
+-                    obrFlag = true;
+-                }
++  obrNum = i+1;
++  obrFlag = false;
++  logger.debug("segment len "+segments.length);
+ 
+-            }
+-            logger.debug("obxSegs size "+obxSegs.size() );
+-            obrGroups.add(obxSegs);
+-        }
+-        */
++  for (int k=0; k < segments.length; k++){
++
++  segmentName = segments[k].substring(0, 3);
++  logger.debug("Segment Name "+segmentName+"  OBR flag "+obrFlag);
++  if (obrFlag && segmentName.equals("OBX")){
++
++  // make sure to count all of the obx segments in the group
++  Structure[] segs = terser.getFinder().getRoot().getAll(segments[k]);
++  logger.debug("segment length "+segs.length);
++  for (int l=0; l < segs.length; l++){
++  Segment obxSeg = (Segment) segs[l];
++  obxSegs.add(obxSeg);
++  }
++
++  }else if (obrFlag && segmentName.equals("OBR")){
++  logger.debug("breaking");
++  break;
++  }else if ( segments[k].equals("OBR"+obrNum) || ( obrNum==1 && segments[k].equals("OBR"))){
++  logger.debug("setting obr Flag true obrNum "+obrNum+" segment  "+segments[k]);
++  obrFlag = true;
++  }
++
++  }
++  logger.debug("obxSegs size "+obxSegs.size() );
++  obrGroups.add(obxSegs);
++  }
++   */
+ 
+     }
+ //
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/IHAHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/IHAHandler.java
+index f4f0ee5615..abdfb4c757 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/IHAHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/IHAHandler.java
+@@ -784,10 +784,10 @@ public class IHAHandler implements MessageHandler {
+         	across all columns
+         	*/
+         	String repType = getSendingApplication();
+-        	if((index=repType.indexOf("TX"))!=-1) return "NAR";
+-        	if((index=repType.indexOf("OE"))!=-1) return "NAR";
+-        	if((index=repType.indexOf("RAD"))!=-1) return "NAR";
+-        	if((index=repType.indexOf("LAB"))!=-1) {
++        	if(repType.indexOf("TX")!=-1) return "NAR";
++        	if(repType.indexOf("OE")!=-1) return "NAR";
++        	if(repType.indexOf("RAD")!=-1) return "NAR";
++        	if(repType.indexOf("LAB")!=-1) {
+         		String type = getReceivingApplication();
+         		if(type.equals("BBK")) return "NAR";
+         		//if(type.equals("MB")) return "NAR";
+@@ -815,7 +815,7 @@ public class IHAHandler implements MessageHandler {
+     public String getOBXName(int i, int j){
+     	int index;
+     	String repType = getSendingApplication();
+-    	if((index=repType.indexOf("OE"))!=-1) return "Narrative Report";
++    	if(repType.indexOf("OE")!=-1) return "Narrative Report";
+         return(getOBXField(i, j, 3, 0, 2));
+     }
+ 
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/SpireHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/SpireHandler.java
+index f4a0a0d886..a3dc6a7134 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/SpireHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/SpireHandler.java
+@@ -481,7 +481,6 @@ public class SpireHandler implements MessageHandler {
+ 
+ 	public String getOBXResult(int i, int j){
+         try{
+-            Terser terser = new Terser(msg);
+             return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
+         }catch(Exception e){
+             return("");
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/TDISHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/TDISHandler.java
+index a5425dc50a..c8714a6489 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/TDISHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/TDISHandler.java
+@@ -315,8 +315,6 @@ public class TDISHandler implements MessageHandler {
+ 	public String getOBXIdentifier(int i, int j) {
+ 
+ 		try {
+-
+-			Terser t = new Terser(msg);
+ 			Segment obxSeg = ((ca.uhn.hl7v2.model.v25.segment.OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i)))
+ 					.get(j));
+ 			String ident = getString(Terser.get(obxSeg, 3, 0, 1, 1));
+@@ -418,14 +416,12 @@ public class TDISHandler implements MessageHandler {
+ 	 * @return String obx result
+ 	 */
+ 	@SuppressWarnings("unchecked")
+-	public String getOBXResult(int i, int j, boolean its) {
+-
+-		String result = "", newComment = "";
++	public String getOBXResult(int i, int j, boolean its) {String result = "";
++		String newComment = "";
+ 		int len = 80; 
+ 		
+ 		try {
+ 			OBX obx = null;
+-			Terser terser = new Terser(msg);
+ 			result = getString(Terser.get((obx = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)), 5, 0,
+ 					1, 1));
+ 
+@@ -464,7 +460,6 @@ public class TDISHandler implements MessageHandler {
+ 	public String getOBXReferenceRange(int i, int j) {
+ 		String ret = "";
+ 		try {
+-			Terser terser = new Terser(msg);
+ 
+ 			ca.uhn.hl7v2.model.v25.segment.OBX obxSeg = (ca.uhn.hl7v2.model.v25.segment.OBX) ((ArrayList) obrSegMap
+ 					.get(obrSegKeySet.get(i))).get(j);
+@@ -512,7 +507,6 @@ public class TDISHandler implements MessageHandler {
+ 			// if there are no units specified check the formatted reference
+ 			// range for the units
+ 			if (ret.equals("")) {
+-				Terser terser = new Terser(msg);
+ 				ret = getString(Terser.get(obxSeg, 7, 0, 2, 1));
+ 
+ 				// only display units from the formatted reference range if they
+@@ -591,7 +585,6 @@ public class TDISHandler implements MessageHandler {
+ 		// array
+ 		j++;
+ 		try {
+-			Terser terser = new Terser(msg);
+ 
+ 			int obxCount = getOBXCount(i);
+ 			int count = 0;
+@@ -607,7 +600,6 @@ public class TDISHandler implements MessageHandler {
+ 				l++;
+ 
+ 			}
+-			l--;
+ 
+ 			int k = 0;
+ 			String nextComment = Terser.get(obxSeg, 5, k, 1, 1);
+@@ -633,8 +625,6 @@ public class TDISHandler implements MessageHandler {
+ 			//for ITS^REPORT return the fields of the ITS REPORT as comments
+ 			if (isReport(i, j))
+ 				return 1; //1 line of report per OBX line as comment
+-
+-			Terser terser = new Terser(msg);
+ 			String comment = "";
+ 			OBX obxSeg = getOBX(i, j);
+ 			while (comment != null) {
+@@ -660,8 +650,6 @@ public class TDISHandler implements MessageHandler {
+ 				return getOBXResult(i, j, true);
+ 			}
+ 			k++;
+-
+-			Terser terser = new Terser(msg);
+ 			ca.uhn.hl7v2.model.v25.segment.OBX obxSeg = (ca.uhn.hl7v2.model.v25.segment.OBX) ((ArrayList) obrSegMap
+ 					.get(obrSegKeySet.get(i))).get(j);
+ 			comment = Terser.get(obxSeg, 7, k, 1, 1);
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/DefaultHandler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/DefaultHandler.java
+index a7fc82e172..816c7b1c22 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/DefaultHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/DefaultHandler.java
+@@ -127,7 +127,7 @@ public class DefaultHandler implements MessageHandler {
+                         
+         char[] chars = new char[1024];
+         int numRead = 0;
+-        while( (numRead = reader.read(chars)) > -1){
++        while( reader.read(chars) > -1){
+                 sb.append(String.valueOf(chars));       
+         }
+ 
+diff --git a/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java b/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java
+index 246843c164..1019e8c49e 100644
+--- a/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java
++++ b/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java
+@@ -374,7 +374,7 @@ public class CMLLabTest {
+ 			} else {
+ 				log.debug("new");
+ 				gResults = new GroupResults();
+-				gResults.groupName = currentGroup = lab.title;
++				gResults.groupName = lab.title;
+ 				groups.add(gResults);
+ 				gResults.addLabResult(lab);
+ 				currentGroup = lab.title;
+diff --git a/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java b/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java
+index 64db20c633..a6e0ce77b7 100644
+--- a/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java
++++ b/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java
+@@ -336,7 +336,6 @@ public class CommonLabTestValues {
+ 			for(Object[] i : dao.findMdsRoutings(demographicNo==null?0:demographicNo, testName, "MDS")) {
+ 					MdsOBX x = (MdsOBX) i[0];
+ 					MdsMSH m = (MdsMSH) i[1];
+-					PatientLabRouting p = (PatientLabRouting) i[2];
+ 					
+ 					String testNam = parseObservationId(x.getObservationIdentifier());
+ 
+@@ -518,7 +517,6 @@ public class CommonLabTestValues {
+ 		
+ 		PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
+ 		for(Object[] i : dao.findRoutingsAndTests(ConversionUtils.fromIntString(demographicNo), "CML")) {
+-			PatientLabRouting p = (PatientLabRouting) i[0];
+ 			LabTestResults ltr = (LabTestResults) i[1];
+ 			LabPatientPhysicianInfo lpp =(LabPatientPhysicianInfo) i[2];
+ 			
+@@ -555,7 +553,6 @@ public class CommonLabTestValues {
+ 		for(Object[] i : dao.findTests(ConversionUtils.fromIntString(demographicNo), "MDS")) {
+ 			MdsOBX x = (MdsOBX) i[0]; 
+ 			MdsMSH m = (MdsMSH) i[0];
+-			PatientLabRouting p = (PatientLabRouting) i[0];
+ 			
+ 			
+ 				String obserIden = parseObservationId(x.getObservationIdentifier()); 
+diff --git a/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java b/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java
+index 01627c0d8a..2575fddf72 100755
+--- a/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java
++++ b/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java
+@@ -385,7 +385,7 @@ public class SpireLabTest {
+ 			} else {
+ 				log.debug("new");
+ 				gResults = new GroupResults();
+-				gResults.groupName = currentGroup = lab.title;
++				gResults.groupName = lab.title;
+ 				groups.add(gResults);
+ 				gResults.addLabResult(lab);
+ 				currentGroup = lab.title;
+diff --git a/src/main/java/oscar/oscarMDS/data/MDSResultsData.java b/src/main/java/oscar/oscarMDS/data/MDSResultsData.java
+index 4b9c05ca07..02bd92f3e8 100644
+--- a/src/main/java/oscar/oscarMDS/data/MDSResultsData.java
++++ b/src/main/java/oscar/oscarMDS/data/MDSResultsData.java
+@@ -390,8 +390,6 @@ public class MDSResultsData {
+ 					labResults.add(lData);
+ 				else if( !attached && Collections.binarySearch(attachedLabs, lData, c) < 0 )
+ 					labResults.add(lData);
+-
+-				lData = new LabResultData(LabResultData.MDS);
+ 			}
+ 		}catch(Exception e){
+ 			logger.error("exception in MDSResultsData", e);
+diff --git a/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayDemographicMessagesAction.java b/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayDemographicMessagesAction.java
+index e87ddb29f3..1bf1e24cf8 100644
+--- a/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayDemographicMessagesAction.java
++++ b/src/main/java/oscar/oscarMessenger/pageUtil/MsgDisplayDemographicMessagesAction.java
+@@ -90,10 +90,10 @@ public class MsgDisplayDemographicMessagesAction extends Action {
+ 
+                 request.getSession().setAttribute("msgSessionBean", bean);
+                                 
+-            }//if
+-            else
++            }
++		 else
+             {
+-                bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
++			((oscar.oscarMessenger.pageUtil.MsgSessionBean) (request.getSession().getAttribute("msgSessionBean")));
+             }//else
+             
+             
+diff --git a/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java b/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java
+index 96ce19703f..421dd7f749 100644
+--- a/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java
++++ b/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java
+@@ -71,7 +71,6 @@ public class MsgDemoMap {
+         MsgDemoMapDao dao = SpringUtils.getBean(MsgDemoMapDao.class);
+         dao.getMessagesAndDemographicsByMessageId(ConversionUtils.fromIntString(msgId));
+         for(Object[] o : dao.getMessagesAndDemographicsByMessageId(ConversionUtils.fromIntString(msgId))) {
+-        	org.oscarehr.common.model.MsgDemoMap m = (org.oscarehr.common.model.MsgDemoMap) o[0];
+         	Demographic d = (Demographic) o[1];
+                 if( demoMap.containsKey(String.valueOf(d.getDemographicNo())) ) {
+                     demoMap.get(String.valueOf(d.getDemographicNo())).add(d.getFormattedName());
+@@ -94,7 +93,6 @@ public class MsgDemoMap {
+         MsgDemoMapDao dao = SpringUtils.getBean(MsgDemoMapDao.class);
+         dao.getMessagesAndDemographicsByMessageId(ConversionUtils.fromIntString(msgId));
+         for(Object[] o : dao.getMessagesAndDemographicsByMessageId(ConversionUtils.fromIntString(msgId))) {
+-        	org.oscarehr.common.model.MsgDemoMap m = (org.oscarehr.common.model.MsgDemoMap) o[0];
+         	Demographic d = (Demographic) o[1];
+         	demoMap.put("" + d.getDemographicNo(), d.getFullName() );
+         }
+diff --git a/src/main/java/oscar/oscarProvider/data/ProviderData.java b/src/main/java/oscar/oscarProvider/data/ProviderData.java
+index 9b6bf631f5..b79894e10b 100644
+--- a/src/main/java/oscar/oscarProvider/data/ProviderData.java
++++ b/src/main/java/oscar/oscarProvider/data/ProviderData.java
+@@ -607,9 +607,7 @@ public class ProviderData {
+ 	public static List<Map<String, String>> searchProvider(String searchStr, boolean onlyActive) {
+ 		String firstname = null;
+ 		String lastname = null;
+-		if (searchStr.indexOf(",") != -1) {
+-			String[] array = new String[2];
+-			array = searchStr.split(",");
++		if (searchStr.indexOf(",") != -1) {String[] array = searchStr.split(",");
+ 			lastname = array[0].trim();
+ 			firstname = array[1].trim();
+ 		} else {
+diff --git a/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java b/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java
+index b376e8ead9..e7f2858bb3 100644
+--- a/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java
++++ b/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java
+@@ -66,9 +66,9 @@ public class RptTableFieldNameCaption {
+         try {
+             ResultSet rs = DBHelp.searchDBRecord(sql);
+             if (rs.next()) {
+-                ret = insertRecord();
++                insertRecord();
+             } else {
+-                ret = updateRecord();
++                updateRecord();
+             }
+             rs.close();
+         } catch (SQLException e) {
+diff --git a/src/main/java/oscar/oscarReport/pageUtil/ManagePatientLettersAction.java b/src/main/java/oscar/oscarReport/pageUtil/ManagePatientLettersAction.java
+index 398afb3580..abf9a40993 100644
+--- a/src/main/java/oscar/oscarReport/pageUtil/ManagePatientLettersAction.java
++++ b/src/main/java/oscar/oscarReport/pageUtil/ManagePatientLettersAction.java
+@@ -85,12 +85,7 @@ public class ManagePatientLettersAction extends Action {
+             
+             fileData = fFile.getFileData();
+             String reportName = request.getParameter("reportName");
+-            
+-            //Getter Stream for letter
+-            //Validate that it is a valid jasper report file
+-            //Save to database
+-            
+-            JasperReport jasperReport = JasperCompileManager.compileReport(new ByteArrayInputStream(fileData));
++            JasperCompileManager.compileReport(new ByteArrayInputStream(fileData));
+         
+             ManageLetters manageLetters = new ManageLetters();
+             manageLetters.saveReport( (String) request.getSession().getAttribute("user"), reportName,fFile.getFileName(), fileData);
+diff --git a/src/main/java/oscar/oscarReport/reportByTemplate/DepressionContinuityReporter.java b/src/main/java/oscar/oscarReport/reportByTemplate/DepressionContinuityReporter.java
+index de202b7b2d..90cd74de66 100644
+--- a/src/main/java/oscar/oscarReport/reportByTemplate/DepressionContinuityReporter.java
++++ b/src/main/java/oscar/oscarReport/reportByTemplate/DepressionContinuityReporter.java
+@@ -94,7 +94,6 @@ public class DepressionContinuityReporter implements Reporter{
+             for(Object[] o : bDao.findDemographicsAndBillingsByDxAndServiceDates(dxCodes, diag_date_from, diag_date_to)) {
+             	 // d.demographic_no, bi.service_date, bi.dx 
+             	Demographic d = (Demographic) o[0];
+-            	BillingONCHeader1 bc = (BillingONCHeader1) o[1];
+             	BillingONItem bi = (BillingONItem) o[2];
+             	
+             	 String demographic_no = d.getDemographicNo().toString(); 
+diff --git a/src/main/java/oscar/oscarReport/reportByTemplate/ReportManager.java b/src/main/java/oscar/oscarReport/reportByTemplate/ReportManager.java
+index c1471bf80c..1ea2d42de8 100644
+--- a/src/main/java/oscar/oscarReport/reportByTemplate/ReportManager.java
++++ b/src/main/java/oscar/oscarReport/reportByTemplate/ReportManager.java
+@@ -105,7 +105,7 @@ public class ReportManager {
+ 			String type = rt.getType() == null ? "" : rt.getType();
+ 			String paramXML = rt.getTemplateXml();
+ 			ArrayList<Parameter> params = new ArrayList<Parameter>();
+-			boolean sequence = rt.isSequence();
++			rt.isSequence();
+ 			
+ 			if (!paramXML.equals("")) {
+ 				paramXML = UtilXML.escapeXML(paramXML); //escapes anomalies such as "date >= {mydate}" the '>' character
+diff --git a/src/main/java/oscar/oscarRx/data/RxDrugData.java b/src/main/java/oscar/oscarRx/data/RxDrugData.java
+index 4ec812452b..b01941129c 100644
+--- a/src/main/java/oscar/oscarRx/data/RxDrugData.java
++++ b/src/main/java/oscar/oscarRx/data/RxDrugData.java
+@@ -676,9 +676,8 @@ public class RxDrugData {
+ 	@Deprecated
+ 	public ArrayList getFormFromDrugCode(String drugCode){
+ 		ArrayList lst = new ArrayList();
+-		Vector v = new Vector();
+ 		RxDrugRef d = new RxDrugRef();
+-		v = d.getFormFromDrugCode(drugCode);
++						Vector v = d.getFormFromDrugCode(drugCode);
+ 		for (int i = 0 ; i < v.size();i++){
+ 			Hashtable h = (Hashtable) v.get(i);
+ 			lst.add(h.get("form"));
+@@ -694,9 +693,8 @@ public class RxDrugData {
+ 	@Deprecated
+ 	public ArrayList getComponentsFromDrugCode(String drugCode){
+ 		ArrayList lst = new ArrayList();
+-		Vector v = new Vector();
+ 		RxDrugRef d = new RxDrugRef();
+-		v = d.listComponents(drugCode);
++						Vector v = d.listComponents(drugCode);
+ 		for (int i = 0 ; i < v.size();i++){
+ 			Hashtable h = (Hashtable) v.get(i);
+ 			lst.add(h.get("name"));
+@@ -711,9 +709,8 @@ public class RxDrugData {
+ 	@Deprecated
+ 	public ArrayList getDistinctForms(){
+ 		ArrayList lst = new ArrayList();
+-		Vector v = new Vector();
+ 		RxDrugRef d = new RxDrugRef();
+-		v = d.getDistinctForms();
++						Vector v = d.getDistinctForms();
+ 		for (int i = 0 ; i < v.size();i++){
+ 			Hashtable h = (Hashtable) v.get(i);
+ 			lst.add(h.get("form"));
+@@ -729,9 +726,8 @@ public class RxDrugData {
+ 	@Deprecated
+ 	public ArrayList getRouteFromDrugCode(String drugCode){
+ 		ArrayList lst = new ArrayList();
+-		Vector v = new Vector();
+ 		RxDrugRef d = new RxDrugRef();
+-		v = d.getRouteFromDrugCode(drugCode);
++						Vector v = d.getRouteFromDrugCode(drugCode);
+ 		for (int i = 0 ; i < v.size();i++){
+ 			Hashtable h = (Hashtable) v.get(i);
+ 			lst.add( h.get("route"));
+@@ -749,10 +745,8 @@ public class RxDrugData {
+ 		Hashtable retHash = new Hashtable();
+ 		String dosage ="";
+ 		String dosageDef ="";
+-		ArrayList lst = new ArrayList();
+-		Vector v = new Vector();
+ 		RxDrugRef d = new RxDrugRef();
+-		v = d.getStrengths(drugCode);
++						Vector v = d.getStrengths(drugCode);
+ 		for (int i = 0 ; i < v.size();i++){
+ 			Hashtable h = (Hashtable) v.get(i);
+ 			dosage    = dosage + ((String) h.get("strength")) +" "+((String) h.get("strength_unit"));
+@@ -780,11 +774,8 @@ public class RxDrugData {
+ 	@Deprecated
+ 	public Hashtable getStrengthsLists(String drugCode){
+ 		Hashtable retHash = new Hashtable();
+-
+-		ArrayList lst = new ArrayList();
+-		Vector v = new Vector();
+ 		RxDrugRef d = new RxDrugRef();
+-		v = d.getStrengths(drugCode);
++						Vector v = d.getStrengths(drugCode);
+ 		ArrayList dosage = new ArrayList();
+ 		ArrayList dosageDef = new ArrayList();
+ 		for (int i = 0 ; i < v.size();i++){
+@@ -869,14 +860,12 @@ public class RxDrugData {
+ 	public Interaction[] getInteractions(Vector atcCodes) throws Exception{
+ 		Interaction[] arr = {};
+ 		ArrayList lst = new ArrayList();
+-		Vector v = new Vector();
+ 		RxDrugRef d = new RxDrugRef();
+ 		for(int i = 0; i < atcCodes.size(); i++){
+ 			String ss = (String) atcCodes.get(i);
+ 			MiscUtils.getLogger().debug(ss);
+ 		}
+-
+-		v = d.getInteractions(atcCodes);
++						Vector v = d.getInteractions(atcCodes);
+ 		for (int i = 0 ; i < v.size();i++){
+ 			Hashtable h = (Hashtable) v.get(i);
+ 			Interaction inact = new Interaction();
+diff --git a/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java b/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java
+index 6e1fe0bba6..d569b84f2d 100644
+--- a/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java
++++ b/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java
+@@ -230,9 +230,6 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
+         			level = providerLevel;
+         	}
+         }
+-
+-
+-        DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+         DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+ 
+         DemographicExt demoWarn = demographicExtDao.getLatestDemographicExt(bean.getDemographicNo(), "rxInteractionWarningLevel");
+@@ -519,11 +516,9 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
+ 		    		} 
+ 		    		
+ 		    		String jsonString = OAuth1Utils.getOAuthGetResponse( loggedInInfo,k2aApp, k2aUser, requestURIWithParams, requestURI);
+-		    		//Convert JSON return to Vector/Hashtable
+-		    		JSONArray jsonArray = new JSONArray();
+ 		    		
+-		    		if(jsonString != null && !jsonString.isEmpty()) {
+-		    			jsonArray = new JSONArray(jsonString);
++		    		if(jsonString != null && !jsonString.isEmpty()) {// Convert JSON return to Vector/Hashtable
++                        JSONArray jsonArray = new JSONArray(jsonString);
+ 		    			result = new Vector();
+ 		    			
+ 		    			for (int i = 0; i < jsonArray.length(); i++) {
+diff --git a/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java b/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java
+index c372832226..ab18cb9acb 100644
+--- a/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java
++++ b/src/main/java/oscar/oscarRx/pageUtil/RxSearchAllergyAction.java
+@@ -80,8 +80,6 @@ public final class RxSearchAllergyAction extends Action {
+  		if( jsondata != null ) {			
+  			frm = (RxSearchAllergyForm) JsonUtil.jsonToPojo(jsondata, RxSearchAllergyForm.class);
+  		}
+- 		
+-        RxAllergyData aData = new RxAllergyData();
+         //RxAllergyData.Allergy[] arr =
+         //    aData.AllergySearch(frm.getSearchString(), frm.getType5(),
+         //    frm.getType4(), frm.getType3(), frm.getType2(), frm.getType1());
+@@ -90,8 +88,6 @@ public final class RxSearchAllergyAction extends Action {
+         ///Search a drug like another one
+ 
+         RxDrugRef drugRef = new RxDrugRef();
+-
+-        java.util.Vector vec    = new java.util.Vector();
+         java.util.Vector catVec = new java.util.Vector();
+ 
+         /**
+@@ -133,15 +129,13 @@ public final class RxSearchAllergyAction extends Action {
+         boolean itemsFound = true;
+ 
+         String wildcardRightOnly = OscarProperties.getInstance().getProperty("allergies.search_right_wildcard_only", "false");
+-        vec  = drugRef.list_search_element_select_categories(frm.getSearchString(),catVec,Boolean.valueOf(wildcardRightOnly));
++		Vector vec = drugRef.list_search_element_select_categories(frm.getSearchString(), catVec, Boolean.valueOf(wildcardRightOnly));
+ 
+         //  'id':'0','category':'','name'
+         Allergy[] arr = new Allergy[vec==null?0:vec.size()];
+ 
+         String includeClassesStr = OscarProperties.getInstance().getProperty("allergies.include_ahfs_class_in_results", "true");
+         boolean includeClasses = Boolean.valueOf(includeClassesStr);
+-
+-        boolean flatResults = Boolean.valueOf(OscarProperties.getInstance().getProperty("allergies.flat_results", "false"));
+         TreeMap<String,Allergy> flatList = new TreeMap<String,Allergy>();
+ 
+         //we want to categorize the search results.
+@@ -153,8 +147,6 @@ public final class RxSearchAllergyAction extends Action {
+         allergyResults.put(13, new ArrayList<Allergy>());
+         allergyResults.put(14, new ArrayList<Allergy>());
+ 
+-        Map<Integer,Allergy> classResults = new HashMap<Integer,Allergy>();
+-
+         Vector classVec = new Vector() ;
+         for (int i = 0; i < vec.size(); i++){
+         	java.util.Hashtable hash = (java.util.Hashtable) vec.get(i);
+diff --git a/src/main/java/oscar/oscarRx/util/RxUtil.java b/src/main/java/oscar/oscarRx/util/RxUtil.java
+index 2566af5a2b..1e2960d379 100644
+--- a/src/main/java/oscar/oscarRx/util/RxUtil.java
++++ b/src/main/java/oscar/oscarRx/util/RxUtil.java
+@@ -563,7 +563,7 @@ public class RxUtil {
+ 					Matcher fMatcher = fPattern.matcher(part);
+ 					String frequencyStr = "";
+ 					if (fMatcher.find()) {
+-						frequencyStr = part.substring(fMatcher.start(), fMatcher.end());
++						part.substring(fMatcher.start(), fMatcher.end());
+ 						break;
+ 					}
+ 					if (frequencyStr.equals("")) {
+@@ -866,7 +866,6 @@ public class RxUtil {
+ 					Matcher m3 = p3.matcher(frequency);
+ 					if (m3.find()) {
+ 						durationUnit = "M";
+-						found = true;
+ 					}
+ 				}
+ 			}
+@@ -893,9 +892,6 @@ public class RxUtil {
+ 			takeMax = swap;
+ 		}
+ 
+-		double nPerDay = 0d;//number of drugs per day
+-		double nDays = 0d;//number of days per duration unit
+-
+ 		MiscUtils.getLogger().debug("in instrucParser,unitName=" + rx.getUnitName());
+ 		boolean isUnitNameUsed = true;
+ 		if (rx.getUnitName() == null || rx.getUnitName().trim().length() == 0) isUnitNameUsed = false;
+@@ -912,6 +908,10 @@ public class RxUtil {
+ 		//no, leave quantity intact.
+ 		//--start new code
+ 		rx.setQuantity(rx.getQuantity().trim());
++		double nPerDay;// number of drugs per day
++
++		double nDays;// number of days per duration unit
++
+ 		if (duration.equals("0") || duration.length() == 0 || duration == null) {//if duration is not specified, find duration based on quantity
+ 			rx.setDurationSpecifiedByUser(false);
+ 			if (!isUnitNameUsed && rx.getQuantity() != null && !rx.getQuantity().equalsIgnoreCase("null") && !rx.getQuantity().equals("") && !durationUnit.equals("") && !frequency.equals("") && !takeMax.equals("0")) {
+diff --git a/src/main/java/oscar/util/CBIUtil.java b/src/main/java/oscar/util/CBIUtil.java
+index 03b758e10e..d9860d66d8 100644
+--- a/src/main/java/oscar/util/CBIUtil.java
++++ b/src/main/java/oscar/util/CBIUtil.java
+@@ -689,8 +689,8 @@ public class CBIUtil
+ 	            return null;
+ 	        } else {
+ 	            GregorianCalendar gc = new GregorianCalendar();
+-	            gc.clear();	        
+-	            String timezone = gc.getTimeZone().getDisplayName();    
++	            gc.clear();
++			gc.getTimeZone().getDisplayName();    
+ 	            gc.setTimeInMillis(date.getTime());
+ 	            XMLGregorianCalendar xmlCalendar = df.newXMLGregorianCalendar(gc);
+ 	            	            
+diff --git a/src/main/java/oscar/util/OscarRoleObjectPrivilege.java b/src/main/java/oscar/util/OscarRoleObjectPrivilege.java
+index a1c86b107e..ac0bccdc20 100644
+--- a/src/main/java/oscar/util/OscarRoleObjectPrivilege.java
++++ b/src/main/java/oscar/util/OscarRoleObjectPrivilege.java
+@@ -137,10 +137,7 @@ public class OscarRoleObjectPrivilege {
+ 			String singleRoleName = roleInObj.get(i);
+ 			String strPrivilege = propPrivilege.getProperty(singleRoleName);
+ 			List<String> vecPrivilName = getPrivilege(strPrivilege);
+-
+-			boolean[] check = { false, false };
+-			for (int j = 0; j < vecPrivilName.size(); j++) {
+-				check = checkRights(vecPrivilName.get(j), rightCustom);
++			for (int j = 0; j < vecPrivilName.size(); j++) {boolean[] check = checkRights(vecPrivilName.get(j), rightCustom);
+ 
+ 				if (check[0]) { // get the rights, stop comparing
+ 					return true;
+diff --git a/src/test/java/org/oscarehr/dashboard/handler/IndicatorTemplateHandlerTest.java b/src/test/java/org/oscarehr/dashboard/handler/IndicatorTemplateHandlerTest.java
+index e385671ff4..c39452bdf8 100644
+--- a/src/test/java/org/oscarehr/dashboard/handler/IndicatorTemplateHandlerTest.java
++++ b/src/test/java/org/oscarehr/dashboard/handler/IndicatorTemplateHandlerTest.java
+@@ -41,8 +41,7 @@ public class IndicatorTemplateHandlerTest {
+ 		try {
+ 			InputStream is = url.openStream();
+ 			templateHandler = new IndicatorTemplateHandler( IOUtils.toByteArray(is) );
+-			StringBuilder message = new StringBuilder();
+-			//templateHandler.validate( message );
++			// templateHandler.validate( message );
+ 		} catch (IOException e) {
+ 			e.printStackTrace();
+ 		}
+diff --git a/src/test/java/org/oscarehr/ws/RxWebServiceTest.java b/src/test/java/org/oscarehr/ws/RxWebServiceTest.java
+index 45d0409537..7fbac1def4 100644
+--- a/src/test/java/org/oscarehr/ws/RxWebServiceTest.java
++++ b/src/test/java/org/oscarehr/ws/RxWebServiceTest.java
+@@ -23,6 +23,7 @@
+  */
+ 
+ package org.oscarehr.ws;
++import org.oscarehr.managers.RxManager.PrescriptionDrugs;
+ 
+ import com.sun.istack.NotNull;
+ import org.junit.After;
+@@ -158,11 +159,7 @@ public class RxWebServiceTest {
+     public void testAddDrugWithNoPrivledges() {
+ 
+         DrugTo1 t = this.getTestTransferObject();
+-
+-        // The MockSecurityInfoManager.hasPrivledge will return false
+-        // for any demographiNo > 5
+-
+-        GenericRESTResponse resp = this.service.addDrug(t, 10);
++        this.service.addDrug(t, 10);
+ 
+     }
+ 
+@@ -222,11 +219,7 @@ public class RxWebServiceTest {
+     public void testShouldThrowAccessDeniedException() {
+ 
+         DrugTo1 t = this.getTestTransferObject();
+-
+-        //demographicId > 5 will cause access denied
+-        // in MockSecurityInfoManager.
+-
+-        DrugResponse r = this.service.updateDrug(t, 6);
++        this.service.updateDrug(t, 6);
+ 
+     }
+ 
+@@ -413,8 +406,7 @@ public class RxWebServiceTest {
+ 
+     @Test(expected = AccessDeniedException.class)
+     public void testShouldHandleAccessDenied(){
+-
+-        DrugSearchResponse resp = this.service.history(1, 6); //demo > 5 will trigger access denied
++        this.service.history(1, 6);
+ 
+     }
+ 
+diff --git a/src/test/java/org/oscarehr/ws/conversion/DrugConverterTest.java b/src/test/java/org/oscarehr/ws/conversion/DrugConverterTest.java
+index 692294af47..0d444dcb32 100644
+--- a/src/test/java/org/oscarehr/ws/conversion/DrugConverterTest.java
++++ b/src/test/java/org/oscarehr/ws/conversion/DrugConverterTest.java
+@@ -153,8 +153,7 @@ public class DrugConverterTest extends DrugConverter {
+         d.setArchived(false);
+         d.setArchivedDate((Date) archivedDate.clone());
+         d.setArchivedReason("reason");
+-
+-        DrugTo1 t = this.getAsTransferObject(info, d);
++        this.getAsTransferObject(info, d);
+     }
+ 
+     

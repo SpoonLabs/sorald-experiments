@@ -1,0 +1,199 @@
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java
+index 9cf8bdadd5..be3303618d 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java
+@@ -38,7 +38,7 @@ public class ProgramAccess implements Serializable {
+     private String _accessTypeId;
+     private boolean _allRoles;// many to one
+     private AccessType _accessType;// collections
+-    private java.util.Set _roles;
++    private transient java.util.Set _roles;
+ 
+     // constructors
+      public ProgramAccess () {
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
+index 5571ce1b85..b83ce64fea 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
+@@ -36,8 +36,8 @@ public class ProgramTeam implements Serializable {
+     private Integer id;// fields
+     private String name;
+     private Integer programId;
+-	private List providers;
+-	private List admissions;
++	private transient List providers;
++	private transient List admissions;
+ 
+ 
+     // constructors
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java b/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
+index c3c49e2678..91d7e1876c 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
+@@ -51,7 +51,7 @@ public class PopulationReportDataObjects {
+ 	 */
+ 	public static class EncounterTypeDataGrid extends TreeMap<EncounterUtil.EncounterType, EncounterTypeDataRow>
+ 	{
+-		public EncounterTypeDataRow subTotal=null;		
++		public transient EncounterTypeDataRow subTotal=null;		
+ 	}
+ 	
+ 	/**
+@@ -59,7 +59,7 @@ public class PopulationReportDataObjects {
+ 	 */
+ 	public static class RoleDataGrid extends TreeMap<SecRole, EncounterTypeDataGrid>
+ 	{
+-		public EncounterTypeDataRow total=null;		
++		public transient EncounterTypeDataRow total=null;		
+ 	}
+ 	
+ 	/**
+@@ -67,7 +67,7 @@ public class PopulationReportDataObjects {
+ 	 */
+ 	public static class ProviderDataGrid extends TreeMap<Provider, EncounterTypeDataGrid>
+ 	{
+-		public EncounterTypeDataRow total=null;		
++		public transient EncounterTypeDataRow total=null;		
+ 	}
+ 	
+ }
+diff --git a/src/main/java/org/oscarehr/casemgmt/web/formbeans/CaseManagementEntryFormBean.java b/src/main/java/org/oscarehr/casemgmt/web/formbeans/CaseManagementEntryFormBean.java
+index 1787641365..608726b135 100644
+--- a/src/main/java/org/oscarehr/casemgmt/web/formbeans/CaseManagementEntryFormBean.java
++++ b/src/main/java/org/oscarehr/casemgmt/web/formbeans/CaseManagementEntryFormBean.java
+@@ -39,7 +39,7 @@ public class CaseManagementEntryFormBean extends ActionForm  implements java.io.
+ 	private String noteId;
+ 	private CheckBoxBean[] issueCheckList;
+ 	private CheckIssueBoxBean[] newIssueCheckList;
+-	private List newIssueList;
++	private transient List newIssueList;
+ 	private String sign; 
+ 	private String includeIssue;
+ 	private String method;
+diff --git a/src/main/java/org/oscarehr/phr/model/PHRDocument.java b/src/main/java/org/oscarehr/phr/model/PHRDocument.java
+index e05fdd11b9..f4bf5112cc 100644
+--- a/src/main/java/org/oscarehr/phr/model/PHRDocument.java
++++ b/src/main/java/org/oscarehr/phr/model/PHRDocument.java
+@@ -81,7 +81,7 @@ public class PHRDocument implements Serializable {
+ 	private String docContent;
+ 	private int status;
+ 	private int sent;
+-	private Map exts;
++	private transient Map exts;
+ 
+ 	/**
+ 	 * Creates a new instance of PHRDocument
+diff --git a/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java b/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java
+index 5e708bfc34..683add95af 100644
+--- a/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java
++++ b/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java
+@@ -28,7 +28,7 @@ import java.util.HashMap;
+ import java.util.Map;
+ 
+ public class SurveyExecuteDataBean implements Serializable {
+-	private Map values = null;
++	private transient Map values = null;
+ 
+ 	public SurveyExecuteDataBean() {
+ 		reset();
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/AbstractSearchResponse.java b/src/main/java/org/oscarehr/ws/rest/to/AbstractSearchResponse.java
+index 2f2404244c..279421ec9e 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/AbstractSearchResponse.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/AbstractSearchResponse.java
+@@ -44,7 +44,7 @@ public class AbstractSearchResponse<T> implements Serializable {
+ 
+ 	private Date timestamp = new Date();
+ 
+-	private List<T> content = new ArrayList<T>();
++	private transient List<T> content = new ArrayList<T>();
+ 	
+ 	private String query;
+ 	
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/OscarSearchResponse.java b/src/main/java/org/oscarehr/ws/rest/to/OscarSearchResponse.java
+index 582048e9e7..b873d5a20c 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/OscarSearchResponse.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/OscarSearchResponse.java
+@@ -44,7 +44,7 @@ public class OscarSearchResponse<T> implements Serializable {
+ 
+ 	private Date timestamp = new Date();
+ 
+-	private List<T> content = new ArrayList<T>();
++	private transient List<T> content = new ArrayList<T>();
+ 
+ 	@XmlElement(name = "Item")
+ 	public List<T> getContent() {
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/PrimitiveResponseWrapper.java b/src/main/java/org/oscarehr/ws/rest/to/PrimitiveResponseWrapper.java
+index 9d238f83a0..ef23cdecce 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/PrimitiveResponseWrapper.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/PrimitiveResponseWrapper.java
+@@ -32,7 +32,7 @@ public class PrimitiveResponseWrapper<T> implements Serializable {
+ 
+ 	private static final long serialVersionUID = 1L;
+ 
+-	private T value;
++	private transient T value;
+ 
+ 	public PrimitiveResponseWrapper() {
+ 	}
+diff --git a/src/main/java/oscar/login/jaas/OscarGroup.java b/src/main/java/oscar/login/jaas/OscarGroup.java
+index 7b64657fae..65b98baa53 100644
+--- a/src/main/java/oscar/login/jaas/OscarGroup.java
++++ b/src/main/java/oscar/login/jaas/OscarGroup.java
+@@ -37,7 +37,7 @@ public class OscarGroup implements Group, Serializable {
+ 
+ 	private String name;
+ 
+-	private List<Principal> principals = new ArrayList<Principal>();
++	private transient List<Principal> principals = new ArrayList<Principal>();
+ 
+ 	public OscarGroup() {
+ 	}
+diff --git a/src/main/java/oscar/oscarBilling/MSP/dbExtract.java b/src/main/java/oscar/oscarBilling/MSP/dbExtract.java
+index 7248bd6882..3f99affd9f 100644
+--- a/src/main/java/oscar/oscarBilling/MSP/dbExtract.java
++++ b/src/main/java/oscar/oscarBilling/MSP/dbExtract.java
+@@ -37,16 +37,16 @@ import org.oscarehr.util.MiscUtils;
+ 
+ public class dbExtract implements Serializable {
+ 
+-    private Connection con = null;
+-    private Statement stmt = null;
+-    private Statement stmt2 = null;
+-    private Statement stmt3 = null;
++    private transient Connection con = null;
++    private transient Statement stmt = null;
++    private transient Statement stmt2 = null;
++    private transient Statement stmt3 = null;
+     private int numUpdate;
+-    private Statement prepStmt = null;
+-    PreparedStatement prep = null;
+-    ResultSet resultSet = null;
+-    ResultSet resultSet2 = null;
+-    ResultSet resultSet3 = null;
++    private transient Statement prepStmt = null;
++    transientPreparedStatement prep = null;
++    transientResultSet resultSet = null;
++    transientResultSet resultSet2 = null;
++    transientResultSet resultSet3 = null;
+ 
+     public dbExtract() {
+     }
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
+index f33e3c05c6..c6aff214fd 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
+@@ -95,10 +95,10 @@ public class EctSessionBean implements java.io.Serializable {
+     public String oscarMsgID;
+     public String oscarMsg = "";
+     public String myoscarMsgId = null;
+-    public ArrayList<String> appointmentsIdArray;
+-    public ArrayList<String> appointmentsNamesArray;
+-    public ArrayList<String> templateNames;
+-    public ArrayList<String> measurementGroupNames;
++    public transient ArrayList<String> appointmentsIdArray;
++    public transient ArrayList<String> appointmentsNamesArray;
++    public transient ArrayList<String> templateNames;
++    public transient ArrayList<String> measurementGroupNames;
+     public String source;
+ 
+     public void resetAll() {

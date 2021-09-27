@@ -1,0 +1,2748 @@
+diff --git a/src/main/java/com/quatro/model/LstOrgcd.java b/src/main/java/com/quatro/model/LstOrgcd.java
+index 23a9511dd4..b966282c49 100644
+--- a/src/main/java/com/quatro/model/LstOrgcd.java
++++ b/src/main/java/com/quatro/model/LstOrgcd.java
+@@ -28,6 +28,7 @@ package com.quatro.model;
+  */
+ 
+ public class LstOrgcd implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 
+diff --git a/src/main/java/com/quatro/model/security/SecProvider.java b/src/main/java/com/quatro/model/security/SecProvider.java
+index b85b3dcf81..52be05ec35 100644
+--- a/src/main/java/com/quatro/model/security/SecProvider.java
++++ b/src/main/java/com/quatro/model/security/SecProvider.java
+@@ -31,6 +31,7 @@ import java.util.Date;
+ 
+ 
+ public class SecProvider implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 
+diff --git a/src/main/java/com/quatro/model/security/Secobjectname.java b/src/main/java/com/quatro/model/security/Secobjectname.java
+index 16f5a1f016..46d335eb7c 100644
+--- a/src/main/java/com/quatro/model/security/Secobjectname.java
++++ b/src/main/java/com/quatro/model/security/Secobjectname.java
+@@ -28,6 +28,7 @@ package com.quatro.model.security;
+  */
+ 
+ public class Secobjectname implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 
+diff --git a/src/main/java/com/quatro/model/security/Secobjprivilege.java b/src/main/java/com/quatro/model/security/Secobjprivilege.java
+index afbad42eca..27acf95db0 100644
+--- a/src/main/java/com/quatro/model/security/Secobjprivilege.java
++++ b/src/main/java/com/quatro/model/security/Secobjprivilege.java
+@@ -22,6 +22,7 @@
+ package com.quatro.model.security;
+ 
+ public class Secobjprivilege implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 
+diff --git a/src/main/java/com/quatro/model/security/Secprivilege.java b/src/main/java/com/quatro/model/security/Secprivilege.java
+index c192051d57..e437213b12 100644
+--- a/src/main/java/com/quatro/model/security/Secprivilege.java
++++ b/src/main/java/com/quatro/model/security/Secprivilege.java
+@@ -28,6 +28,7 @@ package com.quatro.model.security;
+  */
+ 
+ public class Secprivilege implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 
+diff --git a/src/main/java/com/quatro/model/security/Secrole.java b/src/main/java/com/quatro/model/security/Secrole.java
+index a8af1eb2d4..c2eadd13a6 100644
+--- a/src/main/java/com/quatro/model/security/Secrole.java
++++ b/src/main/java/com/quatro/model/security/Secrole.java
+@@ -25,6 +25,7 @@ import java.util.Calendar;
+ 
+ 
+ public class Secrole implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 
+diff --git a/src/main/java/com/quatro/model/security/Secuserrole.java b/src/main/java/com/quatro/model/security/Secuserrole.java
+index 8887694091..ef08dbc009 100644
+--- a/src/main/java/com/quatro/model/security/Secuserrole.java
++++ b/src/main/java/com/quatro/model/security/Secuserrole.java
+@@ -25,6 +25,7 @@ import java.util.Date;
+ 
+ 
+ public class Secuserrole implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 
+diff --git a/src/main/java/com/quatro/model/security/UserAccessValue.java b/src/main/java/com/quatro/model/security/UserAccessValue.java
+index 23db810e68..97b1c91f01 100644
+--- a/src/main/java/com/quatro/model/security/UserAccessValue.java
++++ b/src/main/java/com/quatro/model/security/UserAccessValue.java
+@@ -22,6 +22,7 @@ package com.quatro.model.security;
+ import java.io.Serializable;
+ 
+ public class UserAccessValue implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 		
+ 		String providerNo;
+ 		String orgCd;
+diff --git a/src/main/java/org/caisi/model/BaseObject.java b/src/main/java/org/caisi/model/BaseObject.java
+index cc4f77338e..7a27aa0341 100644
+--- a/src/main/java/org/caisi/model/BaseObject.java
++++ b/src/main/java/org/caisi/model/BaseObject.java
+@@ -37,6 +37,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
+  * as it checks all fields, not the ID of this model object, nor pointer reference.
+  */
+ public class BaseObject implements Serializable {
++    private static final long serialVersionUID = 1L;
+     public String toString() {
+         return ToStringBuilder.reflectionToString(this,
+                 ToStringStyle.MULTI_LINE_STYLE);
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/AccessType.java b/src/main/java/org/oscarehr/PMmodule/model/AccessType.java
+index bc3d2f747a..9e84d61ece 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/AccessType.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/AccessType.java
+@@ -30,6 +30,7 @@ import java.io.Serializable;
+  * Any customizations belong here.
+  */
+ public class AccessType implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Long _id;// fields
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/Agency.java b/src/main/java/org/oscarehr/PMmodule/model/Agency.java
+index 342c77c18f..c1ba9d27c2 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/Agency.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/Agency.java
+@@ -30,6 +30,7 @@ import java.util.Map;
+  * This is the object class that relates to the agency table. Any customizations belong here.
+  */
+ public class Agency implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private static Agency localAgency;
+ 	private static Map<?, ?> agencyMap;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ClientReferral.java b/src/main/java/org/oscarehr/PMmodule/model/ClientReferral.java
+index 0c66e05886..a83b6ddc54 100755
+--- a/src/main/java/org/oscarehr/PMmodule/model/ClientReferral.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ClientReferral.java
+@@ -29,6 +29,7 @@ import java.io.Serializable;
+  * This is the object class that relates to the client_referral table. Any customizations belong here.
+  */
+ public class ClientReferral implements Serializable {
++ private static final long serialVersionUID = 1L;
+ 
+     public static String STATUS_REJECTED = "rejected";
+     public static String STATUS_ACTIVE = "active";
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/Criteria.java b/src/main/java/org/oscarehr/PMmodule/model/Criteria.java
+index 5ee9a22cff..b33184e658 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/Criteria.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/Criteria.java
+@@ -36,6 +36,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "criteria")
+ public class Criteria extends AbstractModel<Integer> implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/CriteriaSelectionOption.java b/src/main/java/org/oscarehr/PMmodule/model/CriteriaSelectionOption.java
+index 6ff7dac3d2..a435f32f80 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/CriteriaSelectionOption.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/CriteriaSelectionOption.java
+@@ -36,6 +36,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "criteria_selection_option")
+ public class CriteriaSelectionOption extends AbstractModel<Integer> implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/CriteriaType.java b/src/main/java/org/oscarehr/PMmodule/model/CriteriaType.java
+index 16795a2fae..5e1dae9c5f 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/CriteriaType.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/CriteriaType.java
+@@ -36,6 +36,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "criteria_type")
+ public class CriteriaType extends AbstractModel<Integer> implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/CriteriaTypeOption.java b/src/main/java/org/oscarehr/PMmodule/model/CriteriaTypeOption.java
+index f73f444364..26bca0e17d 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/CriteriaTypeOption.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/CriteriaTypeOption.java
+@@ -36,6 +36,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "criteria_type_option")
+ public class CriteriaTypeOption extends AbstractModel<Integer> implements java.io.Serializable  {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/DefaultRoleAccess.java b/src/main/java/org/oscarehr/PMmodule/model/DefaultRoleAccess.java
+index 396baab9a4..5683c7abef 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/DefaultRoleAccess.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/DefaultRoleAccess.java
+@@ -29,6 +29,7 @@ import java.io.Serializable;
+  * This is the object class that relates to the default_role_access table. Any customizations belong here.
+  */
+ public class DefaultRoleAccess  implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Long _id;// fields
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/FunctionalUserType.java b/src/main/java/org/oscarehr/PMmodule/model/FunctionalUserType.java
+index 9563c40e2f..d8b834703d 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/FunctionalUserType.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/FunctionalUserType.java
+@@ -29,6 +29,7 @@ import java.io.Serializable;
+  * This is the object class that relates to the functional_user_type table. Any customizations belong here.
+  */
+ public class FunctionalUserType  implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Long _id;// fields
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/HealthSafety.java b/src/main/java/org/oscarehr/PMmodule/model/HealthSafety.java
+index 782bb16801..77db704bc0 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/HealthSafety.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/HealthSafety.java
+@@ -28,6 +28,7 @@ import java.io.Serializable;
+  * Any customizations belong here.
+  */
+ public class HealthSafety  implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+ 	
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/Intake.java b/src/main/java/org/oscarehr/PMmodule/model/Intake.java
+index 8b657ef920..5dfa680cd5 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/Intake.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/Intake.java
+@@ -39,6 +39,7 @@ import org.oscarehr.common.model.Provider;
+ 
+ 
+ public class Intake implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswer.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswer.java
+index 47eafaff5a..7da73ab3f0 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswer.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswer.java
+@@ -28,6 +28,7 @@ import java.io.Serializable;
+ import org.apache.commons.lang.builder.CompareToBuilder;
+ 
+ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     public static String REF = "IntakeAnswer";
+     private int hashCode = Integer.MIN_VALUE;// primary key
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerElement.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerElement.java
+index f5bb547993..6348ba21fb 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerElement.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerElement.java
+@@ -28,6 +28,7 @@ import java.io.Serializable;
+ import org.apache.commons.lang.builder.CompareToBuilder;
+ 
+ public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+ 	public static final String TRUE = "T";
+ 	public static final String FALSE = "F";
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerValidation.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerValidation.java
+index c5eb5cd56b..69f5dfcb36 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerValidation.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeAnswerValidation.java
+@@ -27,6 +27,7 @@ package org.oscarehr.PMmodule.model;
+ import java.io.Serializable;
+ 
+ public class IntakeAnswerValidation implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     public static String REF = "IntakeAnswerValidation";
+     private int hashCode = Integer.MIN_VALUE;// primary key
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNode.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNode.java
+index fa95bc645e..177d26b1bc 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNode.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNode.java
+@@ -35,6 +35,7 @@ import java.util.SortedSet;
+ import java.util.TreeSet;
+ 
+ public class IntakeNode implements Serializable {
++ private static final long serialVersionUID = 1L;
+ 
+     private IntakeNodeWalker walker;
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeJavascript.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeJavascript.java
+index 46ca24c826..4aa2c5795d 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeJavascript.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeJavascript.java
+@@ -26,6 +26,7 @@ package org.oscarehr.PMmodule.model;
+ import java.io.Serializable;
+ 
+ public class IntakeNodeJavascript implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private Integer id;
+ 	private String questionId;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeLabel.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeLabel.java
+index 21173e6eab..0625e4c4b4 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeLabel.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeLabel.java
+@@ -26,6 +26,7 @@ package org.oscarehr.PMmodule.model;
+ import java.io.Serializable;
+ 
+ public class IntakeNodeLabel implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     public static String REF = "IntakeNodeLabel";
+     
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeTemplate.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeTemplate.java
+index 7af5e8f14f..98b0665a0a 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeTemplate.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeTemplate.java
+@@ -29,6 +29,7 @@ import java.util.Set;
+ import java.util.TreeSet;
+ 
+ public class IntakeNodeTemplate implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     public static String REF = "IntakeNodeTemplate";
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeType.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeType.java
+index f903c4437e..ad016b5943 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeType.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeType.java
+@@ -26,6 +26,7 @@ package org.oscarehr.PMmodule.model;
+ import java.io.Serializable;
+ 
+ public class IntakeNodeType implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	public static final Integer INTAKE_ID = 1;
+ 	public static final Integer PAGE_ID = 2;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeWalker.java b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeWalker.java
+index f022ad2c05..2ea8c79a43 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeWalker.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/IntakeNodeWalker.java
+@@ -33,6 +33,7 @@ import java.util.TreeSet;
+ import org.apache.commons.collections.Closure;
+ 
+ public class IntakeNodeWalker implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private static final Closure NULL_CLOSURE = new Closure() {
+ 		public void execute(Object o) {
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/Program.java b/src/main/java/org/oscarehr/PMmodule/model/Program.java
+index 38e2de2536..5708e749da 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/Program.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/Program.java
+@@ -33,6 +33,7 @@ import com.quatro.model.LookupCodeValue;
+  * This is the object class that relates to the program table. Any customizations belong here.
+  */
+ public class Program implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
+ 
+ 	public static final String EXTERNAL_TYPE = "external";
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java
+index 9cf8bdadd5..fb8ab6dae8 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramAccess.java
+@@ -31,6 +31,7 @@ import com.quatro.model.security.Secrole;
+  * This is the object class that relates to the program_access table. Any customizations belong here.
+  */
+ public class ProgramAccess implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Long _id;// fields
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramClientRestriction.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramClientRestriction.java
+index 3d672a2845..b9edbc474b 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramClientRestriction.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramClientRestriction.java
+@@ -33,6 +33,7 @@ import org.oscarehr.common.model.Provider;
+  * Service restriction
+  */
+ public class ProgramClientRestriction implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     private Integer id;
+     private int programId;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramClientStatus.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramClientStatus.java
+index fad9f4a653..4771d495de 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramClientStatus.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramClientStatus.java
+@@ -27,6 +27,7 @@ import java.io.Serializable;
+ 
+ 
+ public class ProgramClientStatus implements Serializable {
++    private static final long serialVersionUID = 1L;
+     public static String REF = "ProgramClientStatus";
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramFunctionalUser.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramFunctionalUser.java
+index c7760e8586..0aa383a4d6 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramFunctionalUser.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramFunctionalUser.java
+@@ -31,6 +31,7 @@ import org.oscarehr.common.model.Provider;
+  * This is the object class that relates to the program_functional_user table. Any customizations belong here.
+  */
+ public class ProgramFunctionalUser implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramProvider.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramProvider.java
+index 191ddd5925..877fc5b380 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramProvider.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramProvider.java
+@@ -35,6 +35,7 @@ import com.quatro.model.security.Secrole;
+  * Any customizations belong here.
+  */
+ public class ProgramProvider implements Serializable {
++  private static final long serialVersionUID = 1L;
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private Long _id;// fields
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramQueue.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramQueue.java
+index 5f0cb80332..4fe736e6ce 100755
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramQueue.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramQueue.java
+@@ -30,6 +30,7 @@ import java.io.Serializable;
+  * Any customizations belong here.
+  */
+ public class ProgramQueue implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     public static String STATUS_ADMITTED = "admitted";
+     public static String STATUS_REJECTED = "rejected";
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramSignature.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramSignature.java
+index 9ee558ce1d..8cf91f8e83 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramSignature.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramSignature.java
+@@ -27,6 +27,7 @@ import java.io.Serializable;
+ import java.util.Date;
+ 
+ public class ProgramSignature implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	public Integer id;
+ 	public Integer programId;
+ 	public String programName;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java b/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
+index 5571ce1b85..be7afd4716 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/ProgramTeam.java
+@@ -30,6 +30,7 @@ import java.util.List;
+  * This is the object class that relates to the program_team table. Any customizations belong here.
+  */
+ public class ProgramTeam implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     public static String REF = "ProgramTeam";
+     private int hashCode = Integer.MIN_VALUE;// primary key
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/SecUserRole.java b/src/main/java/org/oscarehr/PMmodule/model/SecUserRole.java
+index a759a07cca..36ae859c9e 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/SecUserRole.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/SecUserRole.java
+@@ -32,6 +32,7 @@ import java.util.List;
+  * Any customizations belong here.
+  */
+ public class SecUserRole implements Serializable {
++ private static final long serialVersionUID = 1L;
+ 
+     private int hashCode = Integer.MIN_VALUE;// primary key
+     private String _roleName;
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/Vacancy.java b/src/main/java/org/oscarehr/PMmodule/model/Vacancy.java
+index d4bc27e3ed..1e82025103 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/Vacancy.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/Vacancy.java
+@@ -40,6 +40,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "vacancy")
+ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy=GenerationType.AUTO)
+diff --git a/src/main/java/org/oscarehr/PMmodule/model/VacancyTemplate.java b/src/main/java/org/oscarehr/PMmodule/model/VacancyTemplate.java
+index 7df7cd3a99..b1ec1ebb49 100644
+--- a/src/main/java/org/oscarehr/PMmodule/model/VacancyTemplate.java
++++ b/src/main/java/org/oscarehr/PMmodule/model/VacancyTemplate.java
+@@ -37,6 +37,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "vacancy_template")
+ public class VacancyTemplate extends AbstractModel<Integer> implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	// Fields
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java b/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
+index c3c49e2678..2e1e7da28b 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
+@@ -51,6 +51,7 @@ public class PopulationReportDataObjects {
+ 	 */
+ 	public static class EncounterTypeDataGrid extends TreeMap<EncounterUtil.EncounterType, EncounterTypeDataRow>
+ 	{
++			private static final long serialVersionUID = 1L;
+ 		public EncounterTypeDataRow subTotal=null;		
+ 	}
+ 	
+@@ -59,6 +60,7 @@ public class PopulationReportDataObjects {
+ 	 */
+ 	public static class RoleDataGrid extends TreeMap<SecRole, EncounterTypeDataGrid>
+ 	{
++			private static final long serialVersionUID = 1L;
+ 		public EncounterTypeDataRow total=null;		
+ 	}
+ 	
+@@ -67,6 +69,7 @@ public class PopulationReportDataObjects {
+ 	 */
+ 	public static class ProviderDataGrid extends TreeMap<Provider, EncounterTypeDataGrid>
+ 	{
++			private static final long serialVersionUID = 1L;
+ 		public EncounterTypeDataRow total=null;		
+ 	}
+ 	
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/formbean/ClientManagerFormBean.java b/src/main/java/org/oscarehr/PMmodule/web/formbean/ClientManagerFormBean.java
+index 086524eb17..f0f1bb9331 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/formbean/ClientManagerFormBean.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/formbean/ClientManagerFormBean.java
+@@ -26,6 +26,7 @@ package org.oscarehr.PMmodule.web.formbean;
+ import java.io.Serializable;
+ 
+ public class ClientManagerFormBean implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	public static final String[] tabs = { "Summary", "History", "Bed/Room Reservation", "Forms", "Refer","Refer to vacancy", "Discharge", "Service Restrictions" };
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/formbean/ErConsentFormBean.java b/src/main/java/org/oscarehr/PMmodule/web/formbean/ErConsentFormBean.java
+index 15149fbdbc..059e86ab03 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/formbean/ErConsentFormBean.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/formbean/ErConsentFormBean.java
+@@ -26,6 +26,7 @@ package org.oscarehr.PMmodule.web.formbean;
+ import java.io.Serializable;
+ 
+ public class ErConsentFormBean implements Serializable{
++	private static final long serialVersionUID = 1L;
+ 	
+ 	private String consentReason;
+ 	private String consentType;
+diff --git a/src/main/java/org/oscarehr/billing/CA/ON/model/BillingONFavourite.java b/src/main/java/org/oscarehr/billing/CA/ON/model/BillingONFavourite.java
+index 47ce38b92a..037054382c 100644
+--- a/src/main/java/org/oscarehr/billing/CA/ON/model/BillingONFavourite.java
++++ b/src/main/java/org/oscarehr/billing/CA/ON/model/BillingONFavourite.java
+@@ -43,6 +43,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name="billing_on_favourite")
+ public class BillingONFavourite extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/billing/CA/ON/model/BillingPercLimit.java b/src/main/java/org/oscarehr/billing/CA/ON/model/BillingPercLimit.java
+index 33ced08290..4b793a9232 100644
+--- a/src/main/java/org/oscarehr/billing/CA/ON/model/BillingPercLimit.java
++++ b/src/main/java/org/oscarehr/billing/CA/ON/model/BillingPercLimit.java
+@@ -43,6 +43,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name="billingperclimit")
+ public class BillingPercLimit extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.AUTO)
+diff --git a/src/main/java/org/oscarehr/billing/CA/model/GstControl.java b/src/main/java/org/oscarehr/billing/CA/model/GstControl.java
+index d9acb9b5f5..e22bc1d518 100644
+--- a/src/main/java/org/oscarehr/billing/CA/model/GstControl.java
++++ b/src/main/java/org/oscarehr/billing/CA/model/GstControl.java
+@@ -41,6 +41,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name="gstControl")
+ public class GstControl extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
+diff --git a/src/main/java/org/oscarehr/casemgmt/web/CheckBoxBean.java b/src/main/java/org/oscarehr/casemgmt/web/CheckBoxBean.java
+index e9bdb09c87..bdfc3aaa88 100644
+--- a/src/main/java/org/oscarehr/casemgmt/web/CheckBoxBean.java
++++ b/src/main/java/org/oscarehr/casemgmt/web/CheckBoxBean.java
+@@ -30,6 +30,7 @@ import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
+ 
+ public class CheckBoxBean implements Serializable
+ {
++	private static final long serialVersionUID = 1L;
+ 	private String checked = "off";
+ 	private CaseManagementIssue issue = new CaseManagementIssue();
+ 	private IssueDisplay issueDisplay = new IssueDisplay();
+diff --git a/src/main/java/org/oscarehr/casemgmt/web/CheckIssueBoxBean.java b/src/main/java/org/oscarehr/casemgmt/web/CheckIssueBoxBean.java
+index 6d15913521..649aad11cd 100644
+--- a/src/main/java/org/oscarehr/casemgmt/web/CheckIssueBoxBean.java
++++ b/src/main/java/org/oscarehr/casemgmt/web/CheckIssueBoxBean.java
+@@ -30,6 +30,7 @@ import org.oscarehr.casemgmt.model.Issue;
+ 
+ public class CheckIssueBoxBean implements Serializable
+ {
++	private static final long serialVersionUID = 1L;
+ 	private boolean isChecked = false;
+ 	private Issue issue = new Issue();
+ 	private boolean community = false;
+diff --git a/src/main/java/org/oscarehr/casemgmt/web/formbeans/CaseManagementEntryFormBean.java b/src/main/java/org/oscarehr/casemgmt/web/formbeans/CaseManagementEntryFormBean.java
+index 1787641365..64425b58fe 100644
+--- a/src/main/java/org/oscarehr/casemgmt/web/formbeans/CaseManagementEntryFormBean.java
++++ b/src/main/java/org/oscarehr/casemgmt/web/formbeans/CaseManagementEntryFormBean.java
+@@ -33,6 +33,7 @@ import org.oscarehr.casemgmt.web.CheckBoxBean;
+ import org.oscarehr.casemgmt.web.CheckIssueBoxBean;
+ 
+ public class CaseManagementEntryFormBean extends ActionForm  implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private CaseManagementNote caseNote;
+ 	private CaseManagementCPP cpp;        
+ 	private String demoNo;
+diff --git a/src/main/java/org/oscarehr/common/dao/OscarMsgTypeDao.java b/src/main/java/org/oscarehr/common/dao/OscarMsgTypeDao.java
+index b3eee11274..fbf7a3434f 100644
+--- a/src/main/java/org/oscarehr/common/dao/OscarMsgTypeDao.java
++++ b/src/main/java/org/oscarehr/common/dao/OscarMsgTypeDao.java
+@@ -39,6 +39,7 @@ import org.springframework.stereotype.Repository;
+  */
+ @Repository
+ public class OscarMsgTypeDao extends AbstractDao<OscarMsgType> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     public OscarMsgTypeDao() {
+         super(OscarMsgType.class);
+diff --git a/src/main/java/org/oscarehr/common/model/Appointment.java b/src/main/java/org/oscarehr/common/model/Appointment.java
+index fa62e11391..e69833b0f9 100644
+--- a/src/main/java/org/oscarehr/common/model/Appointment.java
++++ b/src/main/java/org/oscarehr/common/model/Appointment.java
+@@ -44,11 +44,12 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name = "appointment")
+ public class Appointment extends AbstractModel<Integer> implements Serializable, DemographicData {
++	private static final long serialVersionUID = 1L;
+ 
+ 	public enum BookingSource
+ 	{
+ 		OSCAR,
+-		MYOSCAR_SELF_BOOKING
++		MYOSCAR_SELF_BOOKING;
+ 	}
+ 	
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/common/model/BORNPathwayMapping.java b/src/main/java/org/oscarehr/common/model/BORNPathwayMapping.java
+index d192d9affd..9d46021759 100644
+--- a/src/main/java/org/oscarehr/common/model/BORNPathwayMapping.java
++++ b/src/main/java/org/oscarehr/common/model/BORNPathwayMapping.java
+@@ -33,6 +33,7 @@ import javax.persistence.Transient;
+ 
+ @Entity
+ public class BORNPathwayMapping extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/BedDemographicHistoricalPK.java b/src/main/java/org/oscarehr/common/model/BedDemographicHistoricalPK.java
+index d09071a0c1..39b8b3a157 100644
+--- a/src/main/java/org/oscarehr/common/model/BedDemographicHistoricalPK.java
++++ b/src/main/java/org/oscarehr/common/model/BedDemographicHistoricalPK.java
+@@ -33,6 +33,7 @@ import javax.persistence.TemporalType;
+ 
+ @Embeddable
+ public class BedDemographicHistoricalPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="bed_id")
+     private Integer bedId;
+diff --git a/src/main/java/org/oscarehr/common/model/BedDemographicPK.java b/src/main/java/org/oscarehr/common/model/BedDemographicPK.java
+index 36a04d84b2..18ff734a9d 100644
+--- a/src/main/java/org/oscarehr/common/model/BedDemographicPK.java
++++ b/src/main/java/org/oscarehr/common/model/BedDemographicPK.java
+@@ -28,6 +28,7 @@ import java.io.Serializable;
+ import javax.persistence.Column;
+ 
+ public class BedDemographicPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="demographic_no")
+     private Integer demographicNo;
+diff --git a/src/main/java/org/oscarehr/common/model/BillingONEAReport.java b/src/main/java/org/oscarehr/common/model/BillingONEAReport.java
+index 03cff33fe9..837760afdd 100644
+--- a/src/main/java/org/oscarehr/common/model/BillingONEAReport.java
++++ b/src/main/java/org/oscarehr/common/model/BillingONEAReport.java
+@@ -33,6 +33,7 @@ import java.util.Date;
+ @Entity
+ @Table(name="billing_on_eareport")
+ public class BillingONEAReport extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+     
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
+diff --git a/src/main/java/org/oscarehr/common/model/BillingONExt.java b/src/main/java/org/oscarehr/common/model/BillingONExt.java
+index d4f81260ee..d899672a56 100644
+--- a/src/main/java/org/oscarehr/common/model/BillingONExt.java
++++ b/src/main/java/org/oscarehr/common/model/BillingONExt.java
+@@ -40,6 +40,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name="billing_on_ext")
+ public class BillingONExt extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
+diff --git a/src/main/java/org/oscarehr/common/model/BillingONItem.java b/src/main/java/org/oscarehr/common/model/BillingONItem.java
+index 4f9d628253..d7692f2435 100644
+--- a/src/main/java/org/oscarehr/common/model/BillingONItem.java
++++ b/src/main/java/org/oscarehr/common/model/BillingONItem.java
+@@ -35,6 +35,7 @@ import javax.persistence.*;
+ @Entity
+ @Table(name = "billing_on_item")
+ public class BillingONItem extends AbstractModel<Integer> implements Serializable{
++    private static final long serialVersionUID = 1L;
+     
+     public static final String DELETED = "D";
+     
+diff --git a/src/main/java/org/oscarehr/common/model/BillingONPremium.java b/src/main/java/org/oscarehr/common/model/BillingONPremium.java
+index d5cf58582e..fde674ac42 100644
+--- a/src/main/java/org/oscarehr/common/model/BillingONPremium.java
++++ b/src/main/java/org/oscarehr/common/model/BillingONPremium.java
+@@ -35,6 +35,7 @@ import java.util.Date;
+ @Table(name="billing_on_premium", 
+        uniqueConstraints=@UniqueConstraint(columnNames={"raheader_no","providerohip_no"}))
+ public class BillingONPremium extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+     
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
+diff --git a/src/main/java/org/oscarehr/common/model/BillingONRepo.java b/src/main/java/org/oscarehr/common/model/BillingONRepo.java
+index 309b32d07c..30f4f8f469 100644
+--- a/src/main/java/org/oscarehr/common/model/BillingONRepo.java
++++ b/src/main/java/org/oscarehr/common/model/BillingONRepo.java
+@@ -39,6 +39,7 @@ import javax.persistence.TemporalType;
+ @Entity 
+ @Table(name="billing_on_repo") 
+ public class BillingONRepo extends AbstractModel<Integer> implements Serializable{
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/BillingService.java b/src/main/java/org/oscarehr/common/model/BillingService.java
+index a851bdf2d9..74e3a3d534 100644
+--- a/src/main/java/org/oscarehr/common/model/BillingService.java
++++ b/src/main/java/org/oscarehr/common/model/BillingService.java
+@@ -46,6 +46,7 @@ import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
+ @Entity
+ @Table(name = "billingservice")
+ public class BillingService extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id()
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Billingreferral.java b/src/main/java/org/oscarehr/common/model/Billingreferral.java
+index 8c964954aa..4db465ecf1 100644
+--- a/src/main/java/org/oscarehr/common/model/Billingreferral.java
++++ b/src/main/java/org/oscarehr/common/model/Billingreferral.java
+@@ -32,6 +32,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name="billingreferral")
+ public class Billingreferral  extends AbstractModel<Integer> implements java.io.Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+ 
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/common/model/CdsClientForm.java b/src/main/java/org/oscarehr/common/model/CdsClientForm.java
+index aedb7f8c3c..57188df828 100644
+--- a/src/main/java/org/oscarehr/common/model/CdsClientForm.java
++++ b/src/main/java/org/oscarehr/common/model/CdsClientForm.java
+@@ -46,6 +46,7 @@ import javax.persistence.TemporalType;
+  */
+ @Entity
+ public class CdsClientForm extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/CdsClientFormData.java b/src/main/java/org/oscarehr/common/model/CdsClientFormData.java
+index 0529cfd386..33b2df6d35 100644
+--- a/src/main/java/org/oscarehr/common/model/CdsClientFormData.java
++++ b/src/main/java/org/oscarehr/common/model/CdsClientFormData.java
+@@ -40,6 +40,7 @@ import javax.persistence.PreUpdate;
+  */
+ @Entity
+ public class CdsClientFormData extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/CdsFormOption.java b/src/main/java/org/oscarehr/common/model/CdsFormOption.java
+index dfbfb1a194..daab125608 100644
+--- a/src/main/java/org/oscarehr/common/model/CdsFormOption.java
++++ b/src/main/java/org/oscarehr/common/model/CdsFormOption.java
+@@ -38,6 +38,7 @@ import javax.persistence.PreUpdate;
+  */
+ @Entity
+ public class CdsFormOption extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/CdsHospitalisationDays.java b/src/main/java/org/oscarehr/common/model/CdsHospitalisationDays.java
+index ffa744798c..01fd1948c4 100644
+--- a/src/main/java/org/oscarehr/common/model/CdsHospitalisationDays.java
++++ b/src/main/java/org/oscarehr/common/model/CdsHospitalisationDays.java
+@@ -39,6 +39,7 @@ import javax.persistence.TemporalType;
+  */
+ @Entity
+ public class CdsHospitalisationDays extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	public static final Comparator<CdsHospitalisationDays> ADMISSION_DATE_COMPARATOR=new Comparator<CdsHospitalisationDays>()
+ 	{
+diff --git a/src/main/java/org/oscarehr/common/model/Clinic.java b/src/main/java/org/oscarehr/common/model/Clinic.java
+index e68b317874..8264dc61f2 100644
+--- a/src/main/java/org/oscarehr/common/model/Clinic.java
++++ b/src/main/java/org/oscarehr/common/model/Clinic.java
+@@ -46,6 +46,7 @@ import org.oscarehr.integration.fhir.resources.constants.ContactType;
+ @Entity
+ @Table(name="clinic")
+ public class Clinic extends AbstractModel<Integer> implements Serializable, ContactInterface {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/ClinicNbr.java b/src/main/java/org/oscarehr/common/model/ClinicNbr.java
+index 1399d97ac8..e8f65a5428 100644
+--- a/src/main/java/org/oscarehr/common/model/ClinicNbr.java
++++ b/src/main/java/org/oscarehr/common/model/ClinicNbr.java
+@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "clinic_nbr")
+ public class ClinicNbr extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	@Id
+    	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/ConsultationRequest.java b/src/main/java/org/oscarehr/common/model/ConsultationRequest.java
+index 604f81f678..d52ae71d3b 100644
+--- a/src/main/java/org/oscarehr/common/model/ConsultationRequest.java
++++ b/src/main/java/org/oscarehr/common/model/ConsultationRequest.java
+@@ -49,6 +49,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "consultationRequests")
+ public class ConsultationRequest extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private static final String ACTIVE_MARKER = "1";
+ 
+diff --git a/src/main/java/org/oscarehr/common/model/ConsultationRequestArchive.java b/src/main/java/org/oscarehr/common/model/ConsultationRequestArchive.java
+index cb0dd2a4a9..8a97e4fe30 100644
+--- a/src/main/java/org/oscarehr/common/model/ConsultationRequestArchive.java
++++ b/src/main/java/org/oscarehr/common/model/ConsultationRequestArchive.java
+@@ -49,6 +49,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "consultationRequestsArchive")
+ public class ConsultationRequestArchive extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private static final String ACTIVE_MARKER = "1";
+ 
+diff --git a/src/main/java/org/oscarehr/common/model/CountryCode.java b/src/main/java/org/oscarehr/common/model/CountryCode.java
+index a31392ecd3..bb9a26eb5b 100644
+--- a/src/main/java/org/oscarehr/common/model/CountryCode.java
++++ b/src/main/java/org/oscarehr/common/model/CountryCode.java
+@@ -40,6 +40,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name="country_codes")
+ public class CountryCode extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/CtlDocClass.java b/src/main/java/org/oscarehr/common/model/CtlDocClass.java
+index ab79d38ad7..0f5e189f1b 100644
+--- a/src/main/java/org/oscarehr/common/model/CtlDocClass.java
++++ b/src/main/java/org/oscarehr/common/model/CtlDocClass.java
+@@ -36,6 +36,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "ctl_doc_class")
+ public class CtlDocClass extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+         @Id
+         @Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/common/model/CtlDocumentPK.java b/src/main/java/org/oscarehr/common/model/CtlDocumentPK.java
+index 8da6f294b9..2c36b9e8f0 100644
+--- a/src/main/java/org/oscarehr/common/model/CtlDocumentPK.java
++++ b/src/main/java/org/oscarehr/common/model/CtlDocumentPK.java
+@@ -34,6 +34,7 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+ 
+ @Embeddable
+ public class CtlDocumentPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private String module;
+ 
+diff --git a/src/main/java/org/oscarehr/common/model/Demographic.java b/src/main/java/org/oscarehr/common/model/Demographic.java
+index f22758aced..894f049749 100644
+--- a/src/main/java/org/oscarehr/common/model/Demographic.java
++++ b/src/main/java/org/oscarehr/common/model/Demographic.java
+@@ -45,6 +45,7 @@ import org.oscarehr.util.MiscUtils;
+  * This is the object class that relates to the demographic table. Any customizations belong here.
+  */
+ public class Demographic extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private static final String DEFAULT_MONTH = "01";
+ 	private static final String DEFAULT_DATE = "01";
+@@ -194,7 +195,7 @@ public class Demographic extends AbstractModel<Integer> implements Serializable
+     }
+ 
+ 	public enum PatientStatus {
+-		AC, IN, DE, IC, ID, MO, FI
++		AC, IN, DE, IC, ID, MO, FI;
+ 	}
+ 
+ 	/**
+diff --git a/src/main/java/org/oscarehr/common/model/DemographicArchive.java b/src/main/java/org/oscarehr/common/model/DemographicArchive.java
+index 45f6afd3aa..620dd04f43 100644
+--- a/src/main/java/org/oscarehr/common/model/DemographicArchive.java
++++ b/src/main/java/org/oscarehr/common/model/DemographicArchive.java
+@@ -41,6 +41,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name = "demographicArchive")
+ public class DemographicArchive extends AbstractModel<Long> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/DemographicExt.java b/src/main/java/org/oscarehr/common/model/DemographicExt.java
+index e01f3c0fb4..129f961fac 100644
+--- a/src/main/java/org/oscarehr/common/model/DemographicExt.java
++++ b/src/main/java/org/oscarehr/common/model/DemographicExt.java
+@@ -45,6 +45,7 @@ import javax.persistence.Transient;
+ @Entity
+ @Table(name="demographicExt")
+ public class DemographicExt extends AbstractModel<Integer> implements Serializable {
++  private static final long serialVersionUID = 1L;
+ 
+ 	@Transient
+     private int hashCode = Integer.MIN_VALUE;// primary key
+@@ -65,7 +66,7 @@ public class DemographicExt extends AbstractModel<Integer> implements Serializab
+     
+     public enum DemographicProperty { PHU, EmploymentStatus, HasPrimaryCarePhyscian, 
+     	informedConsent, privacyConsent, usSigned, fNationCom, statusNum, area, ethnicity, 
+-    	cytolNum, wPhoneExt, hPhoneExt, demo_cell, phoneComment }
++    	cytolNum, wPhoneExt, hPhoneExt, demo_cell, phoneComment; }
+     
+ 	@ManyToOne(fetch=FetchType.EAGER)
+ 	@JoinColumn(name="demographic_no", insertable = false, updatable = false )
+diff --git a/src/main/java/org/oscarehr/common/model/DemographicStudyPK.java b/src/main/java/org/oscarehr/common/model/DemographicStudyPK.java
+index 75dc8f2e00..6eaaeac9ab 100644
+--- a/src/main/java/org/oscarehr/common/model/DemographicStudyPK.java
++++ b/src/main/java/org/oscarehr/common/model/DemographicStudyPK.java
+@@ -32,6 +32,7 @@ import javax.persistence.Embeddable;
+ 
+ @Embeddable
+ public class DemographicStudyPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="demographic_no")
+ 	private Integer demographicNo;
+diff --git a/src/main/java/org/oscarehr/common/model/DocumentDescriptionTemplate.java b/src/main/java/org/oscarehr/common/model/DocumentDescriptionTemplate.java
+index d0dcce10ac..a42c1f7fa2 100644
+--- a/src/main/java/org/oscarehr/common/model/DocumentDescriptionTemplate.java
++++ b/src/main/java/org/oscarehr/common/model/DocumentDescriptionTemplate.java
+@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "documentDescriptionTemplate")
+ public class DocumentDescriptionTemplate extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/DocumentExtraReviewer.java b/src/main/java/org/oscarehr/common/model/DocumentExtraReviewer.java
+index f12ebdd0b0..4f827bca42 100644
+--- a/src/main/java/org/oscarehr/common/model/DocumentExtraReviewer.java
++++ b/src/main/java/org/oscarehr/common/model/DocumentExtraReviewer.java
+@@ -35,6 +35,7 @@ import javax.persistence.TemporalType;
+ 
+ @Entity
+ public class DocumentExtraReviewer extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Drug.java b/src/main/java/org/oscarehr/common/model/Drug.java
+index 601b3f69b6..fb4a50bb53 100644
+--- a/src/main/java/org/oscarehr/common/model/Drug.java
++++ b/src/main/java/org/oscarehr/common/model/Drug.java
+@@ -52,6 +52,7 @@ import oscar.util.UtilDateUtilities;
+ @Entity
+ @Table(name = "drugs")
+ public class Drug extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/DrugReason.java b/src/main/java/org/oscarehr/common/model/DrugReason.java
+index bebd3bd114..6582a57105 100644
+--- a/src/main/java/org/oscarehr/common/model/DrugReason.java
++++ b/src/main/java/org/oscarehr/common/model/DrugReason.java
+@@ -80,6 +80,7 @@ create table drugReason(
+ @Entity
+ @Table(name = "drugReason")
+ public class DrugReason extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/DxAssociation.java b/src/main/java/org/oscarehr/common/model/DxAssociation.java
+index c59d6eee22..f9ce83aeb0 100644
+--- a/src/main/java/org/oscarehr/common/model/DxAssociation.java
++++ b/src/main/java/org/oscarehr/common/model/DxAssociation.java
+@@ -39,6 +39,7 @@ import javax.persistence.Transient;
+ @Entity
+ @Table(name="dx_associations")
+ public class DxAssociation extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/DxRegistedPTInfo.java b/src/main/java/org/oscarehr/common/model/DxRegistedPTInfo.java
+index 300a07c4e5..63913a7d87 100644
+--- a/src/main/java/org/oscarehr/common/model/DxRegistedPTInfo.java
++++ b/src/main/java/org/oscarehr/common/model/DxRegistedPTInfo.java
+@@ -29,6 +29,7 @@ import java.io.Serializable;
+  * @author toby
+  */
+ public class DxRegistedPTInfo implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     private String strFirstName;
+     private String strLastName;
+diff --git a/src/main/java/org/oscarehr/common/model/Dxresearch.java b/src/main/java/org/oscarehr/common/model/Dxresearch.java
+index d459c457e9..edab57f1ec 100644
+--- a/src/main/java/org/oscarehr/common/model/Dxresearch.java
++++ b/src/main/java/org/oscarehr/common/model/Dxresearch.java
+@@ -35,6 +35,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name="dxresearch")
+ public class Dxresearch  extends AbstractModel<Integer> implements java.io.Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+ 
+ 	@Id
+diff --git a/src/main/java/org/oscarehr/common/model/EForm.java b/src/main/java/org/oscarehr/common/model/EForm.java
+index 0ba378566e..680656f386 100644
+--- a/src/main/java/org/oscarehr/common/model/EForm.java
++++ b/src/main/java/org/oscarehr/common/model/EForm.java
+@@ -40,6 +40,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name = "eform")
+ public class EForm extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * This comparator sorts EForm ascending based on the formName
+diff --git a/src/main/java/org/oscarehr/common/model/EFormData.java b/src/main/java/org/oscarehr/common/model/EFormData.java
+index 9a963c8ac7..f5d65fd80b 100644
+--- a/src/main/java/org/oscarehr/common/model/EFormData.java
++++ b/src/main/java/org/oscarehr/common/model/EFormData.java
+@@ -40,6 +40,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name = "eform_data")
+ public class EFormData extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * This comparator sorts EFormData ascending based on the formDate
+diff --git a/src/main/java/org/oscarehr/common/model/EFormValue.java b/src/main/java/org/oscarehr/common/model/EFormValue.java
+index 202d480479..c13e3105bf 100644
+--- a/src/main/java/org/oscarehr/common/model/EFormValue.java
++++ b/src/main/java/org/oscarehr/common/model/EFormValue.java
+@@ -36,6 +36,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "eform_values")
+ public class EFormValue extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/EncounterForm.java b/src/main/java/org/oscarehr/common/model/EncounterForm.java
+index 4c9c3c49e0..ba2e3ad5a5 100644
+--- a/src/main/java/org/oscarehr/common/model/EncounterForm.java
++++ b/src/main/java/org/oscarehr/common/model/EncounterForm.java
+@@ -34,6 +34,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "encounterForm")
+ public class EncounterForm extends AbstractModel<String> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * This comparator sorts By FormName but puts BC form names first
+diff --git a/src/main/java/org/oscarehr/common/model/EncounterTemplate.java b/src/main/java/org/oscarehr/common/model/EncounterTemplate.java
+index 70e59b99eb..b914351270 100644
+--- a/src/main/java/org/oscarehr/common/model/EncounterTemplate.java
++++ b/src/main/java/org/oscarehr/common/model/EncounterTemplate.java
+@@ -37,6 +37,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name = "encountertemplate")
+ public class EncounterTemplate extends AbstractModel<String> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * This comparator sorts By FormName but puts BC form names first
+diff --git a/src/main/java/org/oscarehr/common/model/Facility.java b/src/main/java/org/oscarehr/common/model/Facility.java
+index 60c492960c..450530c62b 100755
+--- a/src/main/java/org/oscarehr/common/model/Facility.java
++++ b/src/main/java/org/oscarehr/common/model/Facility.java
+@@ -36,6 +36,7 @@ import javax.persistence.TemporalType;
+ 
+ @Entity
+ public class Facility extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/FacilityDemographicPrimaryKey.java b/src/main/java/org/oscarehr/common/model/FacilityDemographicPrimaryKey.java
+index 1da3f17ee2..9d43a0cec3 100644
+--- a/src/main/java/org/oscarehr/common/model/FacilityDemographicPrimaryKey.java
++++ b/src/main/java/org/oscarehr/common/model/FacilityDemographicPrimaryKey.java
+@@ -37,6 +37,7 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
+  */
+ @Embeddable
+ public class FacilityDemographicPrimaryKey implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private Integer facilityId = null;
+ 	private Integer demographicId = null;
+ 
+diff --git a/src/main/java/org/oscarehr/common/model/FlowSheetUserCreated.java b/src/main/java/org/oscarehr/common/model/FlowSheetUserCreated.java
+index 9d76fe35a3..d2c1c71ec8 100644
+--- a/src/main/java/org/oscarehr/common/model/FlowSheetUserCreated.java
++++ b/src/main/java/org/oscarehr/common/model/FlowSheetUserCreated.java
+@@ -40,6 +40,7 @@ import javax.persistence.GenerationType;
+ 
+ @Entity
+ public class FlowSheetUserCreated extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	public static final String SCOPE_CLINIC = "clinic";
+ 	public static final String SCOPE_PROVIDER = "provider";
+diff --git a/src/main/java/org/oscarehr/common/model/Flowsheet.java b/src/main/java/org/oscarehr/common/model/Flowsheet.java
+index 928b128b3c..df038a74ef 100644
+--- a/src/main/java/org/oscarehr/common/model/Flowsheet.java
++++ b/src/main/java/org/oscarehr/common/model/Flowsheet.java
+@@ -37,6 +37,7 @@ import javax.persistence.TemporalType;
+ 
+ @Entity
+ public class Flowsheet extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.AUTO)
+diff --git a/src/main/java/org/oscarehr/common/model/FrmLabReqPreSet.java b/src/main/java/org/oscarehr/common/model/FrmLabReqPreSet.java
+index a341dc0568..0c95a8c89e 100644
+--- a/src/main/java/org/oscarehr/common/model/FrmLabReqPreSet.java
++++ b/src/main/java/org/oscarehr/common/model/FrmLabReqPreSet.java
+@@ -41,6 +41,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name="frm_labreq_preset")
+ public class FrmLabReqPreSet extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
+     @Column(name = "preset_id", nullable = false)
+diff --git a/src/main/java/org/oscarehr/common/model/HL7HandlerMSHMapping.java b/src/main/java/org/oscarehr/common/model/HL7HandlerMSHMapping.java
+index 8b4915f42b..3e8bd6dbc9 100644
+--- a/src/main/java/org/oscarehr/common/model/HL7HandlerMSHMapping.java
++++ b/src/main/java/org/oscarehr/common/model/HL7HandlerMSHMapping.java
+@@ -21,6 +21,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name= "HL7HandlerMSHMapping")
+ public class HL7HandlerMSHMapping  extends AbstractModel<Integer> implements Serializable{
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Hl7TextInfo.java b/src/main/java/org/oscarehr/common/model/Hl7TextInfo.java
+index c09c6aed14..acf331fbfd 100644
+--- a/src/main/java/org/oscarehr/common/model/Hl7TextInfo.java
++++ b/src/main/java/org/oscarehr/common/model/Hl7TextInfo.java
+@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "hl7TextInfo")
+ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Hl7TextMessage.java b/src/main/java/org/oscarehr/common/model/Hl7TextMessage.java
+index 565a8afef2..c573e71859 100644
+--- a/src/main/java/org/oscarehr/common/model/Hl7TextMessage.java
++++ b/src/main/java/org/oscarehr/common/model/Hl7TextMessage.java
+@@ -39,6 +39,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name = "hl7TextMessage")
+ public class Hl7TextMessage extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Hl7TextMessageInfo.java b/src/main/java/org/oscarehr/common/model/Hl7TextMessageInfo.java
+index 9122dde438..c140b90303 100644
+--- a/src/main/java/org/oscarehr/common/model/Hl7TextMessageInfo.java
++++ b/src/main/java/org/oscarehr/common/model/Hl7TextMessageInfo.java
+@@ -20,6 +20,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "hl7TextMessageInfo")
+ public class Hl7TextMessageInfo extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	
+ 	public String message;
+diff --git a/src/main/java/org/oscarehr/common/model/Hl7TextMessageInfo2.java b/src/main/java/org/oscarehr/common/model/Hl7TextMessageInfo2.java
+index 3705903b12..53f5d0e2d9 100644
+--- a/src/main/java/org/oscarehr/common/model/Hl7TextMessageInfo2.java
++++ b/src/main/java/org/oscarehr/common/model/Hl7TextMessageInfo2.java
+@@ -36,6 +36,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "hl7TextMessageInfo2")
+ public class Hl7TextMessageInfo2 extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	 
+ 	public String message;
+diff --git a/src/main/java/org/oscarehr/common/model/Hsfo2Visit.java b/src/main/java/org/oscarehr/common/model/Hsfo2Visit.java
+index 62eca2397e..926b15dac2 100644
+--- a/src/main/java/org/oscarehr/common/model/Hsfo2Visit.java
++++ b/src/main/java/org/oscarehr/common/model/Hsfo2Visit.java
+@@ -39,6 +39,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name="form_hsfo2_visit")
+ public class Hsfo2Visit extends AbstractModel<Integer> implements Serializable {
++  private static final long serialVersionUID = 1L;
+ 		
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Icd9.java b/src/main/java/org/oscarehr/common/model/Icd9.java
+index 24921a82eb..e3ec5c0753 100644
+--- a/src/main/java/org/oscarehr/common/model/Icd9.java
++++ b/src/main/java/org/oscarehr/common/model/Icd9.java
+@@ -30,6 +30,7 @@ import javax.persistence.Transient;
+ @Entity
+ @Table(name="icd9")
+ public class Icd9 extends AbstractCodeSystemModel<Integer> implements java.io.Serializable {
++  private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/InstitutionDepartmentPK.java b/src/main/java/org/oscarehr/common/model/InstitutionDepartmentPK.java
+index f713fd8fed..4f2fcd1716 100644
+--- a/src/main/java/org/oscarehr/common/model/InstitutionDepartmentPK.java
++++ b/src/main/java/org/oscarehr/common/model/InstitutionDepartmentPK.java
+@@ -26,6 +26,7 @@ package org.oscarehr.common.model;
+ import java.io.Serializable;
+ 
+ public class InstitutionDepartmentPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private Integer institutionId;
+ 	private Integer departmentId;
+diff --git a/src/main/java/org/oscarehr/common/model/IntegratorControl.java b/src/main/java/org/oscarehr/common/model/IntegratorControl.java
+index 0bcd4ce3f0..2405e7356e 100644
+--- a/src/main/java/org/oscarehr/common/model/IntegratorControl.java
++++ b/src/main/java/org/oscarehr/common/model/IntegratorControl.java
+@@ -36,6 +36,7 @@ import javax.persistence.Id;
+  */
+ @Entity
+ public class IntegratorControl extends AbstractModel<Integer>implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Measurement.java b/src/main/java/org/oscarehr/common/model/Measurement.java
+index 435c77da7b..2df1284a39 100644
+--- a/src/main/java/org/oscarehr/common/model/Measurement.java
++++ b/src/main/java/org/oscarehr/common/model/Measurement.java
+@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "measurements")
+ public class Measurement extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/MeasurementType.java b/src/main/java/org/oscarehr/common/model/MeasurementType.java
+index 97b69eefaa..4cced1f63a 100644
+--- a/src/main/java/org/oscarehr/common/model/MeasurementType.java
++++ b/src/main/java/org/oscarehr/common/model/MeasurementType.java
+@@ -41,6 +41,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name="measurementType")
+ public class MeasurementType extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/MeasurementsDeleted.java b/src/main/java/org/oscarehr/common/model/MeasurementsDeleted.java
+index 9bb85c84ae..f587a99109 100644
+--- a/src/main/java/org/oscarehr/common/model/MeasurementsDeleted.java
++++ b/src/main/java/org/oscarehr/common/model/MeasurementsDeleted.java
+@@ -37,6 +37,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "measurementsDeleted")
+ public class MeasurementsDeleted extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.AUTO)
+diff --git a/src/main/java/org/oscarehr/common/model/MsgDemoMapPK.java b/src/main/java/org/oscarehr/common/model/MsgDemoMapPK.java
+index d42b3c0d16..1ad347456a 100644
+--- a/src/main/java/org/oscarehr/common/model/MsgDemoMapPK.java
++++ b/src/main/java/org/oscarehr/common/model/MsgDemoMapPK.java
+@@ -30,6 +30,7 @@ import javax.persistence.Embeddable;
+ 
+ @Embeddable
+ public class MsgDemoMapPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="messageID")
+     private Integer messageId;
+diff --git a/src/main/java/org/oscarehr/common/model/MyGroup.java b/src/main/java/org/oscarehr/common/model/MyGroup.java
+index dbdac5c376..1ccef28f2d 100644
+--- a/src/main/java/org/oscarehr/common/model/MyGroup.java
++++ b/src/main/java/org/oscarehr/common/model/MyGroup.java
+@@ -36,6 +36,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name="mygroup")
+ public class MyGroup  extends AbstractModel<MyGroupPrimaryKey> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+ 	@EmbeddedId     
+ 	private MyGroupPrimaryKey id;
+diff --git a/src/main/java/org/oscarehr/common/model/MyGroupPrimaryKey.java b/src/main/java/org/oscarehr/common/model/MyGroupPrimaryKey.java
+index a15a09d117..1824e89ab7 100644
+--- a/src/main/java/org/oscarehr/common/model/MyGroupPrimaryKey.java
++++ b/src/main/java/org/oscarehr/common/model/MyGroupPrimaryKey.java
+@@ -35,6 +35,7 @@ import javax.persistence.Column;
+  * MygroupId generated by hbm2java
+  */
+ public class MyGroupPrimaryKey  implements java.io.Serializable {
++  private static final long serialVersionUID = 1L;
+ 
+ 
+ 	@Column(name="mygroup_no")
+diff --git a/src/main/java/org/oscarehr/common/model/OcanClientForm.java b/src/main/java/org/oscarehr/common/model/OcanClientForm.java
+index bbb48dedd0..1731fb97d9 100644
+--- a/src/main/java/org/oscarehr/common/model/OcanClientForm.java
++++ b/src/main/java/org/oscarehr/common/model/OcanClientForm.java
+@@ -47,6 +47,7 @@ import javax.persistence.TemporalType;
+  */
+ @Entity
+ public class OcanClientForm extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/OcanClientFormData.java b/src/main/java/org/oscarehr/common/model/OcanClientFormData.java
+index 63401987fd..1a255bc601 100644
+--- a/src/main/java/org/oscarehr/common/model/OcanClientFormData.java
++++ b/src/main/java/org/oscarehr/common/model/OcanClientFormData.java
+@@ -42,6 +42,7 @@ import javax.persistence.PreUpdate;
+  */
+ @Entity
+ public class OcanClientFormData extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/OcanConnexOption.java b/src/main/java/org/oscarehr/common/model/OcanConnexOption.java
+index 2127d11dc5..cd4f93df85 100644
+--- a/src/main/java/org/oscarehr/common/model/OcanConnexOption.java
++++ b/src/main/java/org/oscarehr/common/model/OcanConnexOption.java
+@@ -35,6 +35,7 @@ import javax.persistence.PreUpdate;
+ 
+ @Entity
+ public class OcanConnexOption extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/OcanFormOption.java b/src/main/java/org/oscarehr/common/model/OcanFormOption.java
+index b5b33ead59..8f0dc6977d 100644
+--- a/src/main/java/org/oscarehr/common/model/OcanFormOption.java
++++ b/src/main/java/org/oscarehr/common/model/OcanFormOption.java
+@@ -38,6 +38,7 @@ import javax.persistence.PreUpdate;
+  */
+ @Entity
+ public class OcanFormOption extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/OcanStaffForm.java b/src/main/java/org/oscarehr/common/model/OcanStaffForm.java
+index 6b438775a6..29fd6e0446 100644
+--- a/src/main/java/org/oscarehr/common/model/OcanStaffForm.java
++++ b/src/main/java/org/oscarehr/common/model/OcanStaffForm.java
+@@ -46,6 +46,7 @@ import javax.persistence.TemporalType;
+  */
+ @Entity
+ public class OcanStaffForm extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/OcanStaffFormData.java b/src/main/java/org/oscarehr/common/model/OcanStaffFormData.java
+index a8118cf587..b8c99c667f 100644
+--- a/src/main/java/org/oscarehr/common/model/OcanStaffFormData.java
++++ b/src/main/java/org/oscarehr/common/model/OcanStaffFormData.java
+@@ -41,6 +41,7 @@ import javax.persistence.PreRemove;
+  */
+ @Entity
+ public class OcanStaffFormData extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/OscarCode.java b/src/main/java/org/oscarehr/common/model/OscarCode.java
+index d7f198b439..25c6738fa2 100644
+--- a/src/main/java/org/oscarehr/common/model/OscarCode.java
++++ b/src/main/java/org/oscarehr/common/model/OscarCode.java
+@@ -27,6 +27,7 @@ import javax.persistence.Id;
+ 
+ @Entity
+ public class OscarCode extends AbstractCodeSystemModel<Integer> implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/OscarKey.java b/src/main/java/org/oscarehr/common/model/OscarKey.java
+index 59e371804a..2e3e5af01e 100644
+--- a/src/main/java/org/oscarehr/common/model/OscarKey.java
++++ b/src/main/java/org/oscarehr/common/model/OscarKey.java
+@@ -33,6 +33,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "oscarKeys")
+ public class OscarKey extends AbstractModel<String> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	private String name;
+diff --git a/src/main/java/org/oscarehr/common/model/OscarLog.java b/src/main/java/org/oscarehr/common/model/OscarLog.java
+index f5975f5180..eda3d585a7 100644
+--- a/src/main/java/org/oscarehr/common/model/OscarLog.java
++++ b/src/main/java/org/oscarehr/common/model/OscarLog.java
+@@ -42,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "log")
+ public class OscarLog extends AbstractModel<Long> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/PHRVerification.java b/src/main/java/org/oscarehr/common/model/PHRVerification.java
+index 9b0003abb0..ac1994d3ed 100644
+--- a/src/main/java/org/oscarehr/common/model/PHRVerification.java
++++ b/src/main/java/org/oscarehr/common/model/PHRVerification.java
+@@ -37,6 +37,7 @@ import javax.persistence.TemporalType;
+ 
+ @Entity
+ public class PHRVerification  extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	public static final String VERIFICATION_METHOD_FAX="FAX";
+ 	public static final String VERIFICATION_METHOD_MAIL="MAIL";
+diff --git a/src/main/java/org/oscarehr/common/model/PartialDate.java b/src/main/java/org/oscarehr/common/model/PartialDate.java
+index 24c7ec680a..9fd60507c5 100644
+--- a/src/main/java/org/oscarehr/common/model/PartialDate.java
++++ b/src/main/java/org/oscarehr/common/model/PartialDate.java
+@@ -57,6 +57,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "partial_date")
+ public class PartialDate extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Prescription.java b/src/main/java/org/oscarehr/common/model/Prescription.java
+index 98780b2f62..676cc9b58f 100644
+--- a/src/main/java/org/oscarehr/common/model/Prescription.java
++++ b/src/main/java/org/oscarehr/common/model/Prescription.java
+@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "prescription")
+ public class Prescription extends AbstractModel<Integer> implements Serializable, DemographicData {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Prevention.java b/src/main/java/org/oscarehr/common/model/Prevention.java
+index 55aee3bc23..e16fc46011 100644
+--- a/src/main/java/org/oscarehr/common/model/Prevention.java
++++ b/src/main/java/org/oscarehr/common/model/Prevention.java
+@@ -22,6 +22,7 @@
+  */
+ 
+ package org.oscarehr.common.model;
++import org.oscarehr.common.interfaces.Immunization.ImmunizationProperty;
+ 
+ import java.io.Serializable;
+ import java.text.ParseException;
+@@ -54,6 +55,7 @@ import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
+ @Entity
+ @Table(name = "preventions")
+ public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface, DemographicData {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+ 	
+diff --git a/src/main/java/org/oscarehr/common/model/PreventionExt.java b/src/main/java/org/oscarehr/common/model/PreventionExt.java
+index 4116831d7e..a4d9db4e19 100644
+--- a/src/main/java/org/oscarehr/common/model/PreventionExt.java
++++ b/src/main/java/org/oscarehr/common/model/PreventionExt.java
+@@ -39,6 +39,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "preventionsExt")
+ public class PreventionExt extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/ProductLocation.java b/src/main/java/org/oscarehr/common/model/ProductLocation.java
+index a4680a2628..521b39fdcb 100644
+--- a/src/main/java/org/oscarehr/common/model/ProductLocation.java
++++ b/src/main/java/org/oscarehr/common/model/ProductLocation.java
+@@ -32,6 +32,7 @@ import javax.persistence.Id;
+ 
+ @Entity
+ public class ProductLocation extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/ProfessionalSpecialist.java b/src/main/java/org/oscarehr/common/model/ProfessionalSpecialist.java
+index 526f15cb2c..4fa48a7a43 100644
+--- a/src/main/java/org/oscarehr/common/model/ProfessionalSpecialist.java
++++ b/src/main/java/org/oscarehr/common/model/ProfessionalSpecialist.java
+@@ -45,6 +45,7 @@ import org.oscarehr.integration.fhir.resources.constants.ContactType;
+ @Entity
+ @Table(name = "professionalSpecialists")
+ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Serializable, ContactInterface {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/Property.java b/src/main/java/org/oscarehr/common/model/Property.java
+index 247ef83d92..12523b1c41 100644
+--- a/src/main/java/org/oscarehr/common/model/Property.java
++++ b/src/main/java/org/oscarehr/common/model/Property.java
+@@ -39,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "property")
+ public class Property extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	public Property() {}
+ 	
+diff --git a/src/main/java/org/oscarehr/common/model/Provider.java b/src/main/java/org/oscarehr/common/model/Provider.java
+index 873cdbec15..5ad6e7d157 100644
+--- a/src/main/java/org/oscarehr/common/model/Provider.java
++++ b/src/main/java/org/oscarehr/common/model/Provider.java
+@@ -377,6 +377,7 @@ public class Provider extends AbstractModel<String> implements Comparable<Provid
+ 	}
+ 
+ 	public class ComparatorName implements Comparator<Provider>, Serializable {
++		private static final long serialVersionUID = 1L;
+ 
+ 		public int compare(Provider o1, Provider o2) {
+ 			Provider bp1 = o1;
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderData.java b/src/main/java/org/oscarehr/common/model/ProviderData.java
+index 9ab9a1a351..f658687c93 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderData.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderData.java
+@@ -40,6 +40,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name = "provider")
+ public class ProviderData extends AbstractModel<String> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@Column(name = "provider_no")
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderFacilityPK.java b/src/main/java/org/oscarehr/common/model/ProviderFacilityPK.java
+index 16ae71d967..2d00250b1e 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderFacilityPK.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderFacilityPK.java
+@@ -32,6 +32,7 @@ import javax.persistence.Embeddable;
+ 
+ @Embeddable
+ public class ProviderFacilityPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	@Column(name="provider_no")
+ 	private String providerNo;
+ 	@Column(name="facility_id")
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderLabRoutingFavorite.java b/src/main/java/org/oscarehr/common/model/ProviderLabRoutingFavorite.java
+index 3202458ef0..16e17a99ab 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderLabRoutingFavorite.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderLabRoutingFavorite.java
+@@ -36,6 +36,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "providerLabRoutingFavorites")
+ public class ProviderLabRoutingFavorite extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+ 	private Integer id;
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderLabRoutingModel.java b/src/main/java/org/oscarehr/common/model/ProviderLabRoutingModel.java
+index fdc60b1035..53513bcba7 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderLabRoutingModel.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderLabRoutingModel.java
+@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
+ @Entity
+ @Table(name = "providerLabRouting")
+ public class ProviderLabRoutingModel extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderPreference.java b/src/main/java/org/oscarehr/common/model/ProviderPreference.java
+index 2a54967b17..a816518498 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderPreference.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderPreference.java
+@@ -45,6 +45,7 @@ import oscar.OscarProperties;
+ 
+ @Entity
+ public class ProviderPreference extends AbstractModel<String> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Embeddable
+ 	public static class QuickLink
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderSitePK.java b/src/main/java/org/oscarehr/common/model/ProviderSitePK.java
+index 9a0c06719c..654b5f19f1 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderSitePK.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderSitePK.java
+@@ -29,6 +29,7 @@ import javax.persistence.Column;
+ 
+ 
+ public class ProviderSitePK implements java.io.Serializable  {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="provider_no")
+ 	private String providerNo;
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderStudyPK.java b/src/main/java/org/oscarehr/common/model/ProviderStudyPK.java
+index b555ae58ce..3b8e166325 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderStudyPK.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderStudyPK.java
+@@ -32,6 +32,7 @@ import javax.persistence.Embeddable;
+ 
+ @Embeddable
+ public class ProviderStudyPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="provider_no")
+ 	private String providerNo;
+diff --git a/src/main/java/org/oscarehr/common/model/PublicKey.java b/src/main/java/org/oscarehr/common/model/PublicKey.java
+index 524c28f13e..5c11f0782e 100644
+--- a/src/main/java/org/oscarehr/common/model/PublicKey.java
++++ b/src/main/java/org/oscarehr/common/model/PublicKey.java
+@@ -33,8 +33,8 @@ import javax.persistence.Id;
+ import javax.persistence.Table;
+ 
+ @Entity
+-@Table(name = "publicKeys")
+-public class PublicKey extends AbstractModel<String> implements Serializable {
++@Table(name = "publicKeys")class PublicKey extends AbstractModel<String> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	private String service;
+@@ -44,8 +44,7 @@ public class PublicKey extends AbstractModel<String> implements Serializable {
+ 	@Column(name = "pubKey")
+ 	private String base64EncodedPublicKey;
+ 	
+-	@Column(name = "privateKey")
+-	private String base64EncodedPrivateKey;
++	@Column(name = "privateKey")String base64EncodedPrivateKey;
+ 	
+ 	
+ 	/**
+diff --git a/src/main/java/org/oscarehr/common/model/Queue.java b/src/main/java/org/oscarehr/common/model/Queue.java
+index b81549afd2..f28f7fa472 100644
+--- a/src/main/java/org/oscarehr/common/model/Queue.java
++++ b/src/main/java/org/oscarehr/common/model/Queue.java
+@@ -48,6 +48,7 @@ import org.apache.commons.lang.StringUtils;
+ @Table(name = "queue")
+ 
+ public class Queue extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 	public static int DEFAULT_QUEUE_ID=1;
+ 
+     @Id
+diff --git a/src/main/java/org/oscarehr/common/model/QuickList.java b/src/main/java/org/oscarehr/common/model/QuickList.java
+index 4ad56c211b..fe593d50eb 100644
+--- a/src/main/java/org/oscarehr/common/model/QuickList.java
++++ b/src/main/java/org/oscarehr/common/model/QuickList.java
+@@ -36,6 +36,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "quickList")
+ public class QuickList extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/QuickListUser.java b/src/main/java/org/oscarehr/common/model/QuickListUser.java
+index 09371b6f61..bf3b9276af 100644
+--- a/src/main/java/org/oscarehr/common/model/QuickListUser.java
++++ b/src/main/java/org/oscarehr/common/model/QuickListUser.java
+@@ -39,6 +39,7 @@ import javax.persistence.TemporalType;
+ @Entity
+ @Table(name = "quickListUser")
+ public class QuickListUser extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/ReportTempPK.java b/src/main/java/org/oscarehr/common/model/ReportTempPK.java
+index 2c8917750e..309aa0469f 100644
+--- a/src/main/java/org/oscarehr/common/model/ReportTempPK.java
++++ b/src/main/java/org/oscarehr/common/model/ReportTempPK.java
+@@ -35,6 +35,7 @@ import javax.persistence.TemporalType;
+ 
+ @Embeddable
+ public class ReportTempPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="demographic_no")
+ 	private int demographicNo;
+diff --git a/src/main/java/org/oscarehr/common/model/RoomBedHistoricalPK.java b/src/main/java/org/oscarehr/common/model/RoomBedHistoricalPK.java
+index c44f61e6fe..f06eb4bd62 100644
+--- a/src/main/java/org/oscarehr/common/model/RoomBedHistoricalPK.java
++++ b/src/main/java/org/oscarehr/common/model/RoomBedHistoricalPK.java
+@@ -33,6 +33,7 @@ import javax.persistence.TemporalType;
+ 
+ @Embeddable
+ public class RoomBedHistoricalPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="bed_id")
+     private Integer bedId;
+diff --git a/src/main/java/org/oscarehr/common/model/RoomBedPK.java b/src/main/java/org/oscarehr/common/model/RoomBedPK.java
+index 2aad555572..a50d29d6f5 100644
+--- a/src/main/java/org/oscarehr/common/model/RoomBedPK.java
++++ b/src/main/java/org/oscarehr/common/model/RoomBedPK.java
+@@ -30,6 +30,7 @@ import javax.persistence.Embeddable;
+ 
+ @Embeddable
+ public class RoomBedPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="bed_id")
+     private Integer bedId;
+diff --git a/src/main/java/org/oscarehr/common/model/RoomDemographicPK.java b/src/main/java/org/oscarehr/common/model/RoomDemographicPK.java
+index 8e3690ddd9..bb4dc4da3c 100644
+--- a/src/main/java/org/oscarehr/common/model/RoomDemographicPK.java
++++ b/src/main/java/org/oscarehr/common/model/RoomDemographicPK.java
+@@ -30,6 +30,7 @@ import javax.persistence.Embeddable;
+ 
+ @Embeddable
+ public class RoomDemographicPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Column(name="demographic_no")
+     private Integer demographicNo;
+diff --git a/src/main/java/org/oscarehr/common/model/ScheduleTemplatePrimaryKey.java b/src/main/java/org/oscarehr/common/model/ScheduleTemplatePrimaryKey.java
+index 7d2d335235..4ba0174a94 100644
+--- a/src/main/java/org/oscarehr/common/model/ScheduleTemplatePrimaryKey.java
++++ b/src/main/java/org/oscarehr/common/model/ScheduleTemplatePrimaryKey.java
+@@ -30,6 +30,7 @@ import java.io.Serializable;
+ import javax.persistence.Column;
+ 
+ public class ScheduleTemplatePrimaryKey implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * Don't blame me, I wasn't the one to start doing this, I'm just making the constant for something already in use. Someday we should refactor it to null.
+diff --git a/src/main/java/org/oscarehr/common/model/SecObjPrivilegePrimaryKey.java b/src/main/java/org/oscarehr/common/model/SecObjPrivilegePrimaryKey.java
+index bd6db8fe4c..0c5d53b417 100644
+--- a/src/main/java/org/oscarehr/common/model/SecObjPrivilegePrimaryKey.java
++++ b/src/main/java/org/oscarehr/common/model/SecObjPrivilegePrimaryKey.java
+@@ -31,6 +31,7 @@ import javax.persistence.Embeddable;
+ 
+ @Embeddable
+ public class SecObjPrivilegePrimaryKey implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private String roleUserGroup = null;
+ 	private String objectName = null;
+ 
+diff --git a/src/main/java/org/oscarehr/common/model/SecRole.java b/src/main/java/org/oscarehr/common/model/SecRole.java
+index 701acc4f54..ff9c77916f 100644
+--- a/src/main/java/org/oscarehr/common/model/SecRole.java
++++ b/src/main/java/org/oscarehr/common/model/SecRole.java
+@@ -35,6 +35,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name = "secRole")
+ public class SecRole extends AbstractModel<Integer> implements Serializable, Comparable<SecRole> {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/ServiceSpecialistsPK.java b/src/main/java/org/oscarehr/common/model/ServiceSpecialistsPK.java
+index c5ef9f5f84..a3040ad06a 100644
+--- a/src/main/java/org/oscarehr/common/model/ServiceSpecialistsPK.java
++++ b/src/main/java/org/oscarehr/common/model/ServiceSpecialistsPK.java
+@@ -26,6 +26,7 @@ package org.oscarehr.common.model;
+ import java.io.Serializable;
+ 
+ public class ServiceSpecialistsPK implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private Integer serviceId;
+ 	private Integer specId;
+diff --git a/src/main/java/org/oscarehr/common/model/Site.java b/src/main/java/org/oscarehr/common/model/Site.java
+index 97cef4b0a7..21f0705b64 100644
+--- a/src/main/java/org/oscarehr/common/model/Site.java
++++ b/src/main/java/org/oscarehr/common/model/Site.java
+@@ -36,6 +36,7 @@ import javax.persistence.Transient;
+ @Entity
+ @Table(name="site")
+ public class Site extends AbstractModel<Integer> implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Override
+ 	public int hashCode() {
+diff --git a/src/main/java/org/oscarehr/common/model/SnomedCore.java b/src/main/java/org/oscarehr/common/model/SnomedCore.java
+index aac94088f1..9a38fb5129 100644
+--- a/src/main/java/org/oscarehr/common/model/SnomedCore.java
++++ b/src/main/java/org/oscarehr/common/model/SnomedCore.java
+@@ -31,6 +31,7 @@ import javax.persistence.Id;
+ 
+ @Entity
+ public class SnomedCore extends AbstractCodeSystemModel<Integer> implements java.io.Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/model/SpecialtyPK.java b/src/main/java/org/oscarehr/common/model/SpecialtyPK.java
+index ff5d343a4d..95f14800b4 100644
+--- a/src/main/java/org/oscarehr/common/model/SpecialtyPK.java
++++ b/src/main/java/org/oscarehr/common/model/SpecialtyPK.java
+@@ -29,6 +29,7 @@ import javax.persistence.Embeddable;
+ 
+ @Embeddable
+ public class SpecialtyPK implements Serializable{
++	private static final long serialVersionUID = 1L;
+ 
+ 	private String region;
+ 	private String specialty;
+diff --git a/src/main/java/org/oscarehr/common/model/UserDSMessagePrefs.java b/src/main/java/org/oscarehr/common/model/UserDSMessagePrefs.java
+index 34d233890e..5e340e4099 100644
+--- a/src/main/java/org/oscarehr/common/model/UserDSMessagePrefs.java
++++ b/src/main/java/org/oscarehr/common/model/UserDSMessagePrefs.java
+@@ -44,6 +44,7 @@ import javax.persistence.Transient;
+ @Entity
+ @Table(name="user_ds_message_prefs")
+ public class UserDSMessagePrefs extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 	@Transient
+     public final static String MYDRUGREF = "mydrugref";
+ 	
+diff --git a/src/main/java/org/oscarehr/common/model/UserProperty.java b/src/main/java/org/oscarehr/common/model/UserProperty.java
+index 621d8a18a0..88de45f178 100644
+--- a/src/main/java/org/oscarehr/common/model/UserProperty.java
++++ b/src/main/java/org/oscarehr/common/model/UserProperty.java
+@@ -37,6 +37,7 @@ import javax.persistence.Transient;
+ @Entity
+ @Table(name="property")
+ public class UserProperty extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     public static final String MYOSCAR_ID="MyOscarId";
+     public static final String STALE_NOTEDATE = "cme_note_date";
+diff --git a/src/main/java/org/oscarehr/common/model/Validations.java b/src/main/java/org/oscarehr/common/model/Validations.java
+index f601eb3a94..214dc28c9e 100644
+--- a/src/main/java/org/oscarehr/common/model/Validations.java
++++ b/src/main/java/org/oscarehr/common/model/Validations.java
+@@ -38,6 +38,7 @@ import javax.persistence.Table;
+ @Entity
+ @Table(name="validations")
+ public class Validations extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/common/web/DemographicHistoryItem.java b/src/main/java/org/oscarehr/common/web/DemographicHistoryItem.java
+index 50f15f3663..895cf6de99 100644
+--- a/src/main/java/org/oscarehr/common/web/DemographicHistoryItem.java
++++ b/src/main/java/org/oscarehr/common/web/DemographicHistoryItem.java
+@@ -32,6 +32,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
+  * type can be address,phone,phone2,cell at the moment
+  */
+ public  class DemographicHistoryItem  implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private String name;
+ 	private String dateSeen;
+ 	private String type;
+diff --git a/src/main/java/org/oscarehr/myoscar/utils/MyOscarLoggedInInfo.java b/src/main/java/org/oscarehr/myoscar/utils/MyOscarLoggedInInfo.java
+index 5da88a5e6d..f9633e1dc2 100755
+--- a/src/main/java/org/oscarehr/myoscar/utils/MyOscarLoggedInInfo.java
++++ b/src/main/java/org/oscarehr/myoscar/utils/MyOscarLoggedInInfo.java
+@@ -37,6 +37,7 @@ import oscar.OscarProperties;
+ 
+ public final class MyOscarLoggedInInfo implements Serializable, MyOscarLoggedInInfoInterface
+ {
++	private static final long serialVersionUID = 1L;
+ 	private static final String myOscarServerBaseUrl = initMyOscarServerBaseUrl();
+ 	private static final String MY_OSCAR_LOGGED_IN_INFO_SESSION_KEY = "MY_OSCAR_LOGGED_IN_INFO_SESSION_KEY";
+ 
+diff --git a/src/main/java/org/oscarehr/phr/model/PHRDocument.java b/src/main/java/org/oscarehr/phr/model/PHRDocument.java
+index e05fdd11b9..d892761db6 100644
+--- a/src/main/java/org/oscarehr/phr/model/PHRDocument.java
++++ b/src/main/java/org/oscarehr/phr/model/PHRDocument.java
+@@ -43,6 +43,7 @@ import oscar.oscarClinic.ClinicData;
+  * @author jay
+  */
+ public class PHRDocument implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	public static final int TYPE_NOT_SET = 0;
+ 	// for senderOscar and receiverOscar
+diff --git a/src/main/java/org/oscarehr/phr/model/PHRMessage.java b/src/main/java/org/oscarehr/phr/model/PHRMessage.java
+index 0b9a34aaaa..68bdffc7f4 100644
+--- a/src/main/java/org/oscarehr/phr/model/PHRMessage.java
++++ b/src/main/java/org/oscarehr/phr/model/PHRMessage.java
+@@ -67,6 +67,7 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
+  * @author jay
+  */
+ public class PHRMessage  extends PHRDocument implements Serializable{
++    private static final long serialVersionUID = 1L;
+     private static Logger log = MiscUtils.getLogger();
+     //for status received msgs
+     public static final int STATUS_NEW = 1;
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/AclDefinitionDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/AclDefinitionDataObject.java
+index 617f5a9c1e..f9f2b62b0b 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/AclDefinitionDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/AclDefinitionDataObject.java
+@@ -36,6 +36,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name="sharing_acl_definition")
+ public class AclDefinitionDataObject extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	@Id
+ 	@Column(name="id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/ActorDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/ActorDataObject.java
+index 5337e99a70..1c89fe154d 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/ActorDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/ActorDataObject.java
+@@ -37,6 +37,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "sharing_actor")
+ public class ActorDataObject extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/AffinityDomainDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/AffinityDomainDataObject.java
+index a34afa467a..8765f63cec 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/AffinityDomainDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/AffinityDomainDataObject.java
+@@ -49,6 +49,7 @@ import org.oscarehr.util.MiscUtils;
+ @Entity
+ @Table(name = "sharing_affinity_domain")
+ public class AffinityDomainDataObject extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * This comparator sorts EForm ascending based on the id
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/ClinicInfoDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/ClinicInfoDataObject.java
+index 7d48c3a0ec..97545acd46 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/ClinicInfoDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/ClinicInfoDataObject.java
+@@ -34,6 +34,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "sharing_clinic_info")
+ public class ClinicInfoDataObject extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * This comparator sorts EForm ascending based on the id
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/CodeMappingDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/CodeMappingDataObject.java
+index 976fa4451c..020ab1f2d2 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/CodeMappingDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/CodeMappingDataObject.java
+@@ -39,6 +39,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name="sharing_code_mapping")
+ public class CodeMappingDataObject extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	@Id
+ 	@Column(name="id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/CodeValueDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/CodeValueDataObject.java
+index b1d9391c5c..3d09efc7cf 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/CodeValueDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/CodeValueDataObject.java
+@@ -34,6 +34,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name="sharing_code_value")
+ public class CodeValueDataObject extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	@Id
+ 	@Column(name="id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/DemographicExport.java b/src/main/java/org/oscarehr/sharingcenter/model/DemographicExport.java
+index 3b5822496a..9f4ff4d706 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/DemographicExport.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/DemographicExport.java
+@@ -48,6 +48,7 @@ import org.oscarehr.common.model.Demographic;
+ @Entity
+ @Table(name = "sharing_document_export")
+ public class DemographicExport extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/EDocMapping.java b/src/main/java/org/oscarehr/sharingcenter/model/EDocMapping.java
+index 214200da9e..86b09d6766 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/EDocMapping.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/EDocMapping.java
+@@ -35,6 +35,7 @@ import org.oscarehr.util.MiscUtils;
+ @Entity
+ @Table(name = "sharing_mapping_edoc")
+ public class EDocMapping extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/EFormMapping.java b/src/main/java/org/oscarehr/sharingcenter/model/EFormMapping.java
+index 035a2d15c8..79d7110c2c 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/EFormMapping.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/EFormMapping.java
+@@ -35,6 +35,7 @@ import org.oscarehr.util.MiscUtils;
+ @Entity
+ @Table(name = "sharing_mapping_eform")
+ public class EFormMapping extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/ExportedDocument.java b/src/main/java/org/oscarehr/sharingcenter/model/ExportedDocument.java
+index e3d98d5498..1ce8cf618f 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/ExportedDocument.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/ExportedDocument.java
+@@ -34,6 +34,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "sharing_exported_doc")
+ public class ExportedDocument extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/InfrastructureDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/InfrastructureDataObject.java
+index eb55dd19d4..47ca44aa34 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/InfrastructureDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/InfrastructureDataObject.java
+@@ -35,6 +35,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name="sharing_infrastructure")
+ public class InfrastructureDataObject extends AbstractModel<Integer> implements Serializable{
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * This comparator sorts EForm ascending based on the id
+@@ -73,8 +74,7 @@ public class InfrastructureDataObject extends AbstractModel<Integer> implements
+ 	@Column(name="public_key")
+ 	private String publicKey;
+ 	
+-	@Column(name="private_key")
+-	private String privateKey;
++	@Column(name="private_key")String privateKey;
+ 	
+ 	
+ 	
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/MappingCode.java b/src/main/java/org/oscarehr/sharingcenter/model/MappingCode.java
+index 5822a67d6a..3c7b2356f5 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/MappingCode.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/MappingCode.java
+@@ -33,6 +33,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "sharing_mapping_code")
+ public class MappingCode extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/MiscMapping.java b/src/main/java/org/oscarehr/sharingcenter/model/MiscMapping.java
+index c7dfbda26c..0b4706ee60 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/MiscMapping.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/MiscMapping.java
+@@ -35,6 +35,7 @@ import org.oscarehr.util.MiscUtils;
+ @Entity
+ @Table(name = "sharing_mapping_misc")
+ public class MiscMapping extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/PatientDocument.java b/src/main/java/org/oscarehr/sharingcenter/model/PatientDocument.java
+index fa0a0ceb43..35286d8aec 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/PatientDocument.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/PatientDocument.java
+@@ -43,6 +43,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "sharing_patient_document")
+ public class PatientDocument extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	/**
+ 	 * This comparator sorts EForm ascending based on the id
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/PatientPolicyConsent.java b/src/main/java/org/oscarehr/sharingcenter/model/PatientPolicyConsent.java
+index 64f64229ae..b1bc421b2f 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/PatientPolicyConsent.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/PatientPolicyConsent.java
+@@ -42,6 +42,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Table(name = "sharing_patient_policy_consent")
+ public class PatientPolicyConsent extends AbstractModel<Integer> implements Serializable
+ {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/PatientSharingNetworkDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/PatientSharingNetworkDataObject.java
+index 1ec0808c37..a880c5b857 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/PatientSharingNetworkDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/PatientSharingNetworkDataObject.java
+@@ -34,6 +34,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name="sharing_patient_network")
+ public class PatientSharingNetworkDataObject extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 	
+ 	@Id
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/PolicyDefinitionDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/PolicyDefinitionDataObject.java
+index 053ad8bcfc..4982013afc 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/PolicyDefinitionDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/PolicyDefinitionDataObject.java
+@@ -40,6 +40,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Table(name = "sharing_policy_definition")
+ public class PolicyDefinitionDataObject extends AbstractModel<Integer> implements Serializable
+ {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/SiteMapping.java b/src/main/java/org/oscarehr/sharingcenter/model/SiteMapping.java
+index 34d843e89c..56a186c42b 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/SiteMapping.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/SiteMapping.java
+@@ -35,6 +35,7 @@ import org.oscarehr.util.MiscUtils;
+ @Entity
+ @Table(name = "sharing_mapping_site")
+ public class SiteMapping extends AbstractModel<Integer> implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     @Id
+     @Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/sharingcenter/model/ValueSetDataObject.java b/src/main/java/org/oscarehr/sharingcenter/model/ValueSetDataObject.java
+index 1c305342a7..d0bcf5f8c1 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/model/ValueSetDataObject.java
++++ b/src/main/java/org/oscarehr/sharingcenter/model/ValueSetDataObject.java
+@@ -34,6 +34,7 @@ import org.oscarehr.common.model.AbstractModel;
+ @Entity
+ @Table(name = "sharing_value_set")
+ public class ValueSetDataObject extends AbstractModel<Integer> implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	@Id
+ 	@Column(name = "id")
+diff --git a/src/main/java/org/oscarehr/survey/model/QuestionTypes.java b/src/main/java/org/oscarehr/survey/model/QuestionTypes.java
+index 32b098aefe..40f3a943b8 100644
+--- a/src/main/java/org/oscarehr/survey/model/QuestionTypes.java
++++ b/src/main/java/org/oscarehr/survey/model/QuestionTypes.java
+@@ -28,6 +28,7 @@ import java.util.ArrayList;
+ import org.apache.struts.util.LabelValueBean;
+ 
+ public class QuestionTypes extends ArrayList<LabelValueBean> {
++	private static final long serialVersionUID = 1L;
+ 
+ 	public static final String RANK = "Rank";
+ 	public static final String DATE = "Date";
+diff --git a/src/main/java/org/oscarehr/survey/web/formbean/PageNavEntry.java b/src/main/java/org/oscarehr/survey/web/formbean/PageNavEntry.java
+index 0981f28617..43f0a2ea85 100644
+--- a/src/main/java/org/oscarehr/survey/web/formbean/PageNavEntry.java
++++ b/src/main/java/org/oscarehr/survey/web/formbean/PageNavEntry.java
+@@ -26,6 +26,7 @@ package org.oscarehr.survey.web.formbean;
+ import java.io.Serializable;
+ 
+ public class PageNavEntry implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private String pageNumber;
+ 	private String pageName;
+ 	
+diff --git a/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java b/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java
+index 5e708bfc34..4c0313ea3d 100644
+--- a/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java
++++ b/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java
+@@ -28,6 +28,7 @@ import java.util.HashMap;
+ import java.util.Map;
+ 
+ public class SurveyExecuteDataBean implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private Map values = null;
+ 
+ 	public SurveyExecuteDataBean() {
+diff --git a/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteFormBean.java b/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteFormBean.java
+index bf651e422d..1c5a72a990 100644
+--- a/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteFormBean.java
++++ b/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteFormBean.java
+@@ -27,6 +27,7 @@ import java.io.Serializable;
+ 
+ 
+ public class SurveyExecuteFormBean implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private String tab;
+ 	private long id;
+ 	private long clientId;
+diff --git a/src/main/java/org/oscarehr/survey/web/formbean/SurveyManagerFormBean.java b/src/main/java/org/oscarehr/survey/web/formbean/SurveyManagerFormBean.java
+index 304cd4801a..1a8b81e45e 100644
+--- a/src/main/java/org/oscarehr/survey/web/formbean/SurveyManagerFormBean.java
++++ b/src/main/java/org/oscarehr/survey/web/formbean/SurveyManagerFormBean.java
+@@ -28,6 +28,7 @@ import java.io.Serializable;
+ import org.apache.struts.upload.FormFile;
+ 
+ public class SurveyManagerFormBean implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private String page;
+ 	private int section;
+ 	private String questionType;
+diff --git a/src/main/java/org/oscarehr/util/LoggedInInfo.java b/src/main/java/org/oscarehr/util/LoggedInInfo.java
+index ab4c57b4c7..871f002618 100644
+--- a/src/main/java/org/oscarehr/util/LoggedInInfo.java
++++ b/src/main/java/org/oscarehr/util/LoggedInInfo.java
+@@ -42,6 +42,7 @@ import org.oscarehr.common.model.Security;
+  * or the jsp name, or web service name and method.
+  */
+ public final class LoggedInInfo implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	
+ 	public final String LOGGED_IN_INFO_KEY = LoggedInInfo.class.getName() + ".LOGGED_IN_INFO_KEY";
+diff --git a/src/main/java/org/oscarehr/web/PatientListApptBean.java b/src/main/java/org/oscarehr/web/PatientListApptBean.java
+index 50e7d9e62c..f496da5972 100644
+--- a/src/main/java/org/oscarehr/web/PatientListApptBean.java
++++ b/src/main/java/org/oscarehr/web/PatientListApptBean.java
+@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlType;
+ @XmlRootElement()
+ @XmlType(name = "", propOrder = {"template", "patients" })
+ public class PatientListApptBean implements Serializable{
++	private static final long serialVersionUID = 1L;
+ 	
+ 	private String template = "patientlist/patientList1.jsp";
+ 	
+diff --git a/src/main/java/org/oscarehr/web/PatientListApptItemBean.java b/src/main/java/org/oscarehr/web/PatientListApptItemBean.java
+index febb79cc80..f3fcfed246 100644
+--- a/src/main/java/org/oscarehr/web/PatientListApptItemBean.java
++++ b/src/main/java/org/oscarehr/web/PatientListApptItemBean.java
+@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
+ 
+ @XmlRootElement
+ public class PatientListApptItemBean implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	private Integer demographicNo;
+ 	private Integer appointmentNo;
+ 	private String name;
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/MeasurementResponse.java b/src/main/java/org/oscarehr/ws/rest/to/MeasurementResponse.java
+index 4b95aa1963..4d956d349c 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/MeasurementResponse.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/MeasurementResponse.java
+@@ -35,6 +35,7 @@ import java.util.Map;
+ 
+ @XmlRootElement
+ public class MeasurementResponse implements Serializable {
++    private static final long serialVersionUID = 1L;
+     private Map<String, List<Measurement>> measurementMap = new HashMap<String, List<Measurement>>();
+ 
+     public void addMeasurements(List<Measurement> measurementList) {
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/BillingDetailTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/BillingDetailTo1.java
+index fc828db352..05623995ce 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/BillingDetailTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/BillingDetailTo1.java
+@@ -31,6 +31,7 @@ import java.util.Date;
+ import java.util.List;
+ 
+ public class BillingDetailTo1 implements Serializable {
++  private static final long serialVersionUID = 1L;
+   private Integer id;
+   private Integer headerId;
+   private String transcId;
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/DemographicSearchResultItem.java b/src/main/java/org/oscarehr/ws/rest/to/model/DemographicSearchResultItem.java
+index 91bdd85a02..b72c60be82 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/DemographicSearchResultItem.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/DemographicSearchResultItem.java
+@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
+ 
+ @XmlRootElement(name="searchResultItem")
+ public class DemographicSearchResultItem implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	private Integer id;
+ 	private String name;
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/DrugSearchTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/DrugSearchTo1.java
+index e7db7b8364..ecc1533a9b 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/DrugSearchTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/DrugSearchTo1.java
+@@ -141,6 +141,7 @@ public class DrugSearchTo1 implements Serializable {
+     }
+ 
+     public static class DrugComponentTo1 implements Serializable{
++        private static final long serialVersionUID = 1L;
+ 
+         private String name;
+         private Double strength;
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/EFormReportToolTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/EFormReportToolTo1.java
+index 778426e6ca..9109b209e0 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/EFormReportToolTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/EFormReportToolTo1.java
+@@ -28,6 +28,7 @@ import java.util.Date;
+ 
+ //@XmlRootElement(name = "eformReportTool")
+ public class EFormReportToolTo1 implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 
+ 	private Integer id;
+ 
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/IssueTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/IssueTo1.java
+index 05708a556b..af43c8eb0b 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/IssueTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/IssueTo1.java
+@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
+ 
+ @XmlRootElement(name="issue")
+ public class IssueTo1 implements Serializable{
++	private static final long serialVersionUID = 1L;
+ 	
+ 	public static String CUSTOM_ISSUE = "userDefined";
+ 	public static String SYSTEM = "system";
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/NoteExtTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/NoteExtTo1.java
+index 28a48137c7..f3097b2c5b 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/NoteExtTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/NoteExtTo1.java
+@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
+ 
+ @XmlRootElement(name="groupNoteExt")
+ public class NoteExtTo1 implements Serializable{
++	private static final long serialVersionUID = 1L;
+ 	
+ 	// Key Value constants ***All date value key must be in format "XXX Date"
+ 	public static String STARTDATE	    = "Start Date"	;
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/NoteTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/NoteTo1.java
+index e79fe22cfb..0531098efa 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/NoteTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/NoteTo1.java
+@@ -37,6 +37,7 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
+ 
+ @XmlRootElement(name="encounterNote")
+ public class NoteTo1 implements Serializable{
++	private static final long serialVersionUID = 1L;
+ 	
+ 	private Integer noteId;
+ 	private Boolean isSigned;
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/ProviderSearchResultItem.java b/src/main/java/org/oscarehr/ws/rest/to/model/ProviderSearchResultItem.java
+index bfcc8f20e5..a624860371 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/ProviderSearchResultItem.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/ProviderSearchResultItem.java
+@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
+ 
+ @XmlRootElement(name="searchResultItem")
+ public class ProviderSearchResultItem implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	private String id;
+ 	private String name;
+diff --git a/src/main/java/org/oscarehr/ws/rest/to/model/RxDsMessageTo1.java b/src/main/java/org/oscarehr/ws/rest/to/model/RxDsMessageTo1.java
+index 56cd1e044b..f6ac770ec8 100644
+--- a/src/main/java/org/oscarehr/ws/rest/to/model/RxDsMessageTo1.java
++++ b/src/main/java/org/oscarehr/ws/rest/to/model/RxDsMessageTo1.java
+@@ -37,6 +37,7 @@ import org.oscarehr.util.MiscUtils;
+ 
+ @XmlRootElement
+ public class RxDsMessageTo1 implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	@Override
+     public String toString(){
+diff --git a/src/main/java/oscar/BillingBean.java b/src/main/java/oscar/BillingBean.java
+index f2e8c03dc4..3df00cfc8b 100644
+--- a/src/main/java/oscar/BillingBean.java
++++ b/src/main/java/oscar/BillingBean.java
+@@ -31,6 +31,7 @@ import java.util.GregorianCalendar;
+ 
+ 
+ public class BillingBean extends Object implements Serializable{
++  private static final long serialVersionUID = 1L;
+   private ArrayList<BillingItemBean> billingItems;
+   private GregorianCalendar billingDate;
+   private int billingNo;
+diff --git a/src/main/java/oscar/BillingDataBean.java b/src/main/java/oscar/BillingDataBean.java
+index 4b8108a438..dc490f29d7 100644
+--- a/src/main/java/oscar/BillingDataBean.java
++++ b/src/main/java/oscar/BillingDataBean.java
+@@ -37,6 +37,7 @@ package oscar;
+ 
+ public class BillingDataBean extends java.lang.Object implements java.io.Serializable
+ {
++    private static final long serialVersionUID = 1L;
+ 
+ /*   *
+    * Instance variable for the BillingData properties
+diff --git a/src/main/java/oscar/BillingDataServlet.java b/src/main/java/oscar/BillingDataServlet.java
+index 652627b70c..e1a2308916 100644
+--- a/src/main/java/oscar/BillingDataServlet.java
++++ b/src/main/java/oscar/BillingDataServlet.java
+@@ -38,6 +38,7 @@ import org.oscarehr.util.MiscUtils;
+ 
+ public class BillingDataServlet extends HttpServlet implements java.io.Serializable
+ {
++ private static final long serialVersionUID = 1L;
+ 
+ /*   ****************************************************************************
+    * Process incoming requests for information
+diff --git a/src/main/java/oscar/BillingItemBean.java b/src/main/java/oscar/BillingItemBean.java
+index f08f064a54..17e6869291 100644
+--- a/src/main/java/oscar/BillingItemBean.java
++++ b/src/main/java/oscar/BillingItemBean.java
+@@ -28,6 +28,7 @@ package oscar;
+ import java.io.Serializable;
+ 
+ public class BillingItemBean extends Object implements Serializable{
++    private static final long serialVersionUID = 1L;
+   private String service_code;
+   private String desc;
+   private String service_value;
+diff --git a/src/main/java/oscar/BillingPatientDataBean.java b/src/main/java/oscar/BillingPatientDataBean.java
+index ee6d0ac1de..0981fbd11f 100644
+--- a/src/main/java/oscar/BillingPatientDataBean.java
++++ b/src/main/java/oscar/BillingPatientDataBean.java
+@@ -37,6 +37,7 @@ package oscar;
+ 
+ public class BillingPatientDataBean extends java.lang.Object implements java.io.Serializable
+ {
++ private static final long serialVersionUID = 1L;
+ 
+ /*   *
+    * Instance variable for the BillingData properties
+diff --git a/src/main/java/oscar/Dict.java b/src/main/java/oscar/Dict.java
+index ee7e1b8530..4e9cda4916 100644
+--- a/src/main/java/oscar/Dict.java
++++ b/src/main/java/oscar/Dict.java
+@@ -30,6 +30,7 @@ import java.util.Properties;
+ import javax.servlet.http.HttpServletRequest;
+ 
+ public class Dict extends Properties {
++  private static final long serialVersionUID = 1L;
+   //it is a help class for storing retrieving Strings, derived from Hashtable
+   //case insensitive for the name
+   public Dict() {}
+diff --git a/src/main/java/oscar/DocumentBean.java b/src/main/java/oscar/DocumentBean.java
+index a472dea294..2c2fdffc3b 100644
+--- a/src/main/java/oscar/DocumentBean.java
++++ b/src/main/java/oscar/DocumentBean.java
+@@ -36,6 +36,7 @@ package oscar;
+  */
+ 
+ public class DocumentBean extends java.lang.Object implements java.io.Serializable {
++    private static final long serialVersionUID = 1L;
+     
+ /*   *
+  * Instance variable for the documentData properties
+diff --git a/src/main/java/oscar/SxmlMisc.java b/src/main/java/oscar/SxmlMisc.java
+index dff6dd4b07..60ee378c27 100644
+--- a/src/main/java/oscar/SxmlMisc.java
++++ b/src/main/java/oscar/SxmlMisc.java
+@@ -31,6 +31,7 @@ import java.util.Properties;
+ import javax.servlet.http.HttpServletRequest;
+ 
+ public class SxmlMisc extends Properties {
++  private static final long serialVersionUID = 1L;
+ 
+   //get the xml string 
+   public static String createXmlDataString(HttpServletRequest req, String strPrefix) {
+diff --git a/src/main/java/oscar/form/pharmaForms/formBPMH/bean/BpmhFormBean.java b/src/main/java/oscar/form/pharmaForms/formBPMH/bean/BpmhFormBean.java
+index 1c52f3eaf5..4a78d40dac 100644
+--- a/src/main/java/oscar/form/pharmaForms/formBPMH/bean/BpmhFormBean.java
++++ b/src/main/java/oscar/form/pharmaForms/formBPMH/bean/BpmhFormBean.java
+@@ -55,6 +55,7 @@ import org.oscarehr.common.model.Provider;
+ @XmlRootElement(name="xml")
+ @XmlAccessorType(XmlAccessType.FIELD)
+ public class BpmhFormBean extends ActionForm implements Serializable {
++	private static final long serialVersionUID = 1L;
+ 	
+ 	private final SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+ 	
+diff --git a/src/main/java/oscar/login/LoginList.java b/src/main/java/oscar/login/LoginList.java
+index ee49c9edec..24e9b452bc 100644
+--- a/src/main/java/oscar/login/LoginList.java
++++ b/src/main/java/oscar/login/LoginList.java
+@@ -35,6 +35,7 @@ import java.util.Hashtable;
+  * Class LoginList : an application level login list: ip/LoginInfoBean 2003-01-29
+  */
+ public final class LoginList extends Hashtable {
++    private static final long serialVersionUID = 1L;
+     //only one instance to use
+     private static LoginList loginList;
+ 
+diff --git a/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java b/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java
+index bf0d9608d8..667539a3d7 100644
+--- a/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java
++++ b/src/main/java/oscar/oscarBilling/MSP/ExtractBean.java
+@@ -49,6 +49,7 @@ import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
+ 
+ 
+ public class ExtractBean extends Object implements Serializable {
++    private static final long serialVersionUID = 1L;
+     private static Logger logger=MiscUtils.getLogger(); 
+     private LogTeleplanTxDao logTeleplanTxDao = SpringUtils.getBean(LogTeleplanTxDao.class);
+     private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+diff --git a/src/main/java/oscar/oscarBilling/MSP/dbExtract.java b/src/main/java/oscar/oscarBilling/MSP/dbExtract.java
+index 7248bd6882..177f608c54 100644
+--- a/src/main/java/oscar/oscarBilling/MSP/dbExtract.java
++++ b/src/main/java/oscar/oscarBilling/MSP/dbExtract.java
+@@ -35,7 +35,8 @@ import java.sql.Statement;
+ import org.oscarehr.util.DbConnectionFilter;
+ import org.oscarehr.util.MiscUtils;
+ 
+-public class dbExtract implements Serializable {
++public class dbExtract implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+     private Connection con = null;
+     private Statement stmt = null;
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/ExtractBean.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/ExtractBean.java
+index 2a8459963c..d467a91602 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/ExtractBean.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/ExtractBean.java
+@@ -52,6 +52,7 @@ import oscar.util.ConversionUtils;
+ 
+ 
+ public class ExtractBean extends Object implements Serializable {
++    private static final long serialVersionUID = 1L;
+     private static Logger logger=MiscUtils.getLogger();
+     private LogTeleplanTxDao logTeleplanTxDao = SpringUtils.getBean(LogTeleplanTxDao.class);
+     private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/MspErrorCodes.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/MspErrorCodes.java
+index 0464bc76e9..43041550b3 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/MspErrorCodes.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/MspErrorCodes.java
+@@ -41,6 +41,7 @@ import org.oscarehr.util.MiscUtils;
+ import oscar.OscarProperties;
+ 
+ public class MspErrorCodes extends Properties{
++    private static final long serialVersionUID = 1L;
+    
+    /** Creates a new instance of MspErrorCodes */
+    public MspErrorCodes() {
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java
+index 3ef627c79b..362684084a 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java
+@@ -30,6 +30,7 @@ import java.util.ArrayList;
+ import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
+ 
+ public class BillingSessionBean implements java.io.Serializable{
++    private static final long serialVersionUID = 1L;
+   private String apptProviderNo = null;
+   private String patientName = null;
+   private String providerView = null;
+diff --git a/src/main/java/oscar/oscarBilling/pageUtil/BillingSessionBean.java b/src/main/java/oscar/oscarBilling/pageUtil/BillingSessionBean.java
+index ee9fabcb7f..ea7636996a 100644
+--- a/src/main/java/oscar/oscarBilling/pageUtil/BillingSessionBean.java
++++ b/src/main/java/oscar/oscarBilling/pageUtil/BillingSessionBean.java
+@@ -30,6 +30,7 @@ import java.util.ArrayList;
+ import oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem;
+ 
+ public class BillingSessionBean implements java.io.Serializable {
++    private static final long serialVersionUID = 1L;
+     private String apptProviderNo = null;
+     private String patientName 	  = null;
+     private String providerView	  = null;
+diff --git a/src/main/java/oscar/oscarDB/OscarHibernateProperties.java b/src/main/java/oscar/oscarDB/OscarHibernateProperties.java
+index 7ce7e12c85..383b26793f 100644
+--- a/src/main/java/oscar/oscarDB/OscarHibernateProperties.java
++++ b/src/main/java/oscar/oscarDB/OscarHibernateProperties.java
+@@ -26,9 +26,9 @@ package oscar.oscarDB;
+ import java.util.Properties;
+ 
+ import oscar.OscarProperties;
+-;
+ 
+ public class OscarHibernateProperties extends Properties {
++	private static final long serialVersionUID = 1L;
+ 	public OscarHibernateProperties(){
+ 		//get db config from oscar properties
+ 		Properties opr=OscarProperties.getInstance();
+diff --git a/src/main/java/oscar/oscarDemographic/data/ProvinceNames.java b/src/main/java/oscar/oscarDemographic/data/ProvinceNames.java
+index 3fb2361f80..7fe6f3e529 100644
+--- a/src/main/java/oscar/oscarDemographic/data/ProvinceNames.java
++++ b/src/main/java/oscar/oscarDemographic/data/ProvinceNames.java
+@@ -30,6 +30,7 @@ import java.util.ArrayList;
+ import oscar.OscarProperties;
+ 
+ public class ProvinceNames extends ArrayList<String> {
++    private static final long serialVersionUID = 1L;
+ 
+     public static ProvinceNames getInstance() {
+         return pNames;
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/RosterTermReasonProperties.java b/src/main/java/oscar/oscarDemographic/pageUtil/RosterTermReasonProperties.java
+index 3472f208a9..08fc2cc3a9 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/RosterTermReasonProperties.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/RosterTermReasonProperties.java
+@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
+ import org.oscarehr.util.MiscUtils;
+ 
+ public class RosterTermReasonProperties extends Properties {
++	private static final long serialVersionUID = 1L;
+ 	private static RosterTermReasonProperties rosterTermReasonProperties = new RosterTermReasonProperties();
+ 	private static SortedSet<String> termReasons = new TreeSet<String>();
+ 	
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/SpokenLangProperties.java b/src/main/java/oscar/oscarDemographic/pageUtil/SpokenLangProperties.java
+index b39dfdc47e..076ba108e3 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/SpokenLangProperties.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/SpokenLangProperties.java
+@@ -42,6 +42,7 @@ import org.oscarehr.util.MiscUtils;
+ import oscar.util.StringUtils;
+ 
+ public class SpokenLangProperties extends Properties {
++	private static final long serialVersionUID = 1L;
+ 	private static SpokenLangProperties spokenLangProperties = new SpokenLangProperties();
+ 	private static SortedSet<String> langSorted = new TreeSet<String>();
+ 	private static HashMap<String,String> langToCode = new HashMap<String,String>();
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBean.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBean.java
+index def47777fc..7b6945e7fe 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBean.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBean.java
+@@ -28,6 +28,7 @@ package oscar.oscarEncounter.oscarMeasurements.bean;
+ import java.io.Serializable;
+ 
+ public class EctGroupNameBean implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 
+        String groupName;
+        
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBean.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBean.java
+index 8f4a088873..fe0ddf7f59 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBean.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBean.java
+@@ -29,6 +29,7 @@ import java.io.Serializable;
+ 
+ 
+ public class EctTypeDisplayNameBean implements Serializable{
++    private static final long serialVersionUID = 1L;
+ 
+        String typeDisplayName;
+        
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
+index f33e3c05c6..9468c701fe 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
+@@ -51,6 +51,7 @@ import oscar.util.UtilDateUtilities;
+ 
+ @Deprecated
+ public class EctSessionBean implements java.io.Serializable {
++    private static final long serialVersionUID = 1L;
+     //data passed from the oscar appointment screen these members are constant for the duration of
+     // a session
+     public Date currentDate;
+diff --git a/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBean.java b/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBean.java
+index 28c38775cb..5a9a19de5a 100644
+--- a/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBean.java
++++ b/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBean.java
+@@ -27,6 +27,7 @@ package oscar.oscarResearch.oscarDxResearch.bean;
+ 
+ 
+ public class dxCodeSearchBean implements java.io.Serializable{
++    private static final long serialVersionUID = 1L;
+ 
+        String description;       
+        String dxSearchCode;              
+diff --git a/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java b/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java
+index 4a7d6851cd..a7c888b557 100644
+--- a/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java
++++ b/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java
+@@ -46,6 +46,7 @@ import oscar.oscarRx.data.RxPatientData;
+ import oscar.oscarRx.data.RxPrescriptionData;
+ 
+ public class RxSessionBean  implements java.io.Serializable {
++    private static final long serialVersionUID = 1L;
+ 	private static final Logger logger=MiscUtils.getLogger();
+ 
+     private String providerNo = null;
+@@ -184,7 +185,7 @@ public class RxSessionBean  implements java.io.Serializable {
+         logger.debug("in getIndexFromRx="+ret);
+         return ret;
+     }
+-    public RxPrescriptionData.Prescription[] getStash() {
++    public oscar.oscarRx.data.RxPrescriptionData.Prescription[] getStash() {
+         RxPrescriptionData.Prescription[] arr = {};
+ 
+         arr = stash.toArray(arr);
+@@ -397,7 +398,7 @@ public class RxSessionBean  implements java.io.Serializable {
+         return regionalIdentifierCodes;
+     }
+     
+-    public RxDrugData.Interaction[] getInteractions(){
++    public oscar.oscarRx.data.RxDrugData.Interaction[] getInteractions(){
+        RxDrugData.Interaction[] interactions = null;
+        long start = System.currentTimeMillis();
+        long start2 = 0;
+diff --git a/src/main/java/oscar/util/FileHolder.java b/src/main/java/oscar/util/FileHolder.java
+index 8e48cb91f7..ec8f272cb0 100644
+--- a/src/main/java/oscar/util/FileHolder.java
++++ b/src/main/java/oscar/util/FileHolder.java
+@@ -36,7 +36,8 @@ import java.io.Serializable;
+ 
+ /**
+  */
+-public class FileHolder implements Serializable {
++public class FileHolder implements Serializable {
++    private static final long serialVersionUID = 1L;
+ 	private boolean toMemory;
+ 
+   // "file system" name of the file
+diff --git a/src/main/java/oscar/util/UtilDict.java b/src/main/java/oscar/util/UtilDict.java
+index d7cb119fc6..a3eb2177a1 100644
+--- a/src/main/java/oscar/util/UtilDict.java
++++ b/src/main/java/oscar/util/UtilDict.java
+@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
+ import org.oscarehr.util.MiscUtils;
+ 
+ public final class UtilDict extends Properties {
++  private static final long serialVersionUID = 1L;
+ 	private static final Logger logger=MiscUtils.getLogger();
+ 	
+   //it is a help class, case insensitive for the name
+diff --git a/src/main/java/oscar/util/plugin/OscarProperties.java b/src/main/java/oscar/util/plugin/OscarProperties.java
+index 9c70f63a8e..0fe7446727 100644
+--- a/src/main/java/oscar/util/plugin/OscarProperties.java
++++ b/src/main/java/oscar/util/plugin/OscarProperties.java
+@@ -21,6 +21,7 @@ package oscar.util.plugin;
+ import java.util.Properties;
+ 
+ public class OscarProperties extends Properties {
++	private static final long serialVersionUID = 1L;
+ 	private static Properties properties;
+ 	
+ 	private OscarProperties() {}

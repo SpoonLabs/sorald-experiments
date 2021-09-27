@@ -1,0 +1,119 @@
+diff --git a/src/main/java/org/oscarehr/common/model/Security.java b/src/main/java/org/oscarehr/common/model/Security.java
+index 415d2b5629..dd3eb601f6 100644
+--- a/src/main/java/org/oscarehr/common/model/Security.java
++++ b/src/main/java/org/oscarehr/common/model/Security.java
+@@ -246,6 +246,7 @@ public class Security extends AbstractModel<Integer> {
+ 	    	Thread.sleep(250);
+ 	    } catch (InterruptedException e) {
+ 	    	logger.error("Error", e);
++			Thread.currentThread().interrupt();
+ 	    }
+     }
+ 	
+diff --git a/src/main/java/org/oscarehr/managers/AuditLogManager.java b/src/main/java/org/oscarehr/managers/AuditLogManager.java
+index 01c4cdbb39..68796fb810 100644
+--- a/src/main/java/org/oscarehr/managers/AuditLogManager.java
++++ b/src/main/java/org/oscarehr/managers/AuditLogManager.java
+@@ -95,7 +95,7 @@ public class AuditLogManager {
+ 
+ 		String filename = outputDirectory + "/OSCAR_AUDIR_LOG_PURGE_FILE_" + formatter3.format(endDateToPurge) + ".sql";
+ 		
+-		String vars[] = new String[9];
++		String vars = new String[9];
+ 		vars[0] = mysqldump;
+ 		vars[1] = "--user=" + user;
+ 		vars[2] = "--password=" + password;
+@@ -134,6 +134,7 @@ public class AuditLogManager {
+ 			throw new Exception(e);
+ 		} catch (InterruptedException e) {
+ 			logger.error("Error running mysqldump command. Aborting!", e);
++			Thread.currentThread().interrupt();
+ 			throw new Exception(e);
+ 		}
+ 
+diff --git a/src/main/java/org/oscarehr/util/WKHtmlToPdfUtils.java b/src/main/java/org/oscarehr/util/WKHtmlToPdfUtils.java
+index 4046b53a73..69b57d2347 100644
+--- a/src/main/java/org/oscarehr/util/WKHtmlToPdfUtils.java
++++ b/src/main/java/org/oscarehr/util/WKHtmlToPdfUtils.java
+@@ -159,6 +159,7 @@ public class WKHtmlToPdfUtils {
+ 					Thread.sleep(PROCESS_COMPLETION_CYCLE_CHECK_PERIOD);
+ 				} catch (InterruptedException e) {
+ 					logger.error("Thread interrupted", e);
++					Thread.currentThread().interrupt();
+ 				}
+ 
+ 				try {
+diff --git a/src/main/java/oscar/oscarRx/data/RxInteractionData.java b/src/main/java/oscar/oscarRx/data/RxInteractionData.java
+index 10d5c532b6..8b79cc4ec2 100644
+--- a/src/main/java/oscar/oscarRx/data/RxInteractionData.java
++++ b/src/main/java/oscar/oscarRx/data/RxInteractionData.java
+@@ -68,8 +68,8 @@ public class RxInteractionData {
+       working.remove(new Integer(atccodes.hashCode()));
+    }
+    
+-   public RxDrugData.Interaction[] getInteractions(Vector atccodes){
+-      RxDrugData.Interaction[] interact = null;
++   public oscar.oscarRx.data.RxDrugData.Interaction[] getInteractions(Vector atccodes){
++      oscar.oscarRx.data.RxDrugData.Interaction[]interact = null;
+       MiscUtils.getLogger().debug("h table size "+htable.size()+"RxInteractionData.getInteraction atc code val  "+atccodes.hashCode());
+       Integer i = new Integer(atccodes.hashCode());
+       if (htable.containsKey(i) ){
+@@ -87,6 +87,7 @@ public class RxInteractionData {
+                 // Thread was interrupted
+                 MiscUtils.getLogger().debug("Already been searched PROBLEM!");
+                 MiscUtils.getLogger().error("Error", e);
++                        Thread.currentThread().interrupt();
+              }
+             
+              
+diff --git a/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java b/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java
+index 4a7d6851cd..30b62cc804 100644
+--- a/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java
++++ b/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java
+@@ -184,7 +184,7 @@ public class RxSessionBean  implements java.io.Serializable {
+         logger.debug("in getIndexFromRx="+ret);
+         return ret;
+     }
+-    public RxPrescriptionData.Prescription[] getStash() {
++    public oscar.oscarRx.data.RxPrescriptionData.Prescription[] getStash() {
+         RxPrescriptionData.Prescription[] arr = {};
+ 
+         arr = stash.toArray(arr);
+@@ -348,6 +348,7 @@ public class RxSessionBean  implements java.io.Serializable {
+                     // Thread was interrupted
+ 
+                     logger.error("Error", e);
++                            Thread.currentThread().interrupt();
+                  }
+ 
+ 
+@@ -397,7 +398,7 @@ public class RxSessionBean  implements java.io.Serializable {
+         return regionalIdentifierCodes;
+     }
+     
+-    public RxDrugData.Interaction[] getInteractions(){
++    public oscar.oscarRx.data.RxDrugData.Interaction[] getInteractions(){
+        RxDrugData.Interaction[] interactions = null;
+        long start = System.currentTimeMillis();
+        long start2 = 0;
+diff --git a/src/test/java/org/oscarehr/common/dao/utils/SchemaUtils.java b/src/test/java/org/oscarehr/common/dao/utils/SchemaUtils.java
+index 7286b14902..3a2eb4761f 100644
+--- a/src/test/java/org/oscarehr/common/dao/utils/SchemaUtils.java
++++ b/src/test/java/org/oscarehr/common/dao/utils/SchemaUtils.java
+@@ -254,7 +254,7 @@ public class SchemaUtils
+ 
+ 	public static int loadFileIntoMySQL(String filename) throws IOException {
+ 		String dir = new File(filename).getParent();
+-                String env[] = null;
++                String env = null;
+                 String envStr = null;
+                 if (System.getProperty("os.name").startsWith("Windows")){
+                     envStr = "SYSTEMROOT="+System.getenv("SYSTEMROOT");
+@@ -286,6 +286,7 @@ public class SchemaUtils
+         try {
+         	exitValue = p.waitFor();
+         }catch(InterruptedException e) {
++			Thread.currentThread().interrupt();
+         	throw new IOException("error with process");
+         }
+ 

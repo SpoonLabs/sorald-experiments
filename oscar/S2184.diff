@@ -1,0 +1,264 @@
+diff --git a/src/main/java/org/oscarehr/PMmodule/utility/DateUtils.java b/src/main/java/org/oscarehr/PMmodule/utility/DateUtils.java
+index bd65c043b4..321b51a64f 100644
+--- a/src/main/java/org/oscarehr/PMmodule/utility/DateUtils.java
++++ b/src/main/java/org/oscarehr/PMmodule/utility/DateUtils.java
+@@ -545,7 +545,7 @@ public class DateUtils {
+    */
+   public static int getDifDays(long greater, long lesser) 
+   {
+-    double x = (greater - lesser) / 86400000;
++    double x = (greater - lesser) / 86400000D ;
+     int ret = (int) x;
+     return ret;
+   }
+diff --git a/src/main/java/org/oscarehr/appointment/web/NextAppointmentSearchHelper.java b/src/main/java/org/oscarehr/appointment/web/NextAppointmentSearchHelper.java
+index 85bbc4d5ad..768184d012 100644
+--- a/src/main/java/org/oscarehr/appointment/web/NextAppointmentSearchHelper.java
++++ b/src/main/java/org/oscarehr/appointment/web/NextAppointmentSearchHelper.java
+@@ -189,7 +189,7 @@ public class NextAppointmentSearchHelper {
+ 		
+ 		for(int x=0;x<timecode.length();x++) {
+ 			char slot = timecode.charAt(x);
+-			int hour = (int)Math.floor(x/slotsPerHour);
++			int hour = ((int) (Math.floor((double) x / slotsPerHour)));
+ 			int min = (x%slotsPerHour)*slotSize;
+ 			if( (hour>=startHour) && (hour <=(endHour-1))) {
+ 				if(hour==startHour && min<startMin) {
+diff --git a/src/main/java/org/oscarehr/common/web/PregnancyAction.java b/src/main/java/org/oscarehr/common/web/PregnancyAction.java
+index af8eccc398..2c0d2b1ba9 100644
+--- a/src/main/java/org/oscarehr/common/web/PregnancyAction.java
++++ b/src/main/java/org/oscarehr/common/web/PregnancyAction.java
+@@ -924,7 +924,7 @@ Repeat antibody screen
+ 			
+ 			if(weeks != null && offset != null) {
+ 				try {
+-					double gaa = Integer.parseInt(weeks) + (Integer.parseInt(offset)/7);
++					double gaa = (double) java.lang.Integer.parseInt(weeks) + (Integer.parseInt(offset)/7);
+ 					double cma = Double.parseDouble(cm);
+ 					Point2D.Double p = new Point2D.Double(gaa,cma);
+ 					points.add(p);
+@@ -956,7 +956,7 @@ Repeat antibody screen
+ 			if(p.y<startingHeight || p.y>45)
+ 				continue;
+ 						
+-			Rectangle r = new Rectangle((int)(xStart+(10.25*(p.x-startingWeek)) -(width/2)), (int)(yStart-(10.60*(p.y-startingHeight))-(height/2)), width, height);		
++			Rectangle r = new Rectangle(((int) (xStart + 10.25 * (p.x - startingWeek) - width / 2D)), ((int) (yStart - 10.6 * (p.y - startingHeight) - height / 2D)), width, height);		
+ 			g.fill(r);
+ 			
+ 			if(lastPoint != null) {
+diff --git a/src/main/java/org/oscarehr/util/ProblemCheckFilter.java b/src/main/java/org/oscarehr/util/ProblemCheckFilter.java
+index f6b0083270..4ada744afd 100644
+--- a/src/main/java/org/oscarehr/util/ProblemCheckFilter.java
++++ b/src/main/java/org/oscarehr/util/ProblemCheckFilter.java
+@@ -47,7 +47,7 @@ public final class ProblemCheckFilter implements Filter
+ {
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 
+-	private static final long MAX_THRESHOLD=1024000*10; // we'll start at 10 megs of ram for now
++	private static final long MAX_THRESHOLD=1024000L*10; // we'll start at 10 megs of ram for now
+ 	
+ 	public static class SessionChecker implements HttpSession
+ 	{
+diff --git a/src/main/java/oscar/form/FrmRourkeRecord.java b/src/main/java/oscar/form/FrmRourkeRecord.java
+index 8666e2a45e..69e36e85e4 100644
+--- a/src/main/java/oscar/form/FrmRourkeRecord.java
++++ b/src/main/java/oscar/form/FrmRourkeRecord.java
+@@ -167,7 +167,7 @@ public class FrmRourkeRecord extends FrmRecord {
+ 
+             Date tDob = (oscar.util.UtilDateUtilities.StringToDate(dob, "yyyy/MM/dd"));
+ 
+-            age = (tToday.getTime() - tDob.getTime())/(1000*3600*24);
++            age = (double) ((double) tToday.getTime() - tDob.getTime())/(1000*3600*24);
+             double daysPerMonth = 30.4375;
+             age = age/daysPerMonth; // the approximate number of days in a month
+         } catch(Exception ex) {
+diff --git a/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java b/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java
+index 1bc67c1044..c704c1afdc 100644
+--- a/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java
++++ b/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java
+@@ -258,7 +258,7 @@ public class EctRourkeRecord {
+ 
+             Date tDob = (oscar.util.UtilDateUtilities.StringToDate(dob, "yyyy/MM/dd"));
+ 
+-            age = (tToday.getTime() - tDob.getTime())/(1000*3600*24);
++            age = (double) ((double) tToday.getTime() - tDob.getTime())/(1000*3600*24);
+             double daysPerMonth = 30.4375;
+             age = age/daysPerMonth; // the approximate number of days in a month
+         } catch(Exception ex) {
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
+index 56ba162465..4795c9175f 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
+@@ -167,7 +167,7 @@ public class EctConsultationFormRequestPrintPdf {
+         if (text != null && text.length() > 0){
+             Font boldFont = new Font(bf, FONTSIZE, Font.BOLD);
+             Font font = new Font(bf, FONTSIZE, Font.NORMAL);
+-            float lineCount = (name.length() + text.length()) / 100;
++            float lineCount = (name.length() + text.length()) / 100F ;
+ 
+             // if there is not enough room on the page for the text start on the next page
+             if ( (height - 264 - dynamicHeight - lineCount*LINEHEIGHT) < LINEHEIGHT*3 ){
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java
+index 9af23a1afb..0f716ad8c7 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java
+@@ -131,10 +131,10 @@ public class ScatterPlotChartServlet extends HttpServlet {
+ 		if (results != null) {
+ 
+ 			if (type.compareTo("BP") != 0) {
+-				Point2D.Double[] points = new Point2D.Double[results[0].length];
++				java.awt.geom.Point2D.Double[]points = new Point2D.Double[results[0].length];
+ 				for (int x = 0; x < results[0].length; x++) {
+ 					points[x] = ScatterPlotDataSet.createPoint2DDouble();
+-					points[x].setLocation(results[0][x] - results[0][0], results[1][x]);
++					points[x].setLocation((double) results[0][x] - results[0][0], results[1][x]);
+ 				}
+ 
+ 				scatterPlotDataSet.addDataPoints(points, Color.red, chartTitle);
+diff --git a/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java b/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java
+index 0460b404fe..c9cdcfbb76 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java
++++ b/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java
+@@ -250,7 +250,7 @@ public class ChildImmunizationReport implements PreventionReport{
+ 
+           }
+           String percentStr = "0";
+-          double eligible = list.size() - inList - dontInclude;
++          double eligible = (double) (list.size() - inList) - dontInclude;
+           log.debug("eligible "+eligible+" done "+done);
+           if (eligible != 0){
+              double percentage = ( done / eligible ) * 100;
+diff --git a/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java b/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java
+index e89122be29..548e293dd9 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java
++++ b/src/main/java/oscar/oscarPrevention/reports/FOBTReport.java
+@@ -62,7 +62,8 @@ public class FOBTReport implements PreventionReport{
+     public Hashtable<String,Object> runReport(LoggedInInfo loggedInInfo,ArrayList<ArrayList<String>> list,Date asofDate){
+ 
+         int inList = 0;
+-        double done= 0,doneWithGrace = 0;
++        double done = 0;
++        double doneWithGrace = 0;
+         ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
+ 
+         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
+@@ -195,7 +196,7 @@ public class FOBTReport implements PreventionReport{
+           }
+           String percentStr = "0";
+           String percentWithGraceStr = "0";
+-          double eligible = list.size() - inList;
++          double eligible = (double) list.size() - inList;
+           log.debug("eligible "+eligible+" done "+done);
+           if (eligible != 0){
+              double percentage = ( done / eligible ) * 100;
+diff --git a/src/main/java/oscar/oscarPrevention/reports/FluReport.java b/src/main/java/oscar/oscarPrevention/reports/FluReport.java
+index f0f16b1529..213a507181 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/FluReport.java
++++ b/src/main/java/oscar/oscarPrevention/reports/FluReport.java
+@@ -252,7 +252,7 @@ public class FluReport implements PreventionReport {
+ 
+           }
+           String percentStr = "0";
+-          double eligible = list.size() - inList;
++          double eligible = (double) list.size() - inList;
+           log.debug("eligible "+eligible+" done "+done);
+           if (eligible != 0){
+              double percentage = ( done / eligible ) * 100;
+diff --git a/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java b/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java
+index edaaf2a4ac..5f6b7067dc 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java
++++ b/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java
+@@ -59,7 +59,8 @@ public class MammogramReport implements PreventionReport{
+ 
+     public Hashtable runReport(LoggedInInfo loggedInInfo,ArrayList<ArrayList<String>> list,Date asofDate){
+         int inList = 0;
+-        double done= 0,doneWithGrace = 0;
++        double done = 0;
++        double doneWithGrace = 0;
+         ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
+ 
+         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
+@@ -196,7 +197,7 @@ public class MammogramReport implements PreventionReport{
+           }
+           String percentStr = "0";
+           String percentWithGraceStr = "0";
+-          double eligible = list.size() - inList;
++          double eligible = (double) list.size() - inList;
+           log.debug("eligible "+eligible+" done "+done);
+           if (eligible != 0){
+              double percentage = ( done / eligible ) * 100;
+diff --git a/src/main/java/oscar/oscarPrevention/reports/PapReport.java b/src/main/java/oscar/oscarPrevention/reports/PapReport.java
+index 01dc3ce684..960dcad376 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/PapReport.java
++++ b/src/main/java/oscar/oscarPrevention/reports/PapReport.java
+@@ -60,7 +60,8 @@ public class PapReport implements PreventionReport {
+ 
+     public Hashtable runReport(LoggedInInfo loggedInInfo,ArrayList list,Date asofDate){
+         int inList = 0;
+-        double done= 0,doneWithGrace = 0;
++        double done = 0;
++        double doneWithGrace = 0;
+         ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
+ 
+         /////
+@@ -209,7 +210,7 @@ public class PapReport implements PreventionReport {
+           }
+           String percentStr = "0";
+           String percentWithGraceStr = "0";
+-          double eligible = list.size() - inList;
++          double eligible = (double) list.size() - inList;
+           log.debug("eligible "+eligible+" done "+done+" doneWithGrace "+doneWithGrace);
+           if (eligible != 0){
+              double percentage = ( done / eligible ) * 100;
+diff --git a/src/main/java/oscar/oscarReport/reportByTemplate/ThirdApptTimeReporter.java b/src/main/java/oscar/oscarReport/reportByTemplate/ThirdApptTimeReporter.java
+index f1ab07d5de..4d4f9207bf 100644
+--- a/src/main/java/oscar/oscarReport/reportByTemplate/ThirdApptTimeReporter.java
++++ b/src/main/java/oscar/oscarReport/reportByTemplate/ThirdApptTimeReporter.java
+@@ -103,14 +103,21 @@ public class ThirdApptTimeReporter implements Reporter{
+         
+         try {
+             int duration;
+-            String timecodes, code;
++            String timecodes;
++            String code;
+             String tmpApptSQL;           
+             String apptTime;
+ 
+             int dayMins = 24*60;
+-            int iHours,iMins,apptHour_s,apptMin_s,apptHour_e,apptMin_e;
+-            int codePos;            
+-            int latestApptHour, latestApptMin;            
++            int iHours;
++            int iMins;
++            int apptHour_s;
++            int apptMin_s;
++            int apptHour_e;
++            int apptMin_e;
++            int codePos;
++            int latestApptHour;
++            int latestApptMin;            
+             int third = 3;
+             int numAppts = 0;
+             boolean codeMatch;
+@@ -200,7 +207,7 @@ public class ThirdApptTimeReporter implements Reporter{
+             
+         	if (schedDate != null) {
+         		// TODO refactor to use ConversionUtils when commit makes it thorugh
+-        		long msInDay = 1000 * 60 * 60 * 24;
++        		long msInDay = 1000 * 60 * 60 * 24L ;
+         		numDays = (int) (Math.abs(schedDate.getTime() - ConversionUtils.fromDateString(date_from).getTime()) / msInDay);
+         	}
+         }catch(Exception e) {
+diff --git a/src/main/java/oscar/util/ConversionUtils.java b/src/main/java/oscar/util/ConversionUtils.java
+index 3ccf857722..5b3660ee4f 100644
+--- a/src/main/java/oscar/util/ConversionUtils.java
++++ b/src/main/java/oscar/util/ConversionUtils.java
+@@ -47,7 +47,7 @@ public class ConversionUtils {
+ 	private static final Double ZERO_DOUBLE = new Double(0.0);
+ 	private static final String ZERO_STRING = "0";
+ 
+-	private static final long MS_IN_DAY = 1000 * 60 * 60 * 24;
++	private static final long MS_IN_DAY = 1000 * 60 * 60 * 24L ;
+ 
+ 	private ConversionUtils() {
+ 	}

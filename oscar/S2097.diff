@@ -1,0 +1,322 @@
+diff --git a/src/main/java/com/quatro/model/security/UserAccessValue.java b/src/main/java/com/quatro/model/security/UserAccessValue.java
+index 23db810e68..69887cba09 100644
+--- a/src/main/java/com/quatro/model/security/UserAccessValue.java
++++ b/src/main/java/com/quatro/model/security/UserAccessValue.java
+@@ -72,6 +72,9 @@ public class UserAccessValue implements Serializable {
+ 	    }
+   	    public boolean equals(Object uv)
+   	    {
++		if (uv == null || getClass() != uv.getClass()) {
++			return false;
++		}
+   	    	UserAccessValue uv1 = (UserAccessValue) uv;
+   	    	return this.functionCd.equals(uv1.functionCd) && this.orgCd.equals(uv1.orgCd);
+   	    }
+diff --git a/src/main/java/org/oscarehr/common/model/BedDemographicHistoricalPK.java b/src/main/java/org/oscarehr/common/model/BedDemographicHistoricalPK.java
+index d09071a0c1..6bf8c98ad3 100644
+--- a/src/main/java/org/oscarehr/common/model/BedDemographicHistoricalPK.java
++++ b/src/main/java/org/oscarehr/common/model/BedDemographicHistoricalPK.java
+@@ -91,6 +91,9 @@ public class BedDemographicHistoricalPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			BedDemographicHistoricalPK o1 = (BedDemographicHistoricalPK) o;
+ 			return ((bedId == o1.getBedId()) && (demographicNo == o1.getDemographicNo()) && (usageStart.equals(o1.getUsageStart())));
+diff --git a/src/main/java/org/oscarehr/common/model/BedDemographicPK.java b/src/main/java/org/oscarehr/common/model/BedDemographicPK.java
+index 36a04d84b2..c003133c2c 100644
+--- a/src/main/java/org/oscarehr/common/model/BedDemographicPK.java
++++ b/src/main/java/org/oscarehr/common/model/BedDemographicPK.java
+@@ -72,6 +72,9 @@ public class BedDemographicPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			BedDemographicPK o1 = (BedDemographicPK) o;
+ 			return ((demographicNo == o1.getDemographicNo()) && (bedId == o1.getBedId()));
+diff --git a/src/main/java/org/oscarehr/common/model/DemographicStudyPK.java b/src/main/java/org/oscarehr/common/model/DemographicStudyPK.java
+index 75dc8f2e00..4007c06b8a 100644
+--- a/src/main/java/org/oscarehr/common/model/DemographicStudyPK.java
++++ b/src/main/java/org/oscarehr/common/model/DemographicStudyPK.java
+@@ -68,6 +68,9 @@ public class DemographicStudyPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			DemographicStudyPK o1 = (DemographicStudyPK) o;
+ 			return ((demographicNo.equals( o1.demographicNo)) && (studyNo.equals(o1.studyNo)));
+diff --git a/src/main/java/org/oscarehr/common/model/FacilityDemographicPrimaryKey.java b/src/main/java/org/oscarehr/common/model/FacilityDemographicPrimaryKey.java
+index 1da3f17ee2..ea0a8bbe0c 100644
+--- a/src/main/java/org/oscarehr/common/model/FacilityDemographicPrimaryKey.java
++++ b/src/main/java/org/oscarehr/common/model/FacilityDemographicPrimaryKey.java
+@@ -85,6 +85,9 @@ public class FacilityDemographicPrimaryKey implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			FacilityDemographicPrimaryKey o1 = (FacilityDemographicPrimaryKey) o;
+ 			return ((facilityId.equals(o1.facilityId)) && (demographicId .equals(o1.demographicId)));
+diff --git a/src/main/java/org/oscarehr/common/model/HashAudit.java b/src/main/java/org/oscarehr/common/model/HashAudit.java
+index 5f5b3bffbd..75ec76365d 100644
+--- a/src/main/java/org/oscarehr/common/model/HashAudit.java
++++ b/src/main/java/org/oscarehr/common/model/HashAudit.java
+@@ -99,6 +99,9 @@ public class HashAudit extends AbstractModel<Integer> {
+ 	
+ 	
+     public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+         String h = this.getSignature();
+         
+         return (h.compareTo( ((HashAudit)o).getSignature()) == 0);
+diff --git a/src/main/java/org/oscarehr/common/model/InstitutionDepartmentPK.java b/src/main/java/org/oscarehr/common/model/InstitutionDepartmentPK.java
+index f713fd8fed..6b00eb7dfc 100644
+--- a/src/main/java/org/oscarehr/common/model/InstitutionDepartmentPK.java
++++ b/src/main/java/org/oscarehr/common/model/InstitutionDepartmentPK.java
+@@ -64,6 +64,9 @@ public class InstitutionDepartmentPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			InstitutionDepartmentPK o1 = (InstitutionDepartmentPK) o;
+ 			return ((institutionId .equals(o1.institutionId)) && (departmentId.equals(o1.departmentId)));
+diff --git a/src/main/java/org/oscarehr/common/model/MsgDemoMapPK.java b/src/main/java/org/oscarehr/common/model/MsgDemoMapPK.java
+index d42b3c0d16..d73d0823fe 100644
+--- a/src/main/java/org/oscarehr/common/model/MsgDemoMapPK.java
++++ b/src/main/java/org/oscarehr/common/model/MsgDemoMapPK.java
+@@ -73,6 +73,9 @@ public class MsgDemoMapPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			MsgDemoMapPK o1 = (MsgDemoMapPK) o;
+ 			return ((messageId.equals(o1.messageId)) && (demographicNo.equals(o1.demographicNo)));
+diff --git a/src/main/java/org/oscarehr/common/model/MyGroupPrimaryKey.java b/src/main/java/org/oscarehr/common/model/MyGroupPrimaryKey.java
+index a15a09d117..ff2c08afe8 100644
+--- a/src/main/java/org/oscarehr/common/model/MyGroupPrimaryKey.java
++++ b/src/main/java/org/oscarehr/common/model/MyGroupPrimaryKey.java
+@@ -79,6 +79,9 @@ public class MyGroupPrimaryKey  implements java.io.Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++    if (o == null || getClass() != o.getClass()) {
++      return false;
++    }
+ 		try {
+ 			MyGroupPrimaryKey o1 = (MyGroupPrimaryKey) o;
+ 			return ((myGroupNo .equals(o1.myGroupNo)) && (providerNo.equals(o1.providerNo)));
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderFacilityPK.java b/src/main/java/org/oscarehr/common/model/ProviderFacilityPK.java
+index 16ae71d967..bf9e62a604 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderFacilityPK.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderFacilityPK.java
+@@ -62,6 +62,9 @@ public class ProviderFacilityPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			ProviderFacilityPK o1 = (ProviderFacilityPK) o;
+ 			return ((providerNo.equals(o1.providerNo)) && (facilityId == o1.facilityId));
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderSitePK.java b/src/main/java/org/oscarehr/common/model/ProviderSitePK.java
+index 9a0c06719c..c5b8c4b2ea 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderSitePK.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderSitePK.java
+@@ -72,6 +72,9 @@ public class ProviderSitePK implements java.io.Serializable  {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			ProviderSitePK o1 = (ProviderSitePK) o;
+ 			return ((providerNo.equals(o1.providerNo)) && (siteId == o1.siteId));
+diff --git a/src/main/java/org/oscarehr/common/model/ProviderStudyPK.java b/src/main/java/org/oscarehr/common/model/ProviderStudyPK.java
+index b555ae58ce..e8f7d6b534 100644
+--- a/src/main/java/org/oscarehr/common/model/ProviderStudyPK.java
++++ b/src/main/java/org/oscarehr/common/model/ProviderStudyPK.java
+@@ -68,6 +68,9 @@ public class ProviderStudyPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			ProviderStudyPK o1 = (ProviderStudyPK) o;
+ 			return ((providerNo.equals(o1.providerNo)) && (studyNo.equals(o1.studyNo)));
+diff --git a/src/main/java/org/oscarehr/common/model/ReportTempPK.java b/src/main/java/org/oscarehr/common/model/ReportTempPK.java
+index 2c8917750e..27d8f28a61 100644
+--- a/src/main/java/org/oscarehr/common/model/ReportTempPK.java
++++ b/src/main/java/org/oscarehr/common/model/ReportTempPK.java
+@@ -71,6 +71,9 @@ public class ReportTempPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			ReportTempPK o1 = (ReportTempPK) o;
+ 			return ((demographicNo == o1.demographicNo) && (edb.equals(o1.edb)));
+diff --git a/src/main/java/org/oscarehr/common/model/RoomBedHistoricalPK.java b/src/main/java/org/oscarehr/common/model/RoomBedHistoricalPK.java
+index c44f61e6fe..4764792ff5 100644
+--- a/src/main/java/org/oscarehr/common/model/RoomBedHistoricalPK.java
++++ b/src/main/java/org/oscarehr/common/model/RoomBedHistoricalPK.java
+@@ -91,6 +91,9 @@ public class RoomBedHistoricalPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			RoomBedHistoricalPK o1 = (RoomBedHistoricalPK) o;
+ 			return ((bedId == o1.getBedId()) && (roomId == o1.getRoomId()) && (containStart.equals(o1.getContainStart())));
+diff --git a/src/main/java/org/oscarehr/common/model/RoomBedPK.java b/src/main/java/org/oscarehr/common/model/RoomBedPK.java
+index 2aad555572..4b25b325ab 100644
+--- a/src/main/java/org/oscarehr/common/model/RoomBedPK.java
++++ b/src/main/java/org/oscarehr/common/model/RoomBedPK.java
+@@ -74,6 +74,9 @@ public class RoomBedPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			RoomBedPK o1 = (RoomBedPK) o;
+ 			return ((bedId == o1.getBedId()) && (roomId == o1.getRoomId()));
+diff --git a/src/main/java/org/oscarehr/common/model/RoomDemographicPK.java b/src/main/java/org/oscarehr/common/model/RoomDemographicPK.java
+index 8e3690ddd9..ad13b5f779 100644
+--- a/src/main/java/org/oscarehr/common/model/RoomDemographicPK.java
++++ b/src/main/java/org/oscarehr/common/model/RoomDemographicPK.java
+@@ -74,6 +74,9 @@ public class RoomDemographicPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			RoomDemographicPK o1 = (RoomDemographicPK) o;
+ 			return ((demographicNo == o1.getDemographicNo()) && (roomId == o1.getRoomId()));
+diff --git a/src/main/java/org/oscarehr/common/model/ScheduleTemplatePrimaryKey.java b/src/main/java/org/oscarehr/common/model/ScheduleTemplatePrimaryKey.java
+index 7d2d335235..a150eee580 100644
+--- a/src/main/java/org/oscarehr/common/model/ScheduleTemplatePrimaryKey.java
++++ b/src/main/java/org/oscarehr/common/model/ScheduleTemplatePrimaryKey.java
+@@ -78,6 +78,9 @@ public class ScheduleTemplatePrimaryKey implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			ScheduleTemplatePrimaryKey o1 = (ScheduleTemplatePrimaryKey) o;
+ 			return ((name.equals(o1.name)) && (providerNo.equals(o1.providerNo)));
+diff --git a/src/main/java/org/oscarehr/common/model/SecObjPrivilegePrimaryKey.java b/src/main/java/org/oscarehr/common/model/SecObjPrivilegePrimaryKey.java
+index bd6db8fe4c..7601c8828d 100644
+--- a/src/main/java/org/oscarehr/common/model/SecObjPrivilegePrimaryKey.java
++++ b/src/main/java/org/oscarehr/common/model/SecObjPrivilegePrimaryKey.java
+@@ -73,6 +73,9 @@ public class SecObjPrivilegePrimaryKey implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			SecObjPrivilegePrimaryKey o1 = (SecObjPrivilegePrimaryKey) o;
+ 			return ((roleUserGroup.equals(o1.roleUserGroup)) && (roleUserGroup.equals(o1.roleUserGroup)));
+diff --git a/src/main/java/org/oscarehr/common/model/ServiceSpecialistsPK.java b/src/main/java/org/oscarehr/common/model/ServiceSpecialistsPK.java
+index c5ef9f5f84..791994aa80 100644
+--- a/src/main/java/org/oscarehr/common/model/ServiceSpecialistsPK.java
++++ b/src/main/java/org/oscarehr/common/model/ServiceSpecialistsPK.java
+@@ -52,6 +52,9 @@ public class ServiceSpecialistsPK implements Serializable {
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			ServiceSpecialistsPK o1 = (ServiceSpecialistsPK) o;
+ 			return ((serviceId.equals(o1.serviceId)) && (specId.equals(o1.specId)));
+diff --git a/src/main/java/org/oscarehr/common/model/SpecialtyPK.java b/src/main/java/org/oscarehr/common/model/SpecialtyPK.java
+index ff5d343a4d..139945ab4b 100644
+--- a/src/main/java/org/oscarehr/common/model/SpecialtyPK.java
++++ b/src/main/java/org/oscarehr/common/model/SpecialtyPK.java
+@@ -70,6 +70,9 @@ public class SpecialtyPK implements Serializable{
+ 
+ 	@Override
+ 	public boolean equals(Object o) {
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try {
+ 			SpecialtyPK o1 = (SpecialtyPK) o;
+ 			return ((region.equals(o1.region)) && (specialty.equals(o1.specialty)));
+diff --git a/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineProviderMapping.java b/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineProviderMapping.java
+index 09c84c4d8b..c1b6833308 100644
+--- a/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineProviderMapping.java
++++ b/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineProviderMapping.java
+@@ -69,6 +69,9 @@ public class DSGuidelineProviderMapping extends AbstractModel<Integer> {
+ 
+     @Override  //must have same hashcode, but oh well
+     public boolean equals(Object object2) {
++        if (object2 == null || getClass() != object2.getClass()) {
++            return false;
++        }
+         DSGuidelineProviderMapping mapping2 = (DSGuidelineProviderMapping) object2;
+         if (mapping2.getProviderNo().equals(this.getProviderNo()) && mapping2.getGuidelineUUID().equals(this.getGuidelineUUID())) {
+             return true;
+diff --git a/src/main/java/org/oscarehr/myoscar/utils/MessageTransferCacheKey.java b/src/main/java/org/oscarehr/myoscar/utils/MessageTransferCacheKey.java
+index cce594c4d8..c13b6cb190 100644
+--- a/src/main/java/org/oscarehr/myoscar/utils/MessageTransferCacheKey.java
++++ b/src/main/java/org/oscarehr/myoscar/utils/MessageTransferCacheKey.java
+@@ -42,6 +42,9 @@ public class MessageTransferCacheKey
+ 	@Override
+ 	public boolean equals(Object o)
+ 	{
++		if (o == null || getClass() != o.getClass()) {
++			return false;
++		}
+ 		try
+ 		{
+ 			MessageTransferCacheKey key=(MessageTransferCacheKey)o;
+diff --git a/src/main/java/org/oscarehr/web/reports/ocan/beans/OcanDomainConsumerStaffBean.java b/src/main/java/org/oscarehr/web/reports/ocan/beans/OcanDomainConsumerStaffBean.java
+index da1f701c89..3d671f8f2d 100644
+--- a/src/main/java/org/oscarehr/web/reports/ocan/beans/OcanDomainConsumerStaffBean.java
++++ b/src/main/java/org/oscarehr/web/reports/ocan/beans/OcanDomainConsumerStaffBean.java
+@@ -75,6 +75,9 @@ public class OcanDomainConsumerStaffBean {
+ 
+ 	@Override
+ 	public boolean equals(Object obj) {
++		if (obj == null || getClass() != obj.getClass()) {
++			return false;
++		}
+ 		OcanDomainConsumerStaffBean b = (OcanDomainConsumerStaffBean)obj;
+ 		if(b.getDomainId() == this.getDomainId()) {
+ 			return true;

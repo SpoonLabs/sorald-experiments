@@ -1,0 +1,2540 @@
+diff --git a/src/main/java/com/indivica/olis/Driver.java b/src/main/java/com/indivica/olis/Driver.java
+index 6186634fb7..08b70b0f4c 100644
+--- a/src/main/java/com/indivica/olis/Driver.java
++++ b/src/main/java/com/indivica/olis/Driver.java
+@@ -82,6 +82,8 @@ import oscar.OscarProperties;
+ import oscar.oscarMessenger.data.MsgProviderData;
+ 
+ public class Driver {
++	private Driver() {
++	}
+ 
+ 	private static OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+ //	private static OLISResultsDao olisResultsDao = SpringUtils.getBean(OLISResultsDao.class);
+diff --git a/src/main/java/com/quatro/common/KeyConstants.java b/src/main/java/com/quatro/common/KeyConstants.java
+index 83dd915f35..4e691df10c 100644
+--- a/src/main/java/com/quatro/common/KeyConstants.java
++++ b/src/main/java/com/quatro/common/KeyConstants.java
+@@ -22,6 +22,8 @@
+ package com.quatro.common;
+ 
+ public class KeyConstants {
++  private KeyConstants() {
++  }
+ 	public static final String SYSTEM_USER_PROVIDER_NO = "1111";
+ 	public static final String SESSION_KEY_SHELTERID="currentShelterId"; 
+ 	public static final String SESSION_KEY_SHELTER="currentShelter"; 
+diff --git a/src/main/java/com/quatro/util/Utility.java b/src/main/java/com/quatro/util/Utility.java
+index 28874bab01..5fc1536431 100644
+--- a/src/main/java/com/quatro/util/Utility.java
++++ b/src/main/java/com/quatro/util/Utility.java
+@@ -32,6 +32,8 @@ import org.oscarehr.PMmodule.model.FieldDefinition;
+ import org.oscarehr.util.MiscUtils;
+ 
+ public class Utility {
++    private Utility() {
++    }
+     public static boolean IsEmpty(String pStr)
+     {
+         if (pStr == null || pStr.trim().equals(""))
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorManager.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorManager.java
+index bdae5c1769..b282b4aab3 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorManager.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorManager.java
+@@ -96,6 +96,8 @@ import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SEARCHMODE;
+  * not be covered and or have no expectation of privacy (although we could be wrong in this interpretation).
+  */
+ public class CaisiIntegratorManager {
++	private CaisiIntegratorManager() {
++	}
+ 
+ 	/** only non-audited data should be cached in here */
+ 	private static QueueCache<String, Object> basicDataCache=new QueueCache<String, Object>(4, 100, org.apache.commons.lang.time.DateUtils.MILLIS_PER_HOUR, null);
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/ConformanceTestHelper.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/ConformanceTestHelper.java
+index c1369f47e5..f81bbfb5f8 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/ConformanceTestHelper.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/ConformanceTestHelper.java
+@@ -51,6 +51,8 @@ import oscar.oscarTickler.TicklerCreator;
+ import oscar.util.DateUtils;
+ 
+ public final class ConformanceTestHelper {
++	private ConformanceTestHelper() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	public static boolean enableConformanceOnlyTestFeatures=Boolean.parseBoolean(OscarProperties.getInstance().getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
+ 	
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/IntegratorFallBackManager.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/IntegratorFallBackManager.java
+index dd08d19a43..39d377c966 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/IntegratorFallBackManager.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/IntegratorFallBackManager.java
+@@ -50,6 +50,8 @@ import org.oscarehr.util.SpringUtils;
+ import oscar.OscarProperties;
+ 
+ public class IntegratorFallBackManager {
++	private IntegratorFallBackManager() {
++	}
+ 	static RemoteIntegratedDataCopyDao remoteIntegratedDataCopyDao = SpringUtils.getBean(RemoteIntegratedDataCopyDao.class);
+ 	static DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/IntegratorRoleUtils.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/IntegratorRoleUtils.java
+index d6719ed3ba..27d585e8e2 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/IntegratorRoleUtils.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/IntegratorRoleUtils.java
+@@ -26,6 +26,8 @@ package org.oscarehr.PMmodule.caisi_integrator;
+ import org.oscarehr.caisi_integrator.ws.Role;
+ 
+ public final class IntegratorRoleUtils {
++	private IntegratorRoleUtils() {
++	}
+ 	
+ 	/**
+ 	 * @return the matching integrator role, the input can be null and it will just return null, roles that do not match will also return null.
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemoteDrugAllergyHelper.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemoteDrugAllergyHelper.java
+index e022068b6d..1c7a51806b 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemoteDrugAllergyHelper.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemoteDrugAllergyHelper.java
+@@ -38,6 +38,8 @@ import org.oscarehr.util.LoggedInInfo;
+ import org.oscarehr.util.MiscUtils;
+ 
+ public class RemoteDrugAllergyHelper {
++	private RemoteDrugAllergyHelper() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+ 	public static ArrayList<String> getAtcCodesFromRemoteDrugs(LoggedInInfo loggedInInfo,Integer localDemographicId) {
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemotePreventionHelper.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemotePreventionHelper.java
+index 2b7ef52acc..42b2db98dc 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemotePreventionHelper.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/RemotePreventionHelper.java
+@@ -49,6 +49,8 @@ import org.xml.sax.SAXException;
+ import oscar.util.DateUtils;
+ 
+ public final class RemotePreventionHelper {
++	private RemotePreventionHelper() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+ 	public static ArrayList<HashMap<String, Object>> getLinkedPreventionDataMap(LoggedInInfo loggedInInfo, Integer localDemographicId) {
+diff --git a/src/main/java/org/oscarehr/PMmodule/service/VacancyTemplateManager.java b/src/main/java/org/oscarehr/PMmodule/service/VacancyTemplateManager.java
+index be904fb8eb..3abf656930 100644
+--- a/src/main/java/org/oscarehr/PMmodule/service/VacancyTemplateManager.java
++++ b/src/main/java/org/oscarehr/PMmodule/service/VacancyTemplateManager.java
+@@ -49,6 +49,8 @@ import org.springframework.transaction.annotation.Transactional;
+ 
+ @Transactional
+ public class VacancyTemplateManager {
++	private VacancyTemplateManager() {
++	}
+ 	
+ 	private static VacancyTemplateDao vacancyTemplateDAO = SpringUtils.getBean(VacancyTemplateDao.class);
+ 	private static CriteriaDao criteriaDAO = SpringUtils.getBean(CriteriaDao.class);
+diff --git a/src/main/java/org/oscarehr/PMmodule/utility/DateTimeFormatUtils.java b/src/main/java/org/oscarehr/PMmodule/utility/DateTimeFormatUtils.java
+index 46b402f47e..e60d3cec79 100755
+--- a/src/main/java/org/oscarehr/PMmodule/utility/DateTimeFormatUtils.java
++++ b/src/main/java/org/oscarehr/PMmodule/utility/DateTimeFormatUtils.java
+@@ -38,6 +38,8 @@ import org.oscarehr.util.MiscUtils;
+  * @deprecated 2013-12-09 use org.oscarehr.util.DateUtils instead
+  */
+ public final class DateTimeFormatUtils {
++	private DateTimeFormatUtils() {
++	}
+ 
+ 	private static final Logger log=MiscUtils.getLogger();
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/utility/ProgramAccessCache.java b/src/main/java/org/oscarehr/PMmodule/utility/ProgramAccessCache.java
+index 5fa30b8fad..3b30629388 100644
+--- a/src/main/java/org/oscarehr/PMmodule/utility/ProgramAccessCache.java
++++ b/src/main/java/org/oscarehr/PMmodule/utility/ProgramAccessCache.java
+@@ -33,6 +33,8 @@ import org.oscarehr.PMmodule.model.ProgramAccess;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ProgramAccessCache {
++	private ProgramAccessCache() {
++	}
+ 
+ 	static ProgramAccessDAO programAccessDAO = (ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
+ 	static Map<String,Map> accessMaps = new HashMap<String,Map>();
+diff --git a/src/main/java/org/oscarehr/PMmodule/utility/RoleCache.java b/src/main/java/org/oscarehr/PMmodule/utility/RoleCache.java
+index d5b56e10f6..3ca92ecd1c 100644
+--- a/src/main/java/org/oscarehr/PMmodule/utility/RoleCache.java
++++ b/src/main/java/org/oscarehr/PMmodule/utility/RoleCache.java
+@@ -39,6 +39,8 @@ import com.quatro.dao.security.SecroleDao;
+ import com.quatro.model.security.Secrole;
+ 
+ public class RoleCache {
++	private RoleCache() {
++	}
+ 	
+ 	static SecroleDao secroleDao = (SecroleDao)SpringUtils.getBean("secroleDao");
+ 	static DefaultRoleAccessDAO defaultRoleAccessDAO = (DefaultRoleAccessDAO)SpringUtils.getBean("defaultRoleAccessDAO");
+diff --git a/src/main/java/org/oscarehr/PMmodule/utility/UtilDateUtilities.java b/src/main/java/org/oscarehr/PMmodule/utility/UtilDateUtilities.java
+index 874c75ef4e..077872db3d 100644
+--- a/src/main/java/org/oscarehr/PMmodule/utility/UtilDateUtilities.java
++++ b/src/main/java/org/oscarehr/PMmodule/utility/UtilDateUtilities.java
+@@ -37,6 +37,8 @@ import java.util.ResourceBundle;
+  * @deprecated 2013-04-28 use org.oscarehr.util.DateUtils instead 
+  */
+ public class UtilDateUtilities {
++    private UtilDateUtilities() {
++    }
+ 
+     public static Date StringToDate(String s)    {
+         return StringToDate(s, defaultPattern, defaultLocale);
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/CdsForm4.java b/src/main/java/org/oscarehr/PMmodule/web/CdsForm4.java
+index f8153e3e51..f7bed48903 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/CdsForm4.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/CdsForm4.java
+@@ -51,6 +51,8 @@ import org.oscarehr.util.SpringUtils;
+ import oscar.util.CBIUtil;
+ 
+ public class CdsForm4 {
++	private CdsForm4() {
++	}
+ 
+ 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+ 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/CdsForm4Action.java b/src/main/java/org/oscarehr/PMmodule/web/CdsForm4Action.java
+index e0e42b667a..e13aca623e 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/CdsForm4Action.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/CdsForm4Action.java
+@@ -34,6 +34,8 @@ import org.oscarehr.util.LoggedInInfo;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class CdsForm4Action {
++	private CdsForm4Action() {
++	}
+ 
+ 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
+ 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/CreateAnonymousClientAction.java b/src/main/java/org/oscarehr/PMmodule/web/CreateAnonymousClientAction.java
+index 233f5ac81f..d7d647e926 100755
+--- a/src/main/java/org/oscarehr/PMmodule/web/CreateAnonymousClientAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/CreateAnonymousClientAction.java
+@@ -46,6 +46,8 @@ import org.oscarehr.util.SpringUtils;
+  */
+ 
+ public class CreateAnonymousClientAction {
++	private CreateAnonymousClientAction() {
++	}
+ 
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/ManageHnrClientAction.java b/src/main/java/org/oscarehr/PMmodule/web/ManageHnrClientAction.java
+index 8f2ec338da..bce7fec966 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/ManageHnrClientAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/ManageHnrClientAction.java
+@@ -49,6 +49,8 @@ import org.oscarehr.util.SpringUtils;
+ import oscar.util.DateUtils;
+ 
+ public class ManageHnrClientAction {
++	private ManageHnrClientAction() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+ 	private static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClients.java b/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClients.java
+index dba4e9d703..83e14e8e36 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClients.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/ManageLinkedClients.java
+@@ -55,6 +55,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ManageLinkedClients {
++	private ManageLinkedClients() {
++	}
+ 	public static Logger logger = MiscUtils.getLogger();
+ 	public static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+ 	public static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/OcanForm.java b/src/main/java/org/oscarehr/PMmodule/web/OcanForm.java
+index 0948f0adf3..55be2d89f9 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/OcanForm.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/OcanForm.java
+@@ -53,6 +53,8 @@ import org.oscarehr.common.model.OcanStaffFormData;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class OcanForm {
++	private OcanForm() {
++	}
+ 	
+ 	public static final int PRE_POPULATION_LEVEL_ALL 			= 3;
+ 	public static final int PRE_POPULATION_LEVEL_DEMOGRAPHIC 	= 2;
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/OcanFormAction.java b/src/main/java/org/oscarehr/PMmodule/web/OcanFormAction.java
+index 18dcf66459..209cb6d228 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/OcanFormAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/OcanFormAction.java
+@@ -36,6 +36,8 @@ import org.oscarehr.util.LoggedInInfo;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class OcanFormAction {
++	private OcanFormAction() {
++	}
+ 	
+ 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
+ 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java b/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
+index c3c49e2678..f0d9fb6113 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/PopulationReportDataObjects.java
+@@ -36,6 +36,8 @@ import org.oscarehr.util.EncounterUtil;
+  * bean is to facilitate with generating population reports.
+  */
+ public class PopulationReportDataObjects {
++	private PopulationReportDataObjects() {
++	}
+ 	
+ 	/**
+ 	 * This map should hold the number of encounters for a given issueGroup.
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/ProgramUtils.java b/src/main/java/org/oscarehr/PMmodule/web/ProgramUtils.java
+index 54734e0d5b..9aef981f7a 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/ProgramUtils.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/ProgramUtils.java
+@@ -32,6 +32,8 @@ import org.oscarehr.util.SpringUtils;
+ 
+ public class ProgramUtils
+ {
++    private ProgramUtils() {
++    }
+     private static ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
+     private static FacilityDao facilityDao=(FacilityDao)SpringUtils.getBean("facilityDao");    
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/formbean/GenericIntakeConstants.java b/src/main/java/org/oscarehr/PMmodule/web/formbean/GenericIntakeConstants.java
+index 273dbd09e7..275982544b 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/formbean/GenericIntakeConstants.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/formbean/GenericIntakeConstants.java
+@@ -26,6 +26,8 @@ package org.oscarehr.PMmodule.web.formbean;
+ import org.apache.struts.util.LabelValueBean;
+ 
+ public class GenericIntakeConstants {
++	private GenericIntakeConstants() {
++	}
+ 
+ 	public static final LabelValueBean EMPTY = new LabelValueBean("", ""); 
+ 	    
+diff --git a/src/main/java/org/oscarehr/admin/web/MigrateProfessionalContactsHelper.java b/src/main/java/org/oscarehr/admin/web/MigrateProfessionalContactsHelper.java
+index 096a3dc39a..b86c83ad7e 100644
+--- a/src/main/java/org/oscarehr/admin/web/MigrateProfessionalContactsHelper.java
++++ b/src/main/java/org/oscarehr/admin/web/MigrateProfessionalContactsHelper.java
+@@ -36,6 +36,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class MigrateProfessionalContactsHelper {
++	private MigrateProfessionalContactsHelper() {
++	}
+ 
+ 	static Logger logger = MiscUtils.getLogger();
+ 	static ProfessionalContactDao professionalContactDao = SpringUtils.getBean(ProfessionalContactDao.class);
+diff --git a/src/main/java/org/oscarehr/admin/web/MigrateRelationshipsToContactsHelper.java b/src/main/java/org/oscarehr/admin/web/MigrateRelationshipsToContactsHelper.java
+index 485054416b..d40b625e98 100644
+--- a/src/main/java/org/oscarehr/admin/web/MigrateRelationshipsToContactsHelper.java
++++ b/src/main/java/org/oscarehr/admin/web/MigrateRelationshipsToContactsHelper.java
+@@ -34,6 +34,8 @@ import org.oscarehr.util.SpringUtils;
+ import oscar.log.LogAction;
+ 
+ public class MigrateRelationshipsToContactsHelper {
++	private MigrateRelationshipsToContactsHelper() {
++	}
+ 
+ 	private static SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+     
+diff --git a/src/main/java/org/oscarehr/app/OAuth1Utils.java b/src/main/java/org/oscarehr/app/OAuth1Utils.java
+index e994258fba..bcffe1d34f 100644
+--- a/src/main/java/org/oscarehr/app/OAuth1Utils.java
++++ b/src/main/java/org/oscarehr/app/OAuth1Utils.java
+@@ -43,6 +43,8 @@ import org.oscarehr.util.MiscUtils;
+ import oscar.log.LogAction;
+ 
+ public class OAuth1Utils {
++	private OAuth1Utils() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 	
+ 	public static List<Object> getProviderK2A() {
+diff --git a/src/main/java/org/oscarehr/appointment/web/NextAppointmentSearchHelper.java b/src/main/java/org/oscarehr/appointment/web/NextAppointmentSearchHelper.java
+index 85bbc4d5ad..e0a15eae0d 100644
+--- a/src/main/java/org/oscarehr/appointment/web/NextAppointmentSearchHelper.java
++++ b/src/main/java/org/oscarehr/appointment/web/NextAppointmentSearchHelper.java
+@@ -46,6 +46,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class NextAppointmentSearchHelper {
++	private NextAppointmentSearchHelper() {
++	}
+ 	static final int MAX_DAYS_TO_SEARCH = 180;
+ 
+ 	static Logger logger = MiscUtils.getLogger();
+diff --git a/src/main/java/org/oscarehr/casemgmt/util/ExtPrintRegistry.java b/src/main/java/org/oscarehr/casemgmt/util/ExtPrintRegistry.java
+index aaaefb28d2..c570a6d5e4 100644
+--- a/src/main/java/org/oscarehr/casemgmt/util/ExtPrintRegistry.java
++++ b/src/main/java/org/oscarehr/casemgmt/util/ExtPrintRegistry.java
+@@ -29,6 +29,8 @@ import java.util.LinkedHashMap;
+ import java.util.Map;
+ 
+ public class ExtPrintRegistry {
++	private ExtPrintRegistry() {
++	}
+ 
+ 	static LinkedHashMap<String,String> entries = new LinkedHashMap<String,String>();
+ 	
+diff --git a/src/main/java/org/oscarehr/casemgmt/web/GroupNoteAction.java b/src/main/java/org/oscarehr/casemgmt/web/GroupNoteAction.java
+index ecd987c345..ed1989bbfc 100644
+--- a/src/main/java/org/oscarehr/casemgmt/web/GroupNoteAction.java
++++ b/src/main/java/org/oscarehr/casemgmt/web/GroupNoteAction.java
+@@ -42,6 +42,8 @@ import org.oscarehr.util.SpringUtils;
+ 
+ 
+ public class GroupNoteAction {
++	private GroupNoteAction() {
++	}
+ 
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+diff --git a/src/main/java/org/oscarehr/common/IsPropertiesOn.java b/src/main/java/org/oscarehr/common/IsPropertiesOn.java
+index 5aa39c76a9..fb05c47a96 100644
+--- a/src/main/java/org/oscarehr/common/IsPropertiesOn.java
++++ b/src/main/java/org/oscarehr/common/IsPropertiesOn.java
+@@ -26,6 +26,8 @@ package org.oscarehr.common;
+ import oscar.OscarProperties;
+ 
+ public class IsPropertiesOn {
++	private IsPropertiesOn() {
++	}
+ 
+ 	public static boolean propertiesOn(String proName) {
+ 		OscarProperties proper = OscarProperties.getInstance();
+diff --git a/src/main/java/org/oscarehr/common/OtherIdManager.java b/src/main/java/org/oscarehr/common/OtherIdManager.java
+index e89f2a7560..b987d7ab10 100644
+--- a/src/main/java/org/oscarehr/common/OtherIdManager.java
++++ b/src/main/java/org/oscarehr/common/OtherIdManager.java
+@@ -34,6 +34,8 @@ import org.oscarehr.util.SpringUtils;
+  * @author Ronnie Cheng
+  */
+ public class OtherIdManager {
++	private OtherIdManager() {
++	}
+ 	final public static Integer DEMOGRAPHIC = 1;
+ 	final public static Integer APPOINTMENT = 2;
+ 	final public static Integer PROVIDER 	= 3;
+diff --git a/src/main/java/org/oscarehr/common/dao/PregnancyFormsDao.java b/src/main/java/org/oscarehr/common/dao/PregnancyFormsDao.java
+index 5f4b6d65d1..b1c2a91711 100644
+--- a/src/main/java/org/oscarehr/common/dao/PregnancyFormsDao.java
++++ b/src/main/java/org/oscarehr/common/dao/PregnancyFormsDao.java
+@@ -36,6 +36,8 @@ import oscar.login.DBHelp;
+  *
+  */
+ public class PregnancyFormsDao {
++	private PregnancyFormsDao() {
++	}
+ 
+ 	public static Integer getLatestFormIdByPregnancy(Integer episodeId) {
+ 		String sql = "SELECT id from formONAREnhancedRecord WHERE episodeId="+episodeId+" ORDER BY formEdited DESC";                
+diff --git a/src/main/java/org/oscarehr/common/hl7/v2/oscar_to_oscar/OscarToOscarUtils.java b/src/main/java/org/oscarehr/common/hl7/v2/oscar_to_oscar/OscarToOscarUtils.java
+index 4925f0304d..3005d91b21 100644
+--- a/src/main/java/org/oscarehr/common/hl7/v2/oscar_to_oscar/OscarToOscarUtils.java
++++ b/src/main/java/org/oscarehr/common/hl7/v2/oscar_to_oscar/OscarToOscarUtils.java
+@@ -37,6 +37,8 @@ import ca.uhn.hl7v2.parser.PipeParser;
+ import ca.uhn.hl7v2.validation.impl.NoValidation;
+ 
+ public final class OscarToOscarUtils {
++	private OscarToOscarUtils() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 
+ 	public static final String UPLOAD_MESSAGE_TYPE = "OSCAR_TO_OSCAR_HL7_V2";
+diff --git a/src/main/java/org/oscarehr/common/jobs/OscarJobExecutingManager.java b/src/main/java/org/oscarehr/common/jobs/OscarJobExecutingManager.java
+index 48fe8b00ca..c1a1e33745 100644
+--- a/src/main/java/org/oscarehr/common/jobs/OscarJobExecutingManager.java
++++ b/src/main/java/org/oscarehr/common/jobs/OscarJobExecutingManager.java
+@@ -28,6 +28,8 @@ import java.util.Map;
+ import java.util.concurrent.ScheduledFuture;
+ 
+ public class OscarJobExecutingManager {
++	private OscarJobExecutingManager() {
++	}
+ 
+ 	private static Map<Integer,ScheduledFuture<Object>> futures = new HashMap<Integer,ScheduledFuture<Object>>();
+ 
+diff --git a/src/main/java/org/oscarehr/common/jobs/OscarJobUtils.java b/src/main/java/org/oscarehr/common/jobs/OscarJobUtils.java
+index d62f32aef6..545e7b16b3 100644
+--- a/src/main/java/org/oscarehr/common/jobs/OscarJobUtils.java
++++ b/src/main/java/org/oscarehr/common/jobs/OscarJobUtils.java
+@@ -36,6 +36,8 @@ import org.springframework.scheduling.TaskScheduler;
+ import org.springframework.scheduling.support.CronTrigger;
+ 
+ public class OscarJobUtils {
++	private OscarJobUtils() {
++	}
+ 
+ 
+ 	
+diff --git a/src/main/java/org/oscarehr/common/printing/PdfWriterFactory.java b/src/main/java/org/oscarehr/common/printing/PdfWriterFactory.java
+index 540b4e5464..9e5fce5abd 100644
+--- a/src/main/java/org/oscarehr/common/printing/PdfWriterFactory.java
++++ b/src/main/java/org/oscarehr/common/printing/PdfWriterFactory.java
+@@ -39,6 +39,8 @@ import com.lowagie.text.pdf.PdfContentByte;
+ import com.lowagie.text.pdf.PdfWriter;
+ 
+ public class PdfWriterFactory {
++	private PdfWriterFactory() {
++	}
+ 
+ 	public static PdfContentByte setFont(PdfContentByte pdfContentByte, FontSettings settings) {
+ 		pdfContentByte.setFontAndSize(settings.createFont(), settings.getFontSize());
+diff --git a/src/main/java/org/oscarehr/common/service/AcceptableUseAgreementManager.java b/src/main/java/org/oscarehr/common/service/AcceptableUseAgreementManager.java
+index 9603d97481..cc51e89a77 100644
+--- a/src/main/java/org/oscarehr/common/service/AcceptableUseAgreementManager.java
++++ b/src/main/java/org/oscarehr/common/service/AcceptableUseAgreementManager.java
+@@ -40,6 +40,8 @@ import org.oscarehr.util.SpringUtils;
+ 
+ 
+ public class AcceptableUseAgreementManager {
++	private AcceptableUseAgreementManager() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	private static String auaText = null;
+ 	private static boolean loadAttempted = false;
+diff --git a/src/main/java/org/oscarehr/common/service/FieldNoteManager.java b/src/main/java/org/oscarehr/common/service/FieldNoteManager.java
+index 3dd45afd8d..1125780d11 100644
+--- a/src/main/java/org/oscarehr/common/service/FieldNoteManager.java
++++ b/src/main/java/org/oscarehr/common/service/FieldNoteManager.java
+@@ -46,6 +46,8 @@ import org.oscarehr.util.SpringUtils;
+ import oscar.util.StringUtils;
+ 
+ public class FieldNoteManager {
++	private FieldNoteManager() {
++	}
+ 
+ 	static TreeSet<Integer> fieldNoteEforms = new TreeSet<Integer>();
+ 	static TreeSet<Integer> fieldNoteNameEforms = new TreeSet<Integer>();
+diff --git a/src/main/java/org/oscarehr/common/service/PopulationReportCodes.java b/src/main/java/org/oscarehr/common/service/PopulationReportCodes.java
+index 79f8be660e..1140b76434 100644
+--- a/src/main/java/org/oscarehr/common/service/PopulationReportCodes.java
++++ b/src/main/java/org/oscarehr/common/service/PopulationReportCodes.java
+@@ -29,6 +29,8 @@ import java.util.SortedSet;
+ import java.util.TreeSet;
+ 
+ class PopulationReportCodes {
++	private PopulationReportCodes() {
++	}
+ 	
+ 	static final String HIV = "HIV/AIDS";
+ 	static final String CANCER = "Cancer";
+diff --git a/src/main/java/org/oscarehr/common/service/myoscar/AllergiesManager.java b/src/main/java/org/oscarehr/common/service/myoscar/AllergiesManager.java
+index e1d5da6879..168d349344 100644
+--- a/src/main/java/org/oscarehr/common/service/myoscar/AllergiesManager.java
++++ b/src/main/java/org/oscarehr/common/service/myoscar/AllergiesManager.java
+@@ -47,6 +47,8 @@ import org.oscarehr.util.XmlUtils;
+ import org.w3c.dom.Document;
+ 
+ public final class AllergiesManager {
++	private AllergiesManager() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 	private static final String OSCAR_ALLERGIES_DATA_TYPE = "ALLERGY";
+ 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
+diff --git a/src/main/java/org/oscarehr/common/service/myoscar/ImmunizationsManager.java b/src/main/java/org/oscarehr/common/service/myoscar/ImmunizationsManager.java
+index 3699937fa0..188feef527 100644
+--- a/src/main/java/org/oscarehr/common/service/myoscar/ImmunizationsManager.java
++++ b/src/main/java/org/oscarehr/common/service/myoscar/ImmunizationsManager.java
+@@ -52,6 +52,8 @@ import org.oscarehr.util.XmlUtils;
+ import org.w3c.dom.Document;
+ 
+ public final class ImmunizationsManager {
++	private ImmunizationsManager() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 	private static final String OSCAR_IMMUNIZATIONS_DATA_TYPE = "IMMUNIZATION";
+ 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
+diff --git a/src/main/java/org/oscarehr/common/service/myoscar/MeasurementsManager.java b/src/main/java/org/oscarehr/common/service/myoscar/MeasurementsManager.java
+index 98e5f389b0..c20c593c51 100644
+--- a/src/main/java/org/oscarehr/common/service/myoscar/MeasurementsManager.java
++++ b/src/main/java/org/oscarehr/common/service/myoscar/MeasurementsManager.java
+@@ -57,6 +57,8 @@ import org.w3c.dom.Document;
+ import org.xml.sax.SAXException;
+ 
+ public final class MeasurementsManager {
++	private MeasurementsManager() {
++	}
+ 	private static final int[] DATASETS_ADAPTIVE_SIZES = {1000, 10000, 100000, 1000000, 10000000, 100000000};
+ 	
+ 	private static final Logger logger = MiscUtils.getLogger();
+diff --git a/src/main/java/org/oscarehr/common/service/myoscar/PrescriptionMedicationManager.java b/src/main/java/org/oscarehr/common/service/myoscar/PrescriptionMedicationManager.java
+index 7a0615d38e..545185296d 100644
+--- a/src/main/java/org/oscarehr/common/service/myoscar/PrescriptionMedicationManager.java
++++ b/src/main/java/org/oscarehr/common/service/myoscar/PrescriptionMedicationManager.java
+@@ -54,6 +54,8 @@ import org.w3c.dom.Element;
+ import org.w3c.dom.Node;
+ 
+ public final class PrescriptionMedicationManager {
++	private PrescriptionMedicationManager() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 	private static final String OSCAR_PRESCRIPTION_DATA_TYPE = "PRESCRIPTION";
+ 	private static final String OSCAR_MEDICATION_DATA_TYPE = "MEDICATION";
+diff --git a/src/main/java/org/oscarehr/decisionSupport/prevention/DSPreventionDrools.java b/src/main/java/org/oscarehr/decisionSupport/prevention/DSPreventionDrools.java
+index 435838cd89..60c3321823 100644
+--- a/src/main/java/org/oscarehr/decisionSupport/prevention/DSPreventionDrools.java
++++ b/src/main/java/org/oscarehr/decisionSupport/prevention/DSPreventionDrools.java
+@@ -41,6 +41,8 @@ import oscar.oscarEncounter.oscarMeasurements.util.DSCondition;
+ import oscar.oscarEncounter.oscarMeasurements.util.RuleBaseCreator;
+ 
+ public class DSPreventionDrools {
++	private DSPreventionDrools() {
++	}
+ 	private static final Logger logger=MiscUtils.getLogger();
+ 
+     public static final Namespace namespace = Namespace.getNamespace("http://drools.org/rules");
+diff --git a/src/main/java/org/oscarehr/drools/RuleBaseFactory.java b/src/main/java/org/oscarehr/drools/RuleBaseFactory.java
+index 9f6083f881..e2888d7c8e 100644
+--- a/src/main/java/org/oscarehr/drools/RuleBaseFactory.java
++++ b/src/main/java/org/oscarehr/drools/RuleBaseFactory.java
+@@ -28,6 +28,8 @@ import org.drools.RuleBase;
+ import org.oscarehr.util.QueueCache;
+ 
+ public final class RuleBaseFactory {
++	private RuleBaseFactory() {
++	}
+ 
+ 	private static QueueCache<String, RuleBase> ruleBaseInstances = new QueueCache<String, RuleBase>(4, 2048, DateUtils.MILLIS_PER_DAY, null);
+ 
+diff --git a/src/main/java/org/oscarehr/e2e/constant/Constants.java b/src/main/java/org/oscarehr/e2e/constant/Constants.java
+index e0479bfb7a..a8605a2711 100644
+--- a/src/main/java/org/oscarehr/e2e/constant/Constants.java
++++ b/src/main/java/org/oscarehr/e2e/constant/Constants.java
+@@ -38,62 +38,66 @@ public class Constants {
+ 		ENTCAP, ERCAP, ERSUSP, ERTAB, FOAM, GASINHL, GEL, GELAPL, GRAN, GUM,
+ 		LTN, MDINHL, OINT, ORTROCHE, PAD, PASTE, PATCH, PELLET, PILL, POWD,
+ 		RINSE, SHMP, SLTAB, SOL, SPRYADAPT, SUPP, SUSP, SWAB, SYRUP, TAB, TINC,
+-		TPASTE, VAGSUPP, VAGTAB, WAFER
++		TPASTE, VAGSUPP, VAGTAB, WAFER;
+ 	}
+ 
+ 	public static enum IdPrefixes {
+ 		AdvanceDirectives, Alerts, Allergies, ClinicalMeasuredObservations, Encounters,
+ 		FamilyHistory, Immunizations, Medications, Lab, LabOBR, MedicationPrescriptions,
+-		ProblemList, RiskFactors, Referrals, SocialHistory, SubstanceUse
++		ProblemList, RiskFactors, Referrals, SocialHistory, SubstanceUse;
+ 	}
+ 
+ 	public static enum IssueCodes {
+-		OMeds, SocHistory, MedHistory, Concerns, Reminders, FamHistory, RiskFactors
++		OMeds, SocHistory, MedHistory, Concerns, Reminders, FamHistory, RiskFactors;
+ 	}
+ 
+ 	public static enum MeasurementsExtKeys {
+ 		abnormal, accession, comments, datetime, identifier, labname, lab_no, maximum,
+-		minimum, name, olis_status, other_id, range, request_datetime, unit
++		minimum, name, olis_status, other_id, range, request_datetime, unit;
+ 	}
+ 
+ 	public static enum ObservationType {
+ 		ALRGRP, CLINSTAT, COMMENT, DATEOBS, ICD9CODE, INSTRUCT, LIFEOBS, NXTENCREAS,
+-		OUTCOBS, PRNIND, REACTOBS, REASON, RECLINK, SEV, TRTNOTE, UNBOUND
++		OUTCOBS, PRNIND, REACTOBS, REASON, RECLINK, SEV, TRTNOTE, UNBOUND;
+ 	}
+ 
+ 	public static enum PreventionExtKeys {
+-		comments, dose, location, lot, manufacture, name, neverReason, route
++		comments, dose, location, lot, manufacture, name, neverReason, route;
+ 	}
+ 
+ 	public static enum ReactionTypeCode {
+-		ALG, DALG, DINT, DNAINT, EALG, EINT, ENAINT, FALG, FINT, FNAINT, NAINT, OINT
++		ALG, DALG, DINT, DNAINT, EALG, EINT, ENAINT, FALG, FINT, FNAINT, NAINT, OINT;
+ 	}
+ 
+ 	public static enum RoleClass {
+-		MANU, PAT, PROV, ROL, SDLOC
++		MANU, PAT, PROV, ROL, SDLOC;
+ 	}
+ 
+ 	public static enum SubstanceAdministrationType {
+-		DRUG, IMMUNIZ, ANTIGEN
++		DRUG, IMMUNIZ, ANTIGEN;
+ 	}
+ 
+ 	public static enum TelecomType {
+-		EMAIL, TELEPHONE
++		EMAIL, TELEPHONE;
+ 	}
+ 
+ 	public static enum TimeUnit {
+-		d, h, mo, wk
++		d, h, mo, wk;
+ 	}
+ 
+ 	/**
+ 	 * Header Constants
+ 	 */
+ 	public static class EMR {
++		private EMR() {
++		}
+ 		public static final String EMR_OID = "2.16.840.1.113883.3.3331";
+ 		public static final String EMR_VERSION = "OSCAR EMR";
+ 	}
+ 
+ 	public static class EMRConversionDocument {
++		private EMRConversionDocument() {
++		}
+ 		public static final String TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.1.1";
+ 		public static final String CODE_DISPLAY_NAME_LOINC = "Medical Records";
+ 		public static final String CODE_SYSTEM_LOINC = Constants.CodeSystems.LOINC_OID;
+@@ -105,6 +109,8 @@ public class Constants {
+ 	}
+ 
+ 	public static class DocumentHeader {
++		private DocumentHeader() {
++		}
+ 		public static final String TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.7.1";
+ 		public static final String E2E_DTC_CLINICAL_DOCUMENT_TYPE_ID = "2.16.840.1.113883.1.3";
+ 		public static final String E2E_DTC_CLINICAL_DOCUMENT_TYPE_ID_EXTENSION = "POCD_HD000040";
+@@ -177,6 +183,8 @@ public class Constants {
+ 	}
+ 
+ 	public static class ObservationOids {
++			private ObservationOids() {
++			}
+ 		public static final String COMMENT_OBSERVATION_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.4.3";
+ 		public static final String DATE_OBSERVATION_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.4.4";
+ 		public static final String INSTRUCTION_OBSERVATION_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.4.35";
+@@ -190,6 +198,8 @@ public class Constants {
+ 	}
+ 
+ 	public static class SectionSupport {
++			private SectionSupport() {
++			}
+ 		public static final String SECTION_SUPPORTED_NO_DATA = "No information on this section for this patient";
+ 		public static final String SECTION_NOT_SUPPORTED_NO_DATA = "This section is not supported by the Originating Application";
+ 	}
+@@ -222,12 +232,16 @@ public class Constants {
+ 	 * Runtime Constants
+ 	 */
+ 	public static class XML {
++				private XML() {
++				}
+ 		public static final Integer INDENT = 2;
+ 		public static final String ENCODING = "UTF-8";
+ 		public static final String VERSION = "1.0";
+ 	}
+ 
+ 	public static class Runtime {
++				private Runtime() {
++				}
+ 		public static final String E2E_SETUP = System.getProperty("basedir") + "/src/test/resources/e2e_setup.sql";
+ 		public static final String[] TABLES = {"admission", "allergies", "casemgmt_note", "casemgmt_note_ext",
+ 				"casemgmt_issue", "casemgmt_issue_notes", "clinic", "demographic", "demographicSets", "demographic_merged",
+diff --git a/src/main/java/org/oscarehr/eyeform/EyeformInit.java b/src/main/java/org/oscarehr/eyeform/EyeformInit.java
+index 2b69d47046..4421295e31 100644
+--- a/src/main/java/org/oscarehr/eyeform/EyeformInit.java
++++ b/src/main/java/org/oscarehr/eyeform/EyeformInit.java
+@@ -28,6 +28,8 @@ package org.oscarehr.eyeform;
+ import org.oscarehr.util.CppUtils;
+ 
+ public class EyeformInit {
++	private EyeformInit() {
++	}
+ 
+ 	static boolean isInit = false;
+ 	public static void init() {
+diff --git a/src/main/java/org/oscarehr/hospitalReportManager/SFTPAuthKeys.java b/src/main/java/org/oscarehr/hospitalReportManager/SFTPAuthKeys.java
+index bfaa262204..afb1b89d04 100644
+--- a/src/main/java/org/oscarehr/hospitalReportManager/SFTPAuthKeys.java
++++ b/src/main/java/org/oscarehr/hospitalReportManager/SFTPAuthKeys.java
+@@ -10,6 +10,8 @@
+ package org.oscarehr.hospitalReportManager;
+ 
+ public class SFTPAuthKeys {
++	private SFTPAuthKeys() {
++	}
+ 
+ 	//the encryption is based on Advanced Encryption Standard (AES) Algorithm aes-128-ecb
+ 	//thus we know about the decryption key
+diff --git a/src/main/java/org/oscarehr/integration/born/BornFtpManager.java b/src/main/java/org/oscarehr/integration/born/BornFtpManager.java
+index 497b33977b..b72e172706 100644
+--- a/src/main/java/org/oscarehr/integration/born/BornFtpManager.java
++++ b/src/main/java/org/oscarehr/integration/born/BornFtpManager.java
+@@ -36,6 +36,8 @@ import org.springframework.integration.sftp.session.DefaultSftpSessionFactory;
+ import oscar.OscarProperties;
+ 
+ public class BornFtpManager {
++	private BornFtpManager() {
++	}
+ 
+ 	public static void uploadONAREnhancedDataToRepository(String path, String filename) throws Exception {
+ 		String remotePath = OscarProperties.getInstance().getProperty("born_sftp_remote_dir","");
+diff --git a/src/main/java/org/oscarehr/integration/clinicalconnect/ClinicalConnectSSO.java b/src/main/java/org/oscarehr/integration/clinicalconnect/ClinicalConnectSSO.java
+index 6833022f1c..1f87680775 100644
+--- a/src/main/java/org/oscarehr/integration/clinicalconnect/ClinicalConnectSSO.java
++++ b/src/main/java/org/oscarehr/integration/clinicalconnect/ClinicalConnectSSO.java
+@@ -24,6 +24,13 @@
+ 
+ 
+ package org.oscarehr.integration.clinicalconnect;
++import PatientList;
++import PatientService;
++import PatientSummary;
++import RequestData;
++import PatientSearchCriteria;
++import SecurityEnvelope;
++import VmoService;
+ 
+ import java.util.HashMap;
+ import java.util.List;
+@@ -39,6 +46,8 @@ import com.medseek.clinical.service.*;
+ import com.medseek.clinical.service.GetDefaultLaunchUrl.Props;
+ 
+ public class ClinicalConnectSSO {
++	private ClinicalConnectSSO() {
++	}
+ 	private static final String VMO_SERVICE = "/VmoService";
+ 	private static final String PATIENT_SERVICE = "/PatientService";
+ 	private static VmoService vmoService = null;
+diff --git a/src/main/java/org/oscarehr/integration/dashboard/OutcomesDashboardUtils.java b/src/main/java/org/oscarehr/integration/dashboard/OutcomesDashboardUtils.java
+index 272784a8c5..2bdbd9fc00 100644
+--- a/src/main/java/org/oscarehr/integration/dashboard/OutcomesDashboardUtils.java
++++ b/src/main/java/org/oscarehr/integration/dashboard/OutcomesDashboardUtils.java
+@@ -63,6 +63,8 @@ import net.sf.json.JSONObject;
+ import oscar.OscarProperties;
+ 
+ public class OutcomesDashboardUtils {
++	private OutcomesDashboardUtils() {
++	}
+ 
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/PollTimer.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/PollTimer.java
+index f44261c982..2c5191c94d 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/PollTimer.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/core/PollTimer.java
+@@ -43,6 +43,8 @@ import static java.util.concurrent.TimeUnit.*;
+  * 
+  */
+ public class PollTimer {
++	private PollTimer() {
++	}
+ 	
+ 	// available services 
+ 	
+diff --git a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/util/FilterUtility.java b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/util/FilterUtility.java
+index 7f10af7833..a88f5af1ce 100644
+--- a/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/util/FilterUtility.java
++++ b/src/main/java/org/oscarehr/integration/excelleris/com/colcamex/www/util/FilterUtility.java
+@@ -33,7 +33,9 @@ package org.oscarehr.integration.excelleris.com.colcamex.www.util;
+  * support. 
+  * 
+  */
+-public class FilterUtility {  
++public class FilterUtility {
++    private FilterUtility() {
++    }  
+     /**
+      * Trim the crap
+      * @param input
+diff --git a/src/main/java/org/oscarehr/integration/fhir/api/BIS.java b/src/main/java/org/oscarehr/integration/fhir/api/BIS.java
+index 256c81885d..8cc492c7ff 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/api/BIS.java
++++ b/src/main/java/org/oscarehr/integration/fhir/api/BIS.java
+@@ -36,6 +36,8 @@ import org.oscarehr.integration.fhir.resources.constants.Region;
+ import org.oscarehr.util.LoggedInInfo;
+ 
+ public class BIS {
++	private BIS() {
++	}
+ 
+ 	private static Settings settings = new Settings(FhirDestination.BORN, Region.ON);
+ 
+diff --git a/src/main/java/org/oscarehr/integration/fhir/api/BORN.java b/src/main/java/org/oscarehr/integration/fhir/api/BORN.java
+index bd25ad3f3e..06699d3de7 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/api/BORN.java
++++ b/src/main/java/org/oscarehr/integration/fhir/api/BORN.java
+@@ -62,6 +62,8 @@ import org.oscarehr.util.LoggedInInfo;
+  */
+ 
+ public class BORN {
++	private BORN() {
++	}
+ 	private static Settings SETTINGS = new Settings( FhirDestination.BORN, Region.ON );
+ 	
+ 	public static synchronized Set<Communication> getCommunicationResources(LoggedInInfo loggedInInfo, int[] demographicNos) {
+diff --git a/src/main/java/org/oscarehr/integration/fhir/api/DHIR.java b/src/main/java/org/oscarehr/integration/fhir/api/DHIR.java
+index 53a9d4e744..d5da848c1f 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/api/DHIR.java
++++ b/src/main/java/org/oscarehr/integration/fhir/api/DHIR.java
+@@ -40,6 +40,8 @@ import org.oscarehr.util.LoggedInInfo;
+ 
+ 
+ public class DHIR {
++	private DHIR() {
++	}
+ 
+ 	private static Settings SETTINGS = new Settings( FhirDestination.DHIR, Region.ON );
+ 	
+diff --git a/src/main/java/org/oscarehr/integration/fhir/builder/DestinationFactory.java b/src/main/java/org/oscarehr/integration/fhir/builder/DestinationFactory.java
+index a6e2f54566..16d2efb1d5 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/builder/DestinationFactory.java
++++ b/src/main/java/org/oscarehr/integration/fhir/builder/DestinationFactory.java
+@@ -28,6 +28,8 @@ import org.oscarehr.integration.fhir.resources.Settings;
+  */
+ 
+ public final class DestinationFactory {
++	private DestinationFactory() {
++	}
+ 	
+ 	public static final Destination getDestination( org.oscarehr.integration.fhir.resources.constants.FhirDestination destination ) {
+ 		return new Destination( destination.title(), destination.endpoint() );
+diff --git a/src/main/java/org/oscarehr/integration/fhir/builder/ResourceAttributeFilterFactory.java b/src/main/java/org/oscarehr/integration/fhir/builder/ResourceAttributeFilterFactory.java
+index 965aaaeb16..c999a4c9e4 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/builder/ResourceAttributeFilterFactory.java
++++ b/src/main/java/org/oscarehr/integration/fhir/builder/ResourceAttributeFilterFactory.java
+@@ -30,6 +30,8 @@ import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
+ import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
+ 
+ public final class ResourceAttributeFilterFactory {
++	private ResourceAttributeFilterFactory() {
++	}
+ 	
+ 	private static final String ROOT_RESOURCE_URL = "/org/oscarehr/integration/fhir/filters/";	
+ 	private static final String FILE_NAME = "resource_attribute";
+diff --git a/src/main/java/org/oscarehr/integration/fhir/builder/SenderFactory.java b/src/main/java/org/oscarehr/integration/fhir/builder/SenderFactory.java
+index 3a779b4af7..6c66b8bcd9 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/builder/SenderFactory.java
++++ b/src/main/java/org/oscarehr/integration/fhir/builder/SenderFactory.java
+@@ -33,6 +33,8 @@ import oscar.OscarProperties;
+ 
+ 
+ public final class SenderFactory {
++	private SenderFactory() {
++	}
+ 
+ 	private static String buildName = OscarProperties.getInstance().getProperty("buildtag", "UNKNOWN");
+ 	private static String senderEndpoint = OscarProperties.getInstance().getProperty("ws_endpoint_url_base", "UNKNOWN");
+diff --git a/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java b/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java
+index b65ddbc13d..17c6b06223 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java
++++ b/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java
+@@ -53,6 +53,8 @@ import oscar.log.LogAction;
+ 
+ @Service
+ public class OscarFhirResourceManager {
++	private OscarFhirResourceManager() {
++	}
+ 	
+ 	/**
+ 	 * 
+diff --git a/src/main/java/org/oscarehr/integration/fhir/utils/EnumMappingUtil.java b/src/main/java/org/oscarehr/integration/fhir/utils/EnumMappingUtil.java
+index b63573046a..079eb0faeb 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/utils/EnumMappingUtil.java
++++ b/src/main/java/org/oscarehr/integration/fhir/utils/EnumMappingUtil.java
+@@ -1,4 +1,8 @@
+ package org.oscarehr.integration.fhir.utils;
++import static org.oscarehr.common.Gender.F;
++import static org.oscarehr.common.Gender.M;
++import static org.oscarehr.common.Gender.T;
++import static org.oscarehr.common.Gender.U;
+ 
+ /**
+  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+@@ -28,6 +32,8 @@ import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
+ import org.oscarehr.common.Gender;
+ 
+ public final class EnumMappingUtil {
++	private EnumMappingUtil() {
++	}
+ 
+ 	public static final AdministrativeGender genderToAdministrativeGender( final Gender gender ) {
+ 		AdministrativeGender genderCode = AdministrativeGender.UNKNOWN;
+diff --git a/src/main/java/org/oscarehr/integration/fhir/utils/FhirUtils.java b/src/main/java/org/oscarehr/integration/fhir/utils/FhirUtils.java
+index 93750cb152..9cb561e7b3 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/utils/FhirUtils.java
++++ b/src/main/java/org/oscarehr/integration/fhir/utils/FhirUtils.java
+@@ -35,6 +35,8 @@ import org.hl7.fhir.dstu3.model.codesystems.ContactPointSystem;
+ import org.hl7.fhir.dstu3.model.codesystems.IdentifierUse;
+ 
+ public final class FhirUtils {
++	private FhirUtils() {
++	}
+ 	
+ 	public static final List<String> fhirAddressLineToString( List<Address> addresses ) {
+ 		List<String> addressList = null;
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/ActionUtils.java b/src/main/java/org/oscarehr/integration/mcedt/ActionUtils.java
+index 36552d3f7d..ebc6c9dd32 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/ActionUtils.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/ActionUtils.java
+@@ -48,6 +48,8 @@ import ca.ontario.health.edt.UploadData;
+  *
+  */
+ class ActionUtils {
++	private ActionUtils() {
++	}
+ 
+ 	static ActionMessages addMessage(String messageId, String... messageParams) {
+ 		ActionMessage message = null;
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/DelegateFactory.java b/src/main/java/org/oscarehr/integration/mcedt/DelegateFactory.java
+index cfa4501f9e..174fe0f5e2 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/DelegateFactory.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/DelegateFactory.java
+@@ -35,6 +35,8 @@ import oscar.OscarProperties;
+ import ca.ontario.health.edt.EDTDelegate;
+ 
+ public class DelegateFactory {
++	private DelegateFactory() {
++	}
+ 	
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	private static UserPropertyDAO userPropertyDAO = SpringUtils.getBean(UserPropertyDAO.class);
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/Functions.java b/src/main/java/org/oscarehr/integration/mcedt/Functions.java
+index 05f81028c1..830980c83e 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/Functions.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/Functions.java
+@@ -39,6 +39,8 @@ import ca.ontario.health.edt.UpdateRequest;
+  *
+  */
+ public class Functions {
++	private Functions() {
++	}
+ 
+ 	public static Date toDate(XMLGregorianCalendar calendar) {
+ 		if (calendar == null) {
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/McedtConstants.java b/src/main/java/org/oscarehr/integration/mcedt/McedtConstants.java
+index 69fd17b36f..bf7b0f83a8 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/McedtConstants.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/McedtConstants.java
+@@ -24,6 +24,8 @@
+ package org.oscarehr.integration.mcedt;
+ 
+ public class McedtConstants {
++	private McedtConstants() {
++	}
+ 	
+ 	public static final String REQUEST_ATTR_KEY_RESOURCE_ID = "resourceId";
+ 	public static final String REQUEST_ATTR_KEY_SERVICE_ID = "serviceId";
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/McedtMessageCreator.java b/src/main/java/org/oscarehr/integration/mcedt/McedtMessageCreator.java
+index 94803f0450..16e8db0521 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/McedtMessageCreator.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/McedtMessageCreator.java
+@@ -35,6 +35,8 @@ import ca.ontario.health.edt.ResourceResult;
+ import ca.ontario.health.edt.ResponseResult;
+ 
+ public class McedtMessageCreator {
++	private McedtMessageCreator() {
++	}
+ 
+ 	public static String responseResultToString(ResponseResult result) {
+ 		boolean isResourcePresent = result.getResourceID() != null;
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/mailbox/ActionUtils.java b/src/main/java/org/oscarehr/integration/mcedt/mailbox/ActionUtils.java
+index c0c7828e9e..d54ba9ca4b 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/mailbox/ActionUtils.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/mailbox/ActionUtils.java
+@@ -69,6 +69,8 @@ import ca.ontario.health.edt.UploadData;
+  *
+  */
+ public class ActionUtils {
++	private ActionUtils() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+ 	static ActionMessages addMessage(String messageId, String... messageParams) {
+diff --git a/src/main/java/org/oscarehr/integration/mchcv/HCValidationFactory.java b/src/main/java/org/oscarehr/integration/mchcv/HCValidationFactory.java
+index b2dca1e359..87691f8f2b 100644
+--- a/src/main/java/org/oscarehr/integration/mchcv/HCValidationFactory.java
++++ b/src/main/java/org/oscarehr/integration/mchcv/HCValidationFactory.java
+@@ -26,6 +26,8 @@ package org.oscarehr.integration.mchcv;
+ import oscar.OscarProperties;
+ 
+ public class HCValidationFactory {
++    private HCValidationFactory() {
++    }
+ 
+     private static HCValidator validator;
+ 
+diff --git a/src/main/java/org/oscarehr/integration/nclass/clientRegistry/impl/Utils.java b/src/main/java/org/oscarehr/integration/nclass/clientRegistry/impl/Utils.java
+index 2b0f03e8af..91f788fd44 100644
+--- a/src/main/java/org/oscarehr/integration/nclass/clientRegistry/impl/Utils.java
++++ b/src/main/java/org/oscarehr/integration/nclass/clientRegistry/impl/Utils.java
+@@ -36,6 +36,8 @@ import org.marc.everest.rmim.ca.r020403.vocabulary.ProcessingID;
+ import org.marc.everest.rmim.ca.r020403.vocabulary.ResponseMode;
+ 
+ public class Utils {
++	private Utils() {
++	}
+ 
+ 	public static AdministrativeGender toAdminGender(String sex) {
+ 		if (sex == null || sex.isEmpty()) {
+diff --git a/src/main/java/org/oscarehr/integration/questimed/QuestimedSSO.java b/src/main/java/org/oscarehr/integration/questimed/QuestimedSSO.java
+index ab04a4dde8..c74db8ae6a 100644
+--- a/src/main/java/org/oscarehr/integration/questimed/QuestimedSSO.java
++++ b/src/main/java/org/oscarehr/integration/questimed/QuestimedSSO.java
+@@ -37,6 +37,8 @@ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.client.RestTemplate;
+ 
+ public class QuestimedSSO {
++    private QuestimedSSO() {
++    }
+ 
+     private static String serviceUserName = null;
+     private static String servicePassword = null;
+diff --git a/src/main/java/org/oscarehr/learning/StudentImporter.java b/src/main/java/org/oscarehr/learning/StudentImporter.java
+index 35d193d90b..1542180fe8 100644
+--- a/src/main/java/org/oscarehr/learning/StudentImporter.java
++++ b/src/main/java/org/oscarehr/learning/StudentImporter.java
+@@ -49,6 +49,8 @@ import oscar.oscarDB.DBPreparedHandler;
+ 
+ 
+ public class StudentImporter {
++	private StudentImporter() {
++	}
+ 
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+diff --git a/src/main/java/org/oscarehr/myoscar/utils/AccountManager.java b/src/main/java/org/oscarehr/myoscar/utils/AccountManager.java
+index 590f6f290f..8834f6c675 100644
+--- a/src/main/java/org/oscarehr/myoscar/utils/AccountManager.java
++++ b/src/main/java/org/oscarehr/myoscar/utils/AccountManager.java
+@@ -52,6 +52,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.QueueCache;
+ 
+ public final class AccountManager {
++	private AccountManager() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+ 	public static final int PERSON_PHOTO_SMALL_DIMENSIONS = 240;
+diff --git a/src/main/java/org/oscarehr/myoscar/utils/MedicalDataManager2.java b/src/main/java/org/oscarehr/myoscar/utils/MedicalDataManager2.java
+index ea2397a160..b2df981467 100644
+--- a/src/main/java/org/oscarehr/myoscar/utils/MedicalDataManager2.java
++++ b/src/main/java/org/oscarehr/myoscar/utils/MedicalDataManager2.java
+@@ -46,6 +46,8 @@ import org.w3c.dom.Document;
+ import org.xml.sax.SAXException;
+ 
+ public final class MedicalDataManager2 {
++	private MedicalDataManager2() {
++	}
+ 	private static final int MAX_OBJECTS_TO_CACHE = ConfigXmlUtils.getPropertyInt("myoscar_client", "medical_data_manager_data_cache_size");
+ 	private static final int MAX_OBJECT_SIZE_TO_CACHE = ConfigXmlUtils.getPropertyInt("myoscar_client", "medical_data_manager_max_object_size_to_cache");
+ 	private static final long MAX_TIME_TO_CACHE = ConfigXmlUtils.getPropertyInt("myoscar_client", "medical_data_manager_cache_time_ms");
+diff --git a/src/main/java/org/oscarehr/myoscar/utils/MessageManager.java b/src/main/java/org/oscarehr/myoscar/utils/MessageManager.java
+index 3ed66099cc..eabd1ae6bb 100644
+--- a/src/main/java/org/oscarehr/myoscar/utils/MessageManager.java
++++ b/src/main/java/org/oscarehr/myoscar/utils/MessageManager.java
+@@ -47,6 +47,8 @@ import org.oscarehr.util.QueueCache;
+ 
+ public final class MessageManager
+ {
++	private MessageManager() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	public static final String ATTACH_FILE_DATA_TYPE="FILE_ATTACHMENT";
+ 	public static final String ATTACH_FILE_XML_MIME_TYPE="application/xml";
+diff --git a/src/main/java/org/oscarehr/myoscar/utils/MyOscarServerWebServicesManager.java b/src/main/java/org/oscarehr/myoscar/utils/MyOscarServerWebServicesManager.java
+index 1e123199a6..8cc4ccda13 100644
+--- a/src/main/java/org/oscarehr/myoscar/utils/MyOscarServerWebServicesManager.java
++++ b/src/main/java/org/oscarehr/myoscar/utils/MyOscarServerWebServicesManager.java
+@@ -75,6 +75,8 @@ import org.oscarehr.util.QueueCache;
+  * category=myoscar_client, property=ws_client_port_cache_time_ms
+  */
+ public class MyOscarServerWebServicesManager {
++	private MyOscarServerWebServicesManager() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	private static int portCacheSize = ConfigXmlUtils.getPropertyInt("misc", "ws_client_port_cache_size");
+ 	private static int portCacheTimeMs = ConfigXmlUtils.getPropertyInt("misc", "ws_client_port_cache_time_ms");
+diff --git a/src/main/java/org/oscarehr/myoscar/utils/SystemInfoManager.java b/src/main/java/org/oscarehr/myoscar/utils/SystemInfoManager.java
+index d2ead5fad1..a8e31047d7 100644
+--- a/src/main/java/org/oscarehr/myoscar/utils/SystemInfoManager.java
++++ b/src/main/java/org/oscarehr/myoscar/utils/SystemInfoManager.java
+@@ -26,6 +26,8 @@ package org.oscarehr.myoscar.utils;
+ import org.oscarehr.myoscar_server.myoscar_server_client_stubs2.SystemInfoWs;
+ 
+ public final class SystemInfoManager {
++	private SystemInfoManager() {
++	}
+ 	public static Integer getDataModelVersion(String serverBaseUrl) {
+ 		SystemInfoWs systemInfoWs = MyOscarServerWebServicesManager.getSystemInfoWs(serverBaseUrl);
+ 		Integer result = systemInfoWs.getMyOscarDataModelVersion();
+diff --git a/src/main/java/org/oscarehr/olis/OLISUtils.java b/src/main/java/org/oscarehr/olis/OLISUtils.java
+index a813c6ea2c..c1e5f41177 100644
+--- a/src/main/java/org/oscarehr/olis/OLISUtils.java
++++ b/src/main/java/org/oscarehr/olis/OLISUtils.java
+@@ -57,6 +57,8 @@ import oscar.oscarLab.ca.all.parsers.OLISHL7Handler;
+ 
+ 
+ public class OLISUtils {
++	private OLISUtils() {
++	}
+ 	static Logger logger = MiscUtils.getLogger();
+ 	
+ 	static Hl7TextInfoDao hl7TextInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
+diff --git a/src/main/java/org/oscarehr/oscarRx/StaticScriptBean.java b/src/main/java/org/oscarehr/oscarRx/StaticScriptBean.java
+index aca3861a4e..c1e3e3083b 100644
+--- a/src/main/java/org/oscarehr/oscarRx/StaticScriptBean.java
++++ b/src/main/java/org/oscarehr/oscarRx/StaticScriptBean.java
+@@ -52,6 +52,8 @@ import oscar.oscarRx.util.RxUtil;
+ import oscar.util.DateUtils;
+ 
+ public class StaticScriptBean {
++	private StaticScriptBean() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 	private static DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+ 
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/ERxScheduledSynchronizer.java b/src/main/java/org/oscarehr/oscarRx/erx/ERxScheduledSynchronizer.java
+index 48bfb21324..b08b1cc858 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/ERxScheduledSynchronizer.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/ERxScheduledSynchronizer.java
+@@ -51,6 +51,8 @@ import oscar.oscarRx.util.RxDrugRef;
+  * An object to manage the periodic tasks that the OscarERx plugin needs to do.
+  */
+ public class ERxScheduledSynchronizer {
++    private ERxScheduledSynchronizer() {
++    }
+     /**
+      * A logger that we will use to record info and errors.
+      */
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxChartUpdater.java b/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxChartUpdater.java
+index b62a3ecdf7..12b14f53e4 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxChartUpdater.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxChartUpdater.java
+@@ -43,6 +43,8 @@ import org.oscarehr.util.SpringUtils;
+  * A class to facilitate adding OSCAR prescriptions (imported from elsewhere) to patients' charts.
+  */
+ public class ERxChartUpdater {
++	private ERxChartUpdater() {
++	}
+ 	
+ 	
+ 	/**
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPatientRecordTranslator.java b/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPatientRecordTranslator.java
+index fc89a4c730..303d05f5cc 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPatientRecordTranslator.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPatientRecordTranslator.java
+@@ -44,6 +44,8 @@ import org.oscarehr.oscarRx.erx.model.ERxPatientData;
+  * translateToExternal(Patient) and Patient translateToInternal(ERxPatientData).
+  */
+ public class ERxPatientRecordTranslator {
++    private ERxPatientRecordTranslator() {
++    }
+     /**
+      * Generate an ERxPatientData given a Patient.
+      * 
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPrescriptionTranslator.java b/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPrescriptionTranslator.java
+index 42af136297..dbe852a0aa 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPrescriptionTranslator.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/controller/ERxPrescriptionTranslator.java
+@@ -24,6 +24,10 @@
+ 
+ 
+ package org.oscarehr.oscarRx.erx.controller;
++import static org.oscarehr.oscarRx.erx.model.PrescriptionTimeUnit.DAY;
++import static org.oscarehr.oscarRx.erx.model.PrescriptionTimeUnit.WEEK;
++import static org.oscarehr.oscarRx.erx.model.PrescriptionTimeUnit.YEAR;
++import static org.oscarehr.oscarRx.erx.model.PrescriptionTimeUnit.MONTH;
+ 
+ import java.text.ParseException;
+ import java.text.SimpleDateFormat;
+@@ -53,6 +57,8 @@ import oscar.oscarRx.util.RxUtil;
+  * internally.
+  */
+ public class ERxPrescriptionTranslator {
++    private ERxPrescriptionTranslator() {
++    }
+     /*
+      * Generate an ERxPrescription given a Prescription
+      * 
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/model/response/GetPrescriptions5Response.java b/src/main/java/org/oscarehr/oscarRx/erx/model/response/GetPrescriptions5Response.java
+index 4874e39002..42b1e7790d 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/model/response/GetPrescriptions5Response.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/model/response/GetPrescriptions5Response.java
+@@ -40,6 +40,8 @@ import org.w3c.dom.NodeList;
+  * request to it.
+  */
+ public class GetPrescriptions5Response {
++	private GetPrescriptions5Response() {
++	}
+ 	/**
+ 	 * Parse a the External Prescriber GetPrescriptions5Response document, re-throwing errors
+ 	 * from the remote web service if necessary, and returning a list of
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/model/response/GetPrescriptions5Result.java b/src/main/java/org/oscarehr/oscarRx/erx/model/response/GetPrescriptions5Result.java
+index 95b25d5f04..9f6282e2b9 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/model/response/GetPrescriptions5Result.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/model/response/GetPrescriptions5Result.java
+@@ -24,6 +24,15 @@
+ 
+ 
+ package org.oscarehr.oscarRx.erx.model.response;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_INVALIDDATEFORMAT;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_AUTHORIZATION;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_UNMANAGED;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_INVALIDLOCALEID;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_INVALIDDATEANDPATIENT;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_NONSECUREACCESS;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_UNAUTHORIZED_CLINIC;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_PATIENTNOTFOUND;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_AUTHENTICATION;
+ 
+ import java.util.LinkedList;
+ import java.util.List;
+@@ -39,6 +48,8 @@ import org.w3c.dom.NodeList;
+  * is returned by the External Prescriber's web service after sending patient data to it.
+  */
+ public class GetPrescriptions5Result {
++	private GetPrescriptions5Result() {
++	}
+ 	public static List<Node> parseGetPrescriptions5Result(Node node)
+ 	    throws DOMException, IllegalArgumentException, SecurityException,
+ 	    ServiceUnavailableException {
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/model/response/Prescriptions.java b/src/main/java/org/oscarehr/oscarRx/erx/model/response/Prescriptions.java
+index 3e8e8cbb54..fa48c3532c 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/model/response/Prescriptions.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/model/response/Prescriptions.java
+@@ -37,6 +37,8 @@ import org.w3c.dom.NodeList;
+  * is returned by the External Prescriber's web service as part of a GetPrescriptions5Result.
+  */
+ public class Prescriptions {
++	private Prescriptions() {
++	}
+ 	/**
+ 	 * Parse a the External Prescriber Prescriptions document fragment, returning a list of
+ 	 * Prescription nodes.
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/model/response/SetPatientImmediate3Response.java b/src/main/java/org/oscarehr/oscarRx/erx/model/response/SetPatientImmediate3Response.java
+index c81c4a9735..e7b115026c 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/model/response/SetPatientImmediate3Response.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/model/response/SetPatientImmediate3Response.java
+@@ -37,6 +37,8 @@ import org.w3c.dom.NodeList;
+  * 
+  */
+ public class SetPatientImmediate3Response {
++	private SetPatientImmediate3Response() {
++	}
+ 	/**
+ 	 * Parse a the External Prescriber SetPatientImmediate3Response document, re-throwing errors
+ 	 * from the remote web service if necessary.
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/model/response/SetPatientImmediate3Result.java b/src/main/java/org/oscarehr/oscarRx/erx/model/response/SetPatientImmediate3Result.java
+index a848e77762..fa47f7b06b 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/model/response/SetPatientImmediate3Result.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/model/response/SetPatientImmediate3Result.java
+@@ -24,6 +24,13 @@
+ 
+ 
+ package org.oscarehr.oscarRx.erx.model.response;
++import static org.oscarehr.oscarRx.erx.model.WSPatientResult3.ERROR_UNKNOWN_CLINIC;
++import static org.oscarehr.oscarRx.erx.model.WSPatientResult3.ERROR_AUTHORIZATION;
++import static org.oscarehr.oscarRx.erx.model.WSPatientResult3.ERROR_INVALIDLOCALID;
++import static org.oscarehr.oscarRx.erx.model.WSPatientResult3.ERROR_UNMANAGED;
++import static org.oscarehr.oscarRx.erx.model.WSPatientResult3.ERROR_NONSECUREACCESS;
++import static org.oscarehr.oscarRx.erx.model.WSPatientResult3.ERROR_UNAUTHORIZED_CLINIC;
++import static org.oscarehr.oscarRx.erx.model.WSPatientResult3.ERROR_AUTHENTICATION;
+ 
+ import javax.naming.ServiceUnavailableException;
+ 
+@@ -38,6 +45,8 @@ import org.w3c.dom.NodeList;
+  * 
+  */
+ public class SetPatientImmediate3Result {
++	private SetPatientImmediate3Result() {
++	}
+ 	/**
+ 	 * Parse a the External Prescriber SetPatientImmediate3Result document, re-throwing errors
+ 	 * from the remote web service if necessary.
+diff --git a/src/main/java/org/oscarehr/oscarRx/erx/model/response/WSPrescriptionList5.java b/src/main/java/org/oscarehr/oscarRx/erx/model/response/WSPrescriptionList5.java
+index 9f441d621f..55fe1b2699 100644
+--- a/src/main/java/org/oscarehr/oscarRx/erx/model/response/WSPrescriptionList5.java
++++ b/src/main/java/org/oscarehr/oscarRx/erx/model/response/WSPrescriptionList5.java
+@@ -24,6 +24,15 @@
+ 
+ 
+ package org.oscarehr.oscarRx.erx.model.response;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_INVALIDDATEFORMAT;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_AUTHORIZATION;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_UNMANAGED;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_INVALIDLOCALEID;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_INVALIDDATEANDPATIENT;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_NONSECUREACCESS;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_UNAUTHORIZED_CLINIC;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_PATIENTNOTFOUND;
++import static org.oscarehr.oscarRx.erx.model.WSResult5.ERROR_AUTHENTICATION;
+ 
+ import java.util.LinkedList;
+ import java.util.List;
+@@ -40,6 +49,8 @@ import org.w3c.dom.NodeList;
+  * returned by the External Prescriber's web service after sending a prescription request to it.
+   */
+ public class WSPrescriptionList5 {
++	private WSPrescriptionList5() {
++	}
+ 	/**
+ 	 * Parse a the External Prescriber WSPrescriptionList5 document, re-throwing errors from the
+ 	 * remote web service if necessary, and returning a list of WSPrescription5
+diff --git a/src/main/java/org/oscarehr/phr/RegistrationHelper.java b/src/main/java/org/oscarehr/phr/RegistrationHelper.java
+index 732a5e233b..0d7a929ecb 100644
+--- a/src/main/java/org/oscarehr/phr/RegistrationHelper.java
++++ b/src/main/java/org/oscarehr/phr/RegistrationHelper.java
+@@ -54,6 +54,8 @@ import org.oscarehr.myoscar_server.ws.RelationshipTransfer4;
+ 
+ 
+ public final class RegistrationHelper {
++	private RegistrationHelper() {
++	}
+ 	private static final String MYOSCAR_REGISTRATION_DEFAULTS_SESSION_KEY = "MYOSCAR_REGISTRATION_DEFAULTS";
+ 
+ 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+diff --git a/src/main/java/org/oscarehr/phr/indivo/IndivoUtil.java b/src/main/java/org/oscarehr/phr/indivo/IndivoUtil.java
+index 925fefc6a4..3dc4c216ec 100644
+--- a/src/main/java/org/oscarehr/phr/indivo/IndivoUtil.java
++++ b/src/main/java/org/oscarehr/phr/indivo/IndivoUtil.java
+@@ -52,6 +52,8 @@ import oscar.util.UtilDateUtilities;
+  * @author apavel
+  */
+ public class IndivoUtil {
++  private IndivoUtil() {
++  }
+ 
+ public static ContactInformationType generateContactInformationType(
+                                         String iFirstName,
+diff --git a/src/main/java/org/oscarehr/phr/util/MyOscarServerRelationManager.java b/src/main/java/org/oscarehr/phr/util/MyOscarServerRelationManager.java
+index 009a8b7d2e..d6d6d21eec 100644
+--- a/src/main/java/org/oscarehr/phr/util/MyOscarServerRelationManager.java
++++ b/src/main/java/org/oscarehr/phr/util/MyOscarServerRelationManager.java
+@@ -36,6 +36,8 @@ import org.oscarehr.util.MiscUtils;
+  * @deprecated 2012-11-22 use AccountManager instead, it should have all the account relationship calls needed.
+  */
+ public class MyOscarServerRelationManager {
++	private MyOscarServerRelationManager() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 
+ 	private static List<RelationshipTransfer4> getRelationShipTransferFromServer(MyOscarLoggedInInfo myOscarLoggedInInfo, Long targetMyOscarUserId) {
+diff --git a/src/main/java/org/oscarehr/phr/util/MyOscarUtils.java b/src/main/java/org/oscarehr/phr/util/MyOscarUtils.java
+index 812bf53980..dc7ebbeefc 100644
+--- a/src/main/java/org/oscarehr/phr/util/MyOscarUtils.java
++++ b/src/main/java/org/oscarehr/phr/util/MyOscarUtils.java
+@@ -56,6 +56,8 @@ import org.oscarehr.util.WebUtils;
+ 
+ 
+ public final class MyOscarUtils {
++	private MyOscarUtils() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 
+ 	private static final String MANGLED_SECRET_KEY_SESSION_KEY=MyOscarUtils.class.getName()+".MANGLED_SECRET_KEY";
+diff --git a/src/main/java/org/oscarehr/phr/util/UsernameHelper.java b/src/main/java/org/oscarehr/phr/util/UsernameHelper.java
+index bdf63c47a5..56e569fbea 100644
+--- a/src/main/java/org/oscarehr/phr/util/UsernameHelper.java
++++ b/src/main/java/org/oscarehr/phr/util/UsernameHelper.java
+@@ -34,6 +34,8 @@ import org.oscarehr.myoscar_server.ws.MinimalPersonTransfer2;
+ 
+ public class UsernameHelper
+ {
++	private UsernameHelper() {
++	}
+ 
+ 	public static List<String> suggestUsernames(MyOscarLoggedInInfoInterface credentials, String fn, String ln, String email)
+ 	{
+diff --git a/src/main/java/org/oscarehr/phr/web/MyOscarMessagesHelper.java b/src/main/java/org/oscarehr/phr/web/MyOscarMessagesHelper.java
+index e63ce48bec..a692be417b 100644
+--- a/src/main/java/org/oscarehr/phr/web/MyOscarMessagesHelper.java
++++ b/src/main/java/org/oscarehr/phr/web/MyOscarMessagesHelper.java
+@@ -38,6 +38,8 @@ import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
+ import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
+ 
+ public final class MyOscarMessagesHelper {
++	private MyOscarMessagesHelper() {
++	}
+ 	public static final int MESSAGE_DISPLAY_SIZE = 25;
+ 
+ 	public static final String ATTACH_FILE_DATA_TYPE="FILE_ATTACHMENT";
+diff --git a/src/main/java/org/oscarehr/renal/ReportHelper.java b/src/main/java/org/oscarehr/renal/ReportHelper.java
+index 3cf21472d8..c4cc79bc65 100644
+--- a/src/main/java/org/oscarehr/renal/ReportHelper.java
++++ b/src/main/java/org/oscarehr/renal/ReportHelper.java
+@@ -45,6 +45,8 @@ import org.oscarehr.common.model.MeasurementMap;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ReportHelper {
++	private ReportHelper() {
++	}
+ 
+ 	static DxresearchDAO dxDao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
+ 	static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+diff --git a/src/main/java/org/oscarehr/rx/util/RxUtil.java b/src/main/java/org/oscarehr/rx/util/RxUtil.java
+index 0ff2c865cb..4b69c85b60 100644
+--- a/src/main/java/org/oscarehr/rx/util/RxUtil.java
++++ b/src/main/java/org/oscarehr/rx/util/RxUtil.java
+@@ -37,6 +37,8 @@ import org.oscarehr.util.MiscUtils;
+ import oscar.OscarProperties;
+ 
+ public class RxUtil {
++	private RxUtil() {
++	}
+ 
+ 	public static String trimSpecial(Drug rx) {
+ 		String special = rx.getSpecial();
+diff --git a/src/main/java/org/oscarehr/sharingcenter/OidType.java b/src/main/java/org/oscarehr/sharingcenter/OidType.java
+index deb19b340e..5b2d344335 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/OidType.java
++++ b/src/main/java/org/oscarehr/sharingcenter/OidType.java
+@@ -25,6 +25,8 @@
+ package org.oscarehr.sharingcenter;
+ 
+ public class OidType {
++	private OidType() {
++	}
+ 	
+ 	public static final String PATIENT_OID = "1.1";
+ 	public static final String PROVIDER_OID = "1.2";
+diff --git a/src/main/java/org/oscarehr/sharingcenter/OidUtil.java b/src/main/java/org/oscarehr/sharingcenter/OidUtil.java
+index fbcdbd1205..afbf4ad28d 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/OidUtil.java
++++ b/src/main/java/org/oscarehr/sharingcenter/OidUtil.java
+@@ -29,6 +29,8 @@ import org.oscarehr.sharingcenter.model.ClinicInfoDataObject;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class OidUtil {
++	private OidUtil() {
++	}
+ 	
+ 	private static final ClinicInfoDao clinicInfoDao = SpringUtils.getBean(ClinicInfoDao.class);
+ 	private static final ClinicInfoDataObject clinicData = clinicInfoDao.getClinic();
+diff --git a/src/main/java/org/oscarehr/sharingcenter/util/CDADocumentUtil.java b/src/main/java/org/oscarehr/sharingcenter/util/CDADocumentUtil.java
+index 431f6e0376..96efa488c9 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/util/CDADocumentUtil.java
++++ b/src/main/java/org/oscarehr/sharingcenter/util/CDADocumentUtil.java
+@@ -95,6 +95,8 @@ import oscar.util.DateUtils;
+  * @date Modified: February 3rd 2013
+  */
+ public class CDADocumentUtil {
++    private CDADocumentUtil() {
++    }
+ 
+     private static final String DATEFORMAT = "MM/dd/yyyy";
+     private static PhrExtractDocument phrExtractDocument;
+diff --git a/src/main/java/org/oscarehr/sharingcenter/util/ProviderUtil.java b/src/main/java/org/oscarehr/sharingcenter/util/ProviderUtil.java
+index 61e1d499ef..e9d4981dfb 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/util/ProviderUtil.java
++++ b/src/main/java/org/oscarehr/sharingcenter/util/ProviderUtil.java
+@@ -35,6 +35,8 @@ import org.oscarehr.common.model.Provider;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class ProviderUtil {
++	private ProviderUtil() {
++	}
+ 
+ 	private static ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+ 	
+diff --git a/src/main/java/org/oscarehr/survey/service/SurveyModelManager.java b/src/main/java/org/oscarehr/survey/service/SurveyModelManager.java
+index 0e99dbaa91..2881384ebd 100644
+--- a/src/main/java/org/oscarehr/survey/service/SurveyModelManager.java
++++ b/src/main/java/org/oscarehr/survey/service/SurveyModelManager.java
+@@ -36,6 +36,8 @@ import org.oscarehr.surveymodel.SelectDocument.Select;
+ import org.oscarehr.surveymodel.SurveyDocument.Survey;
+ 
+ public class SurveyModelManager {
++	private SurveyModelManager() {
++	}
+ 
+ 	public static Section findSection(Survey surveyModel, String pageNumber, int  sectionId) {
+ 		try {
+diff --git a/src/main/java/org/oscarehr/util/AgeCalculator.java b/src/main/java/org/oscarehr/util/AgeCalculator.java
+index 0d2836f4da..9e66c09d8c 100644
+--- a/src/main/java/org/oscarehr/util/AgeCalculator.java
++++ b/src/main/java/org/oscarehr/util/AgeCalculator.java
+@@ -30,6 +30,8 @@ import org.joda.time.Period;
+ import org.joda.time.PeriodType;
+ 
+ public class AgeCalculator {
++	private AgeCalculator() {
++	}
+ 
+ 	public static Age calculateAge(Calendar birthDate) {
+ 		LocalDate birthdate = LocalDate.fromCalendarFields(birthDate);
+diff --git a/src/main/java/org/oscarehr/util/CppUtils.java b/src/main/java/org/oscarehr/util/CppUtils.java
+index c03e9ee268..8912468f6f 100644
+--- a/src/main/java/org/oscarehr/util/CppUtils.java
++++ b/src/main/java/org/oscarehr/util/CppUtils.java
+@@ -26,7 +26,9 @@ package org.oscarehr.util;
+ import java.util.Arrays;
+ 
+ public class CppUtils {
+-	public static String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
++	private CppUtils() {
++	}
++	public static String cppCodes = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
+ 	
+ 	public static void addCppCode(String code) {
+ 		String[] result = Arrays.copyOf(cppCodes, cppCodes.length+1);
+diff --git a/src/main/java/org/oscarehr/util/CxfClientUtilsOld.java b/src/main/java/org/oscarehr/util/CxfClientUtilsOld.java
+index a83fe48a64..82c8cc24bf 100644
+--- a/src/main/java/org/oscarehr/util/CxfClientUtilsOld.java
++++ b/src/main/java/org/oscarehr/util/CxfClientUtilsOld.java
+@@ -66,6 +66,8 @@ import oscar.OscarProperties;
+  */
+ public class CxfClientUtilsOld
+ {
++	private CxfClientUtilsOld() {
++	}
+ 	private static long connectionTimeout=Long.parseLong(OscarProperties.getInstance().getProperty("web_service_client.connection_timeout_ms"));
+ 	private static long receiveTimeout=Long.parseLong(OscarProperties.getInstance().getProperty("web_service_client.received_timeout_ms"));
+ 	
+diff --git a/src/main/java/org/oscarehr/util/DigitalSignatureUtils.java b/src/main/java/org/oscarehr/util/DigitalSignatureUtils.java
+index 288e191c1a..da878c4a97 100644
+--- a/src/main/java/org/oscarehr/util/DigitalSignatureUtils.java
++++ b/src/main/java/org/oscarehr/util/DigitalSignatureUtils.java
+@@ -33,6 +33,8 @@ import org.oscarehr.common.dao.DigitalSignatureDao;
+ import org.oscarehr.common.model.DigitalSignature;
+ 
+ public class DigitalSignatureUtils {
++	private DigitalSignatureUtils() {
++	}
+ 
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+diff --git a/src/main/java/org/oscarehr/util/HinValidator.java b/src/main/java/org/oscarehr/util/HinValidator.java
+index 100e5c9a2c..ceb28c63ae 100644
+--- a/src/main/java/org/oscarehr/util/HinValidator.java
++++ b/src/main/java/org/oscarehr/util/HinValidator.java
+@@ -25,6 +25,8 @@ package org.oscarehr.util;
+ import org.apache.commons.lang.StringUtils;
+ 
+ public class HinValidator {
++	private HinValidator() {
++	}
+ 	/**
+ 	 * This method will return false if the hin is clearly invalid. It will return true otherwise. This means that the default is true and anything it can't figure out will return true. As an example if the hinType is null then there's no validation
+ 	 * algorithm so it will return true.
+diff --git a/src/main/java/org/oscarehr/util/JsonUtil.java b/src/main/java/org/oscarehr/util/JsonUtil.java
+index d1cc69098d..2ac7a56001 100644
+--- a/src/main/java/org/oscarehr/util/JsonUtil.java
++++ b/src/main/java/org/oscarehr/util/JsonUtil.java
+@@ -37,6 +37,8 @@ import net.sf.json.JsonConfig;
+  * For: UBC Pharmacy Clinic and McMaster Department of Family Medicine
+  */
+ public class JsonUtil {
++	private JsonUtil() {
++	}
+ 
+ 	private static final JSONArray jsonArray = new JSONArray();
+ 	private static final JsonConfig jsonConfig = new JsonConfig();
+diff --git a/src/main/java/org/oscarehr/util/MiscUtilsOld.java b/src/main/java/org/oscarehr/util/MiscUtilsOld.java
+index d837746da0..810faf3d2f 100644
+--- a/src/main/java/org/oscarehr/util/MiscUtilsOld.java
++++ b/src/main/java/org/oscarehr/util/MiscUtilsOld.java
+@@ -62,6 +62,8 @@ import org.apache.log4j.xml.DOMConfigurator;
+  * agnostic fashion, then it should be moved to the util project itself. 
+  */
+ public final class MiscUtilsOld {
++	private MiscUtilsOld() {
++	}
+ 	
+ 	private static boolean shutdownSignaled = false;
+ 	private static Thread shutdownHookThread = null;
+diff --git a/src/main/java/org/oscarehr/util/ObjectMarshalUtil.java b/src/main/java/org/oscarehr/util/ObjectMarshalUtil.java
+index 54181b2ec5..468abd5800 100644
+--- a/src/main/java/org/oscarehr/util/ObjectMarshalUtil.java
++++ b/src/main/java/org/oscarehr/util/ObjectMarshalUtil.java
+@@ -35,6 +35,8 @@ import javax.xml.namespace.QName;
+ import javax.xml.transform.stream.StreamSource;
+ 
+ public class ObjectMarshalUtil {
++	private ObjectMarshalUtil() {
++	}
+ 	
+ 	public static <T> T unmarshallToObject(Class<T> clazz,String str) throws Exception{
+ 		JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+diff --git a/src/main/java/org/oscarehr/util/SessionConstants.java b/src/main/java/org/oscarehr/util/SessionConstants.java
+index a2350bb485..d68abbd584 100644
+--- a/src/main/java/org/oscarehr/util/SessionConstants.java
++++ b/src/main/java/org/oscarehr/util/SessionConstants.java
+@@ -24,6 +24,8 @@ package org.oscarehr.util;
+ 
+ public class SessionConstants
+ {
++    private SessionConstants() {
++    }
+     public static final String CURRENT_PROGRAM_ID="infirmaryView_programId";
+     public static final String CURRENT_FACILITY="currentFacility";
+     public static final String INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY="isClientDependentOfFamily";
+diff --git a/src/main/java/org/oscarehr/util/SpringUtils.java b/src/main/java/org/oscarehr/util/SpringUtils.java
+index 0ee39b66ba..45bd78abb1 100644
+--- a/src/main/java/org/oscarehr/util/SpringUtils.java
++++ b/src/main/java/org/oscarehr/util/SpringUtils.java
+@@ -32,6 +32,8 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+  * The main usage is probably the beanFactory singleton.
+  */
+ public class SpringUtils {
++	private SpringUtils() {
++	}
+ 	
+     /**
+      * This variable is populated by one of the context listeners.
+diff --git a/src/main/java/org/oscarehr/util/WebUtilsOld.java b/src/main/java/org/oscarehr/util/WebUtilsOld.java
+index b3de7fe9c9..addc1cd86d 100644
+--- a/src/main/java/org/oscarehr/util/WebUtilsOld.java
++++ b/src/main/java/org/oscarehr/util/WebUtilsOld.java
+@@ -38,6 +38,8 @@ import org.apache.commons.lang.StringEscapeUtils;
+  * agnostic fashion, then it should be moved to the util project itself. 
+  */
+ public final class WebUtilsOld {
++	private WebUtilsOld() {
++	}
+ 
+ 	public static String popErrorAndInfoMessagesAsHtml(HttpSession session)
+ 	{
+diff --git a/src/main/java/org/oscarehr/web/AppointmentProviderAdminDayUIBean.java b/src/main/java/org/oscarehr/web/AppointmentProviderAdminDayUIBean.java
+index 9a0baaf0f1..059f8d54b9 100644
+--- a/src/main/java/org/oscarehr/web/AppointmentProviderAdminDayUIBean.java
++++ b/src/main/java/org/oscarehr/web/AppointmentProviderAdminDayUIBean.java
+@@ -31,6 +31,8 @@ import org.oscarehr.util.LoggedInInfo;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public final class AppointmentProviderAdminDayUIBean {
++	private AppointmentProviderAdminDayUIBean() {
++	}
+ 	private static EFormDao eFormDao=(EFormDao)SpringUtils.getBean("EFormDao");
+ 	private static ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao)SpringUtils.getBean("providerPreferenceDao");
+ 	
+diff --git a/src/main/java/org/oscarehr/web/DemographicSearchHelper.java b/src/main/java/org/oscarehr/web/DemographicSearchHelper.java
+index d5c09eb905..6a4aaa735b 100644
+--- a/src/main/java/org/oscarehr/web/DemographicSearchHelper.java
++++ b/src/main/java/org/oscarehr/web/DemographicSearchHelper.java
+@@ -35,6 +35,8 @@ import org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore;
+ import org.oscarehr.util.LoggedInInfo;
+ 
+ public final class DemographicSearchHelper {
++	private DemographicSearchHelper() {
++	}
+ 	
+ 	public static List<MatchingDemographicTransferScore> getIntegratedSearchResults(LoggedInInfo loggedInInfo, MatchingDemographicParameters matchingDemographicParameters) throws MalformedURLException
+ 	{
+diff --git a/src/main/java/org/oscarehr/web/OcanReportingBean.java b/src/main/java/org/oscarehr/web/OcanReportingBean.java
+index 7f510166a5..72c7f4e800 100644
+--- a/src/main/java/org/oscarehr/web/OcanReportingBean.java
++++ b/src/main/java/org/oscarehr/web/OcanReportingBean.java
+@@ -34,6 +34,8 @@ import org.oscarehr.common.model.Demographic;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class OcanReportingBean {
++	private OcanReportingBean() {
++	}
+ 
+ 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
+ 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+diff --git a/src/main/java/org/oscarehr/web/admin/KeyManagerUIBean.java b/src/main/java/org/oscarehr/web/admin/KeyManagerUIBean.java
+index db0203cfb7..2f9989ede2 100644
+--- a/src/main/java/org/oscarehr/web/admin/KeyManagerUIBean.java
++++ b/src/main/java/org/oscarehr/web/admin/KeyManagerUIBean.java
+@@ -35,6 +35,8 @@ import org.oscarehr.common.model.PublicKey;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public final class KeyManagerUIBean {
++	private KeyManagerUIBean() {
++	}
+ 	
+ 	private static final PublicKeyDao publicKeyDao=(PublicKeyDao) SpringUtils.getBean("publicKeyDao");
+ 	private static final OscarKeyDao oscarKeyDao=(OscarKeyDao) SpringUtils.getBean("oscarKeyDao");
+diff --git a/src/main/java/org/oscarehr/web/admin/ProviderPreferencesUIBean.java b/src/main/java/org/oscarehr/web/admin/ProviderPreferencesUIBean.java
+index 3d715c0370..d6fa173040 100644
+--- a/src/main/java/org/oscarehr/web/admin/ProviderPreferencesUIBean.java
++++ b/src/main/java/org/oscarehr/web/admin/ProviderPreferencesUIBean.java
+@@ -44,6 +44,8 @@ import org.oscarehr.util.SpringUtils;
+ import org.oscarehr.util.WebUtils;
+ 
+ public final class ProviderPreferencesUIBean {
++	private ProviderPreferencesUIBean() {
++	}
+ 
+ 	private static final ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
+ 	private static final EFormDao eFormDao = (EFormDao) SpringUtils.getBean("EFormDao");
+diff --git a/src/main/java/org/oscarehr/ws/WsUtils.java b/src/main/java/org/oscarehr/ws/WsUtils.java
+index 8151d1cc28..7513ea31cb 100644
+--- a/src/main/java/org/oscarehr/ws/WsUtils.java
++++ b/src/main/java/org/oscarehr/ws/WsUtils.java
+@@ -37,6 +37,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public final class WsUtils {
++	private WsUtils() {
++	}
+ 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 
+diff --git a/src/main/java/org/oscarehr/ws/rest/util/ClinicalConnectUtil.java b/src/main/java/org/oscarehr/ws/rest/util/ClinicalConnectUtil.java
+index e9e37aa5b4..52d38be3ad 100644
+--- a/src/main/java/org/oscarehr/ws/rest/util/ClinicalConnectUtil.java
++++ b/src/main/java/org/oscarehr/ws/rest/util/ClinicalConnectUtil.java
+@@ -51,6 +51,8 @@ import oscar.OscarProperties;
+ import oscar.log.LogAction;
+ 
+ public class ClinicalConnectUtil {
++	private ClinicalConnectUtil() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	private static UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+ 	private static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+diff --git a/src/main/java/org/oscarehr/ws/rest/util/QuestimedUtil.java b/src/main/java/org/oscarehr/ws/rest/util/QuestimedUtil.java
+index 9afe8518a8..3f560e98f3 100644
+--- a/src/main/java/org/oscarehr/ws/rest/util/QuestimedUtil.java
++++ b/src/main/java/org/oscarehr/ws/rest/util/QuestimedUtil.java
+@@ -52,6 +52,8 @@ import oscar.log.LogAction;
+ import oscar.log.LogConst;
+ 
+ public class QuestimedUtil {
++    private QuestimedUtil() {
++    }
+ 
+     private static Logger logger = MiscUtils.getLogger();
+     private static UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+diff --git a/src/main/java/oscar/appt/ApptUtil.java b/src/main/java/oscar/appt/ApptUtil.java
+index 8370fec64f..dc786852ab 100644
+--- a/src/main/java/oscar/appt/ApptUtil.java
++++ b/src/main/java/oscar/appt/ApptUtil.java
+@@ -36,6 +36,8 @@ import org.oscarehr.common.model.Site;
+  * 
+  */
+ public class ApptUtil {
++	private ApptUtil() {
++	}
+ 
+ 	private static final String SESSION_APPT_BEAN = "apptBean";
+ 
+diff --git a/src/main/java/oscar/caisi/CaisiUtil.java b/src/main/java/oscar/caisi/CaisiUtil.java
+index 2cf46ffec4..6a053846c4 100644
+--- a/src/main/java/oscar/caisi/CaisiUtil.java
++++ b/src/main/java/oscar/caisi/CaisiUtil.java
+@@ -25,6 +25,8 @@ package oscar.caisi;
+ 
+ public class CaisiUtil
+ {
++	private CaisiUtil() {
++	}
+ 	public static String removeAttr(String str, String attr)
+ 	{
+ 	    if (str==null) return(null);
+diff --git a/src/main/java/oscar/eform/OSISReportUtil.java b/src/main/java/oscar/eform/OSISReportUtil.java
+index 154b23f56e..2c8ee8dafc 100644
+--- a/src/main/java/oscar/eform/OSISReportUtil.java
++++ b/src/main/java/oscar/eform/OSISReportUtil.java
+@@ -41,6 +41,8 @@ import oscar.util.UtilDateUtilities;
+ 
+ 
+ public class OSISReportUtil {
++	private OSISReportUtil() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 
+ 
+diff --git a/src/main/java/oscar/eform/OneTimeConsultUtil.java b/src/main/java/oscar/eform/OneTimeConsultUtil.java
+index c8bff6d0df..0f9f6296b6 100644
+--- a/src/main/java/oscar/eform/OneTimeConsultUtil.java
++++ b/src/main/java/oscar/eform/OneTimeConsultUtil.java
+@@ -38,6 +38,8 @@ import org.oscarehr.util.SpringUtils;
+ import oscar.util.UtilDateUtilities;
+ 
+ public class OneTimeConsultUtil{
++	private OneTimeConsultUtil() {
++	}
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 
+ 	
+diff --git a/src/main/java/oscar/eform/util/EFormPrintPDFUtil.java b/src/main/java/oscar/eform/util/EFormPrintPDFUtil.java
+index c49778ae57..12c96acebf 100644
+--- a/src/main/java/oscar/eform/util/EFormPrintPDFUtil.java
++++ b/src/main/java/oscar/eform/util/EFormPrintPDFUtil.java
+@@ -48,6 +48,8 @@ import oscar.oscarEncounter.data.EctFormData;
+ import oscar.util.UtilDateUtilities;
+ 
+ public final class EFormPrintPDFUtil {
++    private EFormPrintPDFUtil() {
++    }
+ 	private static final String HEAD_CIRCUMFERENCE_GRAPH = "HEAD_CIRC";
+ 	private static final String LENGTH_GRAPH = "LENGTH";
+     
+diff --git a/src/main/java/oscar/form/graphic/FrmGraphicFactory.java b/src/main/java/oscar/form/graphic/FrmGraphicFactory.java
+index b784aa8004..74ce3da319 100644
+--- a/src/main/java/oscar/form/graphic/FrmGraphicFactory.java
++++ b/src/main/java/oscar/form/graphic/FrmGraphicFactory.java
+@@ -33,6 +33,8 @@ import org.oscarehr.util.MiscUtils;
+  * Creates pdf graphic class passed to it with reflection
+  */
+ public class FrmGraphicFactory {
++    private FrmGraphicFactory() {
++    }
+     
+     public static FrmPdfGraphic create( String name ) {
+         FrmPdfGraphic pdfGraph = null;
+diff --git a/src/main/java/oscar/form/pharmaForms/formBPMH/util/CaseNoteParser.java b/src/main/java/oscar/form/pharmaForms/formBPMH/util/CaseNoteParser.java
+index 7d56f06769..cab20c474e 100644
+--- a/src/main/java/oscar/form/pharmaForms/formBPMH/util/CaseNoteParser.java
++++ b/src/main/java/oscar/form/pharmaForms/formBPMH/util/CaseNoteParser.java
+@@ -35,6 +35,8 @@ import org.apache.commons.lang.StringUtils;
+  * For: UBC Pharmacy Clinic and McMaster Department of Family Medicine
+  */
+ public class CaseNoteParser {
++	private CaseNoteParser() {
++	}
+ 	
+ 	private final static String FAMILY_DR_KEY = "familyphysician";
+ 	private final static String PHONE_KEY = "p";
+diff --git a/src/main/java/oscar/form/pharmaForms/formBPMH/util/JsonUtil.java b/src/main/java/oscar/form/pharmaForms/formBPMH/util/JsonUtil.java
+index af6a7b4ffe..fb07c5b860 100644
+--- a/src/main/java/oscar/form/pharmaForms/formBPMH/util/JsonUtil.java
++++ b/src/main/java/oscar/form/pharmaForms/formBPMH/util/JsonUtil.java
+@@ -37,6 +37,8 @@ import net.sf.json.JsonConfig;
+  * For: UBC Pharmacy Clinic and McMaster Department of Family Medicine
+  */
+ public class JsonUtil {
++	private JsonUtil() {
++	}
+ 
+ 	private static final JSONArray jsonArray = new JSONArray();
+ 	private static final JsonConfig jsonConfig = new JsonConfig();
+diff --git a/src/main/java/oscar/form/pharmaForms/formBPMH/util/SortDrugList.java b/src/main/java/oscar/form/pharmaForms/formBPMH/util/SortDrugList.java
+index b2f8271fd8..261d67ff17 100644
+--- a/src/main/java/oscar/form/pharmaForms/formBPMH/util/SortDrugList.java
++++ b/src/main/java/oscar/form/pharmaForms/formBPMH/util/SortDrugList.java
+@@ -37,6 +37,8 @@ import oscar.form.pharmaForms.formBPMH.bean.BpmhDrug;
+  * For: UBC Pharmacy Clinic and McMaster Department of Family Medicine
+  */
+ public class SortDrugList {
++	private SortDrugList() {
++	}
+ 	
+ 	public static void byPositionOrder (List<BpmhDrug> drugList) {		
+ 		Collections.sort(drugList, byPositionOrder);
+diff --git a/src/main/java/oscar/form/study/hsfo2/pageUtil/ConvertUtil.java b/src/main/java/oscar/form/study/hsfo2/pageUtil/ConvertUtil.java
+index f07cbd8465..ba3853da2a 100644
+--- a/src/main/java/oscar/form/study/hsfo2/pageUtil/ConvertUtil.java
++++ b/src/main/java/oscar/form/study/hsfo2/pageUtil/ConvertUtil.java
+@@ -29,6 +29,8 @@ import java.util.Date;
+ 
+ public class ConvertUtil
+ {
++    private ConvertUtil() {
++    }
+   public static int toInt( String sValue )
+   {
+     if( sValue == null || sValue.length() == 0 )
+diff --git a/src/main/java/oscar/form/study/hsfo2/pageUtil/HsfoUtil.java b/src/main/java/oscar/form/study/hsfo2/pageUtil/HsfoUtil.java
+index 35955ee328..a9bbca8c07 100644
+--- a/src/main/java/oscar/form/study/hsfo2/pageUtil/HsfoUtil.java
++++ b/src/main/java/oscar/form/study/hsfo2/pageUtil/HsfoUtil.java
+@@ -27,6 +27,8 @@ import java.util.Calendar;
+ 
+ public class HsfoUtil
+ {
++  private HsfoUtil() {
++  }
+   public static String getRegistrationId()
+   {
+     Calendar c = Calendar.getInstance();
+diff --git a/src/main/java/oscar/log/LogAction.java b/src/main/java/oscar/log/LogAction.java
+index 4702548282..c24c1bf0a2 100644
+--- a/src/main/java/oscar/log/LogAction.java
++++ b/src/main/java/oscar/log/LogAction.java
+@@ -41,6 +41,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class LogAction {
++	private LogAction() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	private static OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+ 	private static ExecutorService executorService = Executors.newCachedThreadPool(new DeamonThreadFactory(LogAction.class.getSimpleName()+".executorService", Thread.MAX_PRIORITY));
+diff --git a/src/main/java/oscar/log/LogConst.java b/src/main/java/oscar/log/LogConst.java
+index f6520574a7..8ddfac2a40 100644
+--- a/src/main/java/oscar/log/LogConst.java
++++ b/src/main/java/oscar/log/LogConst.java
+@@ -32,6 +32,8 @@ package oscar.log;
+  * @author yilee18
+  */
+ public class LogConst {
++    private LogConst() {
++    }
+     public static final String LOGIN = "log in";
+     public static final String LOGOUT = "log out";
+     public static final String SHELTER_SELECTION="select shelter";
+diff --git a/src/main/java/oscar/login/DBHelp.java b/src/main/java/oscar/login/DBHelp.java
+index b46da98e12..0d8610573f 100644
+--- a/src/main/java/oscar/login/DBHelp.java
++++ b/src/main/java/oscar/login/DBHelp.java
+@@ -42,6 +42,8 @@ import oscar.oscarDB.DBHandler;
+  */
+ @Deprecated
+ public final class DBHelp {
++    private DBHelp() {
++    }
+     private static final Logger logger = MiscUtils.getLogger();
+ 
+ 
+diff --git a/src/main/java/oscar/login/OAuthSessionMerger.java b/src/main/java/oscar/login/OAuthSessionMerger.java
+index d9bf28f785..a5843885e8 100644
+--- a/src/main/java/oscar/login/OAuthSessionMerger.java
++++ b/src/main/java/oscar/login/OAuthSessionMerger.java
+@@ -37,6 +37,8 @@ import org.oscarehr.util.SpringUtils;
+ 
+ 
+ public class OAuthSessionMerger {
++    private OAuthSessionMerger() {
++    }
+ 
+     public static boolean mergeSession(HttpServletRequest request) {
+ 
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/CreateHRMFile.java b/src/main/java/oscar/oscarDemographic/pageUtil/CreateHRMFile.java
+index 149c2de379..9156fcedd8 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/CreateHRMFile.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/CreateHRMFile.java
+@@ -87,6 +87,8 @@ import oscar.OscarProperties;
+  * @author ronnie
+  */
+ public class CreateHRMFile {
++    private CreateHRMFile() {
++    }
+ 
+     static public void create(DemographicsDocument.Demographics demographic, List<Reports> reports, String filepath) {
+ 
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/HRMCreateFile.java b/src/main/java/oscar/oscarDemographic/pageUtil/HRMCreateFile.java
+index 49e31a0afb..62cea822e2 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/HRMCreateFile.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/HRMCreateFile.java
+@@ -72,6 +72,8 @@ import cds.ReportsDocument.Reports.SourceAuthorPhysician;
+  * @author ronnie
+  */
+ public class HRMCreateFile {
++    private HRMCreateFile() {
++    }
+ 
+     static public void create(DemographicsDocument.Demographics demographic, List<Reports> reports, String file) throws JAXBException, DatatypeConfigurationException {
+ 
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/Util.java b/src/main/java/oscar/oscarDemographic/pageUtil/Util.java
+index 219819b08f..edf9c344a1 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/Util.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/Util.java
+@@ -68,6 +68,8 @@ import oscar.util.UtilDateUtilities;
+  * @author Ronnie
+  */
+ public class Util {
++    private Util() {
++    }
+ 	static private final Logger logger = MiscUtils.getLogger();
+ 	static private final PartialDateDao partialDateDao = (PartialDateDao)SpringUtils.getBean("partialDateDao");
+     
+diff --git a/src/main/java/oscar/oscarEncounter/data/EctFormData.java b/src/main/java/oscar/oscarEncounter/data/EctFormData.java
+index 3b971f81e0..53b04b3ff2 100644
+--- a/src/main/java/oscar/oscarEncounter/data/EctFormData.java
++++ b/src/main/java/oscar/oscarEncounter/data/EctFormData.java
+@@ -54,6 +54,8 @@ import oscar.util.SqlUtils;
+ import oscar.util.UtilDateUtilities;
+ 
+ public class EctFormData {
++	private EctFormData() {
++	}
+ 
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	private static EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
+diff --git a/src/main/java/oscar/oscarEncounter/data/myoscar/FieldToTypesMapping.java b/src/main/java/oscar/oscarEncounter/data/myoscar/FieldToTypesMapping.java
+index 7a95a7e290..9465419af7 100644
+--- a/src/main/java/oscar/oscarEncounter/data/myoscar/FieldToTypesMapping.java
++++ b/src/main/java/oscar/oscarEncounter/data/myoscar/FieldToTypesMapping.java
+@@ -32,6 +32,8 @@ import java.util.Map;
+ import org.oscarehr.myoscar.commons.MedicalDataType;
+ 
+ public class FieldToTypesMapping {
++	private FieldToTypesMapping() {
++	}
+ 
+ 	public static Map<MedicalDataType, List<String>> mapping;
+ 	static {
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultResponsePDFCreator.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultResponsePDFCreator.java
+index 990ce6ad99..5b9a7ddd0e 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultResponsePDFCreator.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultResponsePDFCreator.java
+@@ -35,6 +35,8 @@ import org.oscarehr.util.WKHtmlToPdfUtils;
+ import oscar.OscarProperties;
+ 
+ public class ConsultResponsePDFCreator {
++	private ConsultResponsePDFCreator() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+ 	public static String create(String consultResponseHtmlPage) {
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/ImportExportMeasurements.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/ImportExportMeasurements.java
+index 599fbea79d..8e4dd18ccd 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/ImportExportMeasurements.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/ImportExportMeasurements.java
+@@ -37,7 +37,9 @@ import org.oscarehr.common.model.MeasurementType;
+ import org.oscarehr.common.model.MeasurementsExt;
+ import org.oscarehr.util.SpringUtils;
+ 
+-public class ImportExportMeasurements {
++public class ImportExportMeasurements {
++    private ImportExportMeasurements() {
++    }
+ 
+ 	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
+ 	private static MeasurementTypeDao measurementTypeDao = SpringUtils.getBean(MeasurementTypeDao.class);
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementHelper.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementHelper.java
+index a0baab8a14..6d8d743323 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementHelper.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementHelper.java
+@@ -32,6 +32,8 @@ import oscar.oscarEncounter.oscarMeasurements.MeasurementInfo;
+ /**
+  */
+ public class MeasurementHelper {
++    private MeasurementHelper() {
++    }
+ 
+     public static boolean flowSheetRequiresWork(String demographic_no, MeasurementFlowSheet mFlowsheet) throws Exception {
+         MeasurementInfo mi = new MeasurementInfo(demographic_no);
+diff --git a/src/main/java/oscar/oscarLab/LabRequestReportLink.java b/src/main/java/oscar/oscarLab/LabRequestReportLink.java
+index 1708927653..eeb433d0c4 100644
+--- a/src/main/java/oscar/oscarLab/LabRequestReportLink.java
++++ b/src/main/java/oscar/oscarLab/LabRequestReportLink.java
+@@ -39,6 +39,8 @@ import oscar.util.StringUtils;
+ import oscar.util.UtilDateUtilities;
+ 
+ public class LabRequestReportLink {
++	private LabRequestReportLink() {
++	}
+ 	private static LabRequestReportLinkDao dao = SpringUtils.getBean(LabRequestReportLinkDao.class);
+ 	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+     
+diff --git a/src/main/java/oscar/oscarLab/ca/all/pageUtil/ORUR01Manager.java b/src/main/java/oscar/oscarLab/ca/all/pageUtil/ORUR01Manager.java
+index be550c9524..9e04151e4e 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/pageUtil/ORUR01Manager.java
++++ b/src/main/java/oscar/oscarLab/ca/all/pageUtil/ORUR01Manager.java
+@@ -17,6 +17,8 @@ package oscar.oscarLab.ca.all.pageUtil;
+  * 
+  */
+ public class ORUR01Manager {
++	private ORUR01Manager() {
++	}
+ 
+ 	/*public static ca.uhn.hl7v2.model.v21.message.ORU_R01 getORUR01_21(Object obj) {
+ 		return (ca.uhn.hl7v2.model.v21.message.ORU_R01) obj;
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/OscarToOscarHl7V2/AdtA09Handler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/OscarToOscarHl7V2/AdtA09Handler.java
+index 35f152eb99..77cf0679ae 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/OscarToOscarHl7V2/AdtA09Handler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/OscarToOscarHl7V2/AdtA09Handler.java
+@@ -49,6 +49,8 @@ import ca.uhn.hl7v2.model.v26.segment.PID;
+ import ca.uhn.hl7v2.model.v26.segment.PV1;
+ 
+ public final class AdtA09Handler {
++	private AdtA09Handler() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+ 	private static final String WAITING_ROOM = "WAITING_ROOM";
+diff --git a/src/main/java/oscar/oscarLab/ca/all/web/LabDisplayHelper.java b/src/main/java/oscar/oscarLab/ca/all/web/LabDisplayHelper.java
+index 5c27debf50..27a245725c 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/web/LabDisplayHelper.java
++++ b/src/main/java/oscar/oscarLab/ca/all/web/LabDisplayHelper.java
+@@ -63,6 +63,8 @@ import oscar.oscarLab.ca.on.LabResultData;
+ import oscar.oscarMDS.data.ReportStatus;
+ 
+ public class LabDisplayHelper {
++	private LabDisplayHelper() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+ 	public static String makeLabKey(Integer demographicId, String segmentId, String labType, String labDateTime) {
+diff --git a/src/main/java/oscar/oscarLab/ca/on/LabResultImport.java b/src/main/java/oscar/oscarLab/ca/on/LabResultImport.java
+index deb16bea71..df87642c25 100644
+--- a/src/main/java/oscar/oscarLab/ca/on/LabResultImport.java
++++ b/src/main/java/oscar/oscarLab/ca/on/LabResultImport.java
+@@ -43,6 +43,8 @@ import oscar.util.ConversionUtils;
+ import oscar.util.UtilDateUtilities;
+ 
+ public class LabResultImport {
++    private LabResultImport() {
++    }
+    
+ 	private static LabTestResultsDao labTestResultsDao = SpringUtils.getBean(LabTestResultsDao.class);
+ 	private static LabPatientPhysicianInfoDao labPatientPhysicianInfoDao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
+diff --git a/src/main/java/oscar/oscarMessenger/docxfer/util/MsgCommxml.java b/src/main/java/oscar/oscarMessenger/docxfer/util/MsgCommxml.java
+index f0c59bea8d..05d1a17cc4 100644
+--- a/src/main/java/oscar/oscarMessenger/docxfer/util/MsgCommxml.java
++++ b/src/main/java/oscar/oscarMessenger/docxfer/util/MsgCommxml.java
+@@ -42,6 +42,8 @@ import org.w3c.dom.Node;
+ import org.xml.sax.InputSource;
+ 
+ public class MsgCommxml {
++    private MsgCommxml() {
++    }
+     public static Document newDocument() {
+         try {
+             return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+diff --git a/src/main/java/oscar/oscarMessenger/docxfer/util/MsgUtil.java b/src/main/java/oscar/oscarMessenger/docxfer/util/MsgUtil.java
+index 53f83c918a..dbd8ca0bae 100644
+--- a/src/main/java/oscar/oscarMessenger/docxfer/util/MsgUtil.java
++++ b/src/main/java/oscar/oscarMessenger/docxfer/util/MsgUtil.java
+@@ -28,6 +28,8 @@ package oscar.oscarMessenger.docxfer.util;
+ 
+ public class MsgUtil
+ {
++    private MsgUtil() {
++    }
+     public static String replaceQuote(String Expression)
+     {
+         StringBuilder sb = new java.lang.StringBuilder(Expression);
+diff --git a/src/main/java/oscar/oscarMessenger/util/Msgxml.java b/src/main/java/oscar/oscarMessenger/util/Msgxml.java
+index 1660066293..5fb7b4b857 100644
+--- a/src/main/java/oscar/oscarMessenger/util/Msgxml.java
++++ b/src/main/java/oscar/oscarMessenger/util/Msgxml.java
+@@ -42,6 +42,8 @@ import org.xml.sax.InputSource;
+ 
+ public class Msgxml
+ {
++    private Msgxml() {
++    }
+     public static Document newDocument()
+     {
+         try
+diff --git a/src/main/java/oscar/oscarPrevention/reports/PreventionReportUtil.java b/src/main/java/oscar/oscarPrevention/reports/PreventionReportUtil.java
+index 566afeda6c..4a766c6cc2 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/PreventionReportUtil.java
++++ b/src/main/java/oscar/oscarPrevention/reports/PreventionReportUtil.java
+@@ -38,6 +38,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public final class PreventionReportUtil {
++	private PreventionReportUtil() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+ 	public static DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
+diff --git a/src/main/java/oscar/oscarReport/data/RptResultStruct.java b/src/main/java/oscar/oscarReport/data/RptResultStruct.java
+index d3f1c81ead..8d88372012 100644
+--- a/src/main/java/oscar/oscarReport/data/RptResultStruct.java
++++ b/src/main/java/oscar/oscarReport/data/RptResultStruct.java
+@@ -30,6 +30,8 @@ import java.sql.ResultSetMetaData;
+ import java.sql.SQLException;
+ 
+ public class RptResultStruct {
++ private RptResultStruct() {
++ }
+ public static String getStructure(ResultSet rs) throws SQLException {
+ 
+ // assuming  multiple rows in rs
+diff --git a/src/main/java/oscar/oscarReport/data/RptTableShadowFieldConst.java b/src/main/java/oscar/oscarReport/data/RptTableShadowFieldConst.java
+index a0d6973f1b..8d8bc6b390 100644
+--- a/src/main/java/oscar/oscarReport/data/RptTableShadowFieldConst.java
++++ b/src/main/java/oscar/oscarReport/data/RptTableShadowFieldConst.java
+@@ -33,5 +33,7 @@ package oscar.oscarReport.data;
+  * @author yilee18
+  */
+ public class RptTableShadowFieldConst {
++    private RptTableShadowFieldConst() {
++    }
+     public static String fieldName = "ID|demographic_no|provider_no|formCreated|formEdited|c_lastVisited";
+ }
+diff --git a/src/main/java/oscar/oscarRx/pageUtil/AllergyHelperBean.java b/src/main/java/oscar/oscarRx/pageUtil/AllergyHelperBean.java
+index 463cb92808..b982dc95cc 100644
+--- a/src/main/java/oscar/oscarRx/pageUtil/AllergyHelperBean.java
++++ b/src/main/java/oscar/oscarRx/pageUtil/AllergyHelperBean.java
+@@ -45,6 +45,8 @@ import oscar.oscarRx.data.RxPatientData.Patient;
+ import oscar.util.DateUtils;
+ 
+ public final class AllergyHelperBean {
++	private AllergyHelperBean() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
+ 
+diff --git a/src/main/java/oscar/oscarRx/util/RxInstructionPolicy.java b/src/main/java/oscar/oscarRx/util/RxInstructionPolicy.java
+index 2b1c80a374..0f34d5c5ab 100644
+--- a/src/main/java/oscar/oscarRx/util/RxInstructionPolicy.java
++++ b/src/main/java/oscar/oscarRx/util/RxInstructionPolicy.java
+@@ -33,6 +33,8 @@ import java.util.regex.Pattern;
+ import oscar.OscarProperties;
+ 
+ public class RxInstructionPolicy {
++	private RxInstructionPolicy() {
++	}
+ 
+ 	public static List<String> checkInstructions(String instr) {
+ 		List<String> errors =  new ArrayList<String>();
+diff --git a/src/main/java/oscar/oscarRx/util/RxUtil.java b/src/main/java/oscar/oscarRx/util/RxUtil.java
+index 2566af5a2b..692c27dcef 100644
+--- a/src/main/java/oscar/oscarRx/util/RxUtil.java
++++ b/src/main/java/oscar/oscarRx/util/RxUtil.java
+@@ -60,6 +60,8 @@ import oscar.oscarRx.pageUtil.RxSessionBean;
+ import oscar.oscarRx.util.TimingOutCallback.TimeoutException;
+ 
+ public class RxUtil {
++	private RxUtil() {
++	}
+ 
+ 	private static String defaultPattern = "yyyy/MM/dd";
+ 	private static Locale locale = Locale.CANADA;
+diff --git a/src/main/java/oscar/oscarRx/util/xml.java b/src/main/java/oscar/oscarRx/util/xml.java
+index 33b0971b6d..8b69ce1cf9 100644
+--- a/src/main/java/oscar/oscarRx/util/xml.java
++++ b/src/main/java/oscar/oscarRx/util/xml.java
+@@ -41,6 +41,8 @@ import org.w3c.dom.Node;
+ import org.xml.sax.InputSource;
+ 
+ public class xml {
++    private xml() {
++    }
+     
+     public static Document newDocument() {
+         try {
+diff --git a/src/main/java/oscar/oscarWaitingList/util/WLWaitingListNameUtil.java b/src/main/java/oscar/oscarWaitingList/util/WLWaitingListNameUtil.java
+index 2270d1f0b8..584ad1af54 100644
+--- a/src/main/java/oscar/oscarWaitingList/util/WLWaitingListNameUtil.java
++++ b/src/main/java/oscar/oscarWaitingList/util/WLWaitingListNameUtil.java
+@@ -29,6 +29,8 @@ import org.oscarehr.util.MiscUtils;
+ import org.oscarehr.util.SpringUtils;
+ 
+ public class WLWaitingListNameUtil {
++	private WLWaitingListNameUtil() {
++	}
+         
+ 	private static WaitingListNameDao nameDao = SpringUtils.getBean(WaitingListNameDao.class);
+ 	private static WaitingListDao dao = SpringUtils.getBean(WaitingListDao.class);
+diff --git a/src/main/java/oscar/oscarWaitingList/util/WLWaitingListUtil.java b/src/main/java/oscar/oscarWaitingList/util/WLWaitingListUtil.java
+index 696a27d901..19342c63ba 100644
+--- a/src/main/java/oscar/oscarWaitingList/util/WLWaitingListUtil.java
++++ b/src/main/java/oscar/oscarWaitingList/util/WLWaitingListUtil.java
+@@ -35,6 +35,8 @@ import org.oscarehr.util.SpringUtils;
+ import oscar.util.ConversionUtils;
+ 
+ public class WLWaitingListUtil {
++	private WLWaitingListUtil() {
++	}
+ 	
+ 	
+ 	// Modified this method in Feb 2007 to ensure that all records cannot be deleted except hidden.
+diff --git a/src/main/java/oscar/util/ConcatPDF.java b/src/main/java/oscar/util/ConcatPDF.java
+index 052bb89ade..64f56584f2 100644
+--- a/src/main/java/oscar/util/ConcatPDF.java
++++ b/src/main/java/oscar/util/ConcatPDF.java
+@@ -61,6 +61,8 @@ import com.itextpdf.text.pdf.PdfReader;
+ import com.itextpdf.text.pdf.SimpleBookmark;
+ 
+ public class ConcatPDF {
++    private ConcatPDF() {
++    }
+ 
+ 
+     public static void concat (ArrayList<Object> alist,String filename) throws IOException {
+diff --git a/src/main/java/oscar/util/Doc2PDF.java b/src/main/java/oscar/util/Doc2PDF.java
+index 85cf680539..990a339da1 100644
+--- a/src/main/java/oscar/util/Doc2PDF.java
++++ b/src/main/java/oscar/util/Doc2PDF.java
+@@ -56,6 +56,8 @@ import com.itextpdf.tool.xml.XMLWorkerHelper;
+  * @author root
+  */
+ public class Doc2PDF {
++    private Doc2PDF() {
++    }
+     private static Logger logger=MiscUtils.getLogger(); 
+ 
+     public static void parseJSP2PDF(HttpServletRequest request, HttpServletResponse response, String uri, String jsessionid) {
+diff --git a/src/main/java/oscar/util/FieldTypes.java b/src/main/java/oscar/util/FieldTypes.java
+index 11f1ed837a..fb0c5e2281 100644
+--- a/src/main/java/oscar/util/FieldTypes.java
++++ b/src/main/java/oscar/util/FieldTypes.java
+@@ -25,7 +25,9 @@
+ 
+ package oscar.util;
+ 
+-public class FieldTypes {
++public class FieldTypes {
++    private FieldTypes() {
++    }
+   public static final int INTEGER = 1;
+   public static final int CHAR = 2;
+   public static final int DATE = 3;
+diff --git a/src/main/java/oscar/util/JDBCUtil.java b/src/main/java/oscar/util/JDBCUtil.java
+index 3d0b1fcd67..f1b55555db 100644
+--- a/src/main/java/oscar/util/JDBCUtil.java
++++ b/src/main/java/oscar/util/JDBCUtil.java
+@@ -52,6 +52,8 @@ import oscar.oscarDB.DBHandler;
+ 
+ public class JDBCUtil
+ {
++    private JDBCUtil() {
++    }
+     public static Document toDocument(ResultSet rs)
+        throws ParserConfigurationException, SQLException
+     {
+diff --git a/src/main/java/oscar/util/Pager.java b/src/main/java/oscar/util/Pager.java
+index a90968e1ba..5729023f14 100644
+--- a/src/main/java/oscar/util/Pager.java
++++ b/src/main/java/oscar/util/Pager.java
+@@ -31,6 +31,8 @@ import org.oscarehr.util.MiscUtils;
+ 
+ 
+ public class Pager {
++    private Pager() {
++    }
+     private static int MAX_PAGE_INDEX = 15;
+     private static String HEADER = "Result page";
+     private static ResourceBundle prop = ResourceBundle.getBundle("oscarResources");
+diff --git a/src/main/java/oscar/util/SqlUtils.java b/src/main/java/oscar/util/SqlUtils.java
+index 964279c603..5ea51004f8 100644
+--- a/src/main/java/oscar/util/SqlUtils.java
++++ b/src/main/java/oscar/util/SqlUtils.java
+@@ -40,6 +40,8 @@ import org.oscarehr.util.MiscUtils;
+ import oscar.oscarDB.DBHandler;
+ 
+ public class SqlUtils {
++	private SqlUtils() {
++	}
+ 	private static Logger logger = MiscUtils.getLogger();
+ 
+ 
+diff --git a/src/main/java/oscar/util/StringBuilderUtils.java b/src/main/java/oscar/util/StringBuilderUtils.java
+index b3e9a133ba..4d768adeb4 100644
+--- a/src/main/java/oscar/util/StringBuilderUtils.java
++++ b/src/main/java/oscar/util/StringBuilderUtils.java
+@@ -24,6 +24,8 @@
+ package oscar.util;
+ 
+ public class StringBuilderUtils {
++    private StringBuilderUtils() {
++    }
+     static public int indexOfIgnoreCase(StringBuilder strbuf, String target, int start) {
+         String searchStr = strbuf.toString().toLowerCase();
+         String lowerTarget = target.toLowerCase();
+diff --git a/src/main/java/oscar/util/StringUtils.java b/src/main/java/oscar/util/StringUtils.java
+index 0c86914b3c..c44fc321fb 100644
+--- a/src/main/java/oscar/util/StringUtils.java
++++ b/src/main/java/oscar/util/StringUtils.java
+@@ -41,6 +41,8 @@ import org.apache.struts.upload.FormFile;
+ import org.oscarehr.util.MiscUtils;
+ 
+ public class StringUtils {
++    private StringUtils() {
++    }
+ 
+     private static Logger logger = MiscUtils.getLogger();
+     public final static String ELLIPSIS = "...";
+diff --git a/src/main/java/oscar/util/UtilDateUtilities.java b/src/main/java/oscar/util/UtilDateUtilities.java
+index 660a77dda2..2e15d75057 100644
+--- a/src/main/java/oscar/util/UtilDateUtilities.java
++++ b/src/main/java/oscar/util/UtilDateUtilities.java
+@@ -39,6 +39,8 @@ import java.util.ResourceBundle;
+  * @deprecated 2013-04-28 use org.oscarehr.util.DateUtils instead 
+  */
+ public class UtilDateUtilities {
++    private UtilDateUtilities() {
++    }
+ 
+     public static Date StringToDate(String s)    {
+         return StringToDate(s, defaultPattern, defaultLocale);
+diff --git a/src/main/java/oscar/util/UtilMisc.java b/src/main/java/oscar/util/UtilMisc.java
+index ed3deab17b..453308f074 100755
+--- a/src/main/java/oscar/util/UtilMisc.java
++++ b/src/main/java/oscar/util/UtilMisc.java
+@@ -35,6 +35,8 @@ import org.apache.commons.codec.binary.Base64;
+ import org.oscarehr.util.MiscUtils;
+ 
+ public class UtilMisc {
++    private UtilMisc() {
++    }
+   /**
+    * @deprecated use apache's StringEscapeUtils instead.
+    */
+diff --git a/src/main/java/oscar/util/UtilXML.java b/src/main/java/oscar/util/UtilXML.java
+index 523f3be7ea..5f205deea9 100644
+--- a/src/main/java/oscar/util/UtilXML.java
++++ b/src/main/java/oscar/util/UtilXML.java
+@@ -48,6 +48,8 @@ import org.w3c.dom.Text;
+ import org.xml.sax.InputSource;
+ 
+ public class UtilXML {
++    private UtilXML() {
++    }
+    
+    public static Document newDocument() {
+       try {
+diff --git a/src/main/java/oscar/util/plugin/IsPropertiesOn.java b/src/main/java/oscar/util/plugin/IsPropertiesOn.java
+index 0020513f98..867af62fd7 100644
+--- a/src/main/java/oscar/util/plugin/IsPropertiesOn.java
++++ b/src/main/java/oscar/util/plugin/IsPropertiesOn.java
+@@ -21,6 +21,8 @@ package oscar.util.plugin;
+ import oscar.OscarProperties;
+ 
+ public class IsPropertiesOn {
++	private IsPropertiesOn() {
++	}
+ 
+ 	public static boolean propertiesOn(String proName) {
+ 
+diff --git a/src/test/java/org/oscarehr/common/dao/utils/AuthUtils.java b/src/test/java/org/oscarehr/common/dao/utils/AuthUtils.java
+index 45619ff621..e00cb2fcd9 100644
+--- a/src/test/java/org/oscarehr/common/dao/utils/AuthUtils.java
++++ b/src/test/java/org/oscarehr/common/dao/utils/AuthUtils.java
+@@ -35,6 +35,8 @@ import org.oscarehr.util.LoggedInInfo;
+ import oscar.util.ConversionUtils;
+ 
+ public class AuthUtils {
++	private AuthUtils() {
++	}
+ 
+ 	public static LoggedInInfo initLoginContext() {
+ 		HttpSession session = null;
+diff --git a/src/test/java/org/oscarehr/common/dao/utils/ConfigUtils.java b/src/test/java/org/oscarehr/common/dao/utils/ConfigUtils.java
+index f0d70a545b..9112637d52 100644
+--- a/src/test/java/org/oscarehr/common/dao/utils/ConfigUtils.java
++++ b/src/test/java/org/oscarehr/common/dao/utils/ConfigUtils.java
+@@ -33,6 +33,8 @@ import org.oscarehr.util.MiscUtils;
+ 
+ public class ConfigUtils
+ {
++	private ConfigUtils() {
++	}
+ 	private static final Logger logger=MiscUtils.getLogger();
+ 
+ 	private static Properties properties=null;
+diff --git a/src/test/java/org/oscarehr/common/dao/utils/EntityDataGenerator.java b/src/test/java/org/oscarehr/common/dao/utils/EntityDataGenerator.java
+index 59cc9fdc87..7231f87f66 100644
+--- a/src/test/java/org/oscarehr/common/dao/utils/EntityDataGenerator.java
++++ b/src/test/java/org/oscarehr/common/dao/utils/EntityDataGenerator.java
+@@ -44,6 +44,8 @@ import org.oscarehr.common.model.Provider;
+ import org.oscarehr.util.MiscUtils;
+ 
+ public class EntityDataGenerator {
++	private EntityDataGenerator() {
++	}
+ 
+ 	public static Object generateTestDataForModelClass(Object model) throws Exception {
+ 
+diff --git a/src/test/java/org/oscarehr/labs/alberta/TestLabs.java b/src/test/java/org/oscarehr/labs/alberta/TestLabs.java
+index 3621b84067..852b80940c 100644
+--- a/src/test/java/org/oscarehr/labs/alberta/TestLabs.java
++++ b/src/test/java/org/oscarehr/labs/alberta/TestLabs.java
+@@ -24,6 +24,8 @@
+ package org.oscarehr.labs.alberta;
+ 
+ public class TestLabs {
++	private TestLabs() {
++	}
+ 
+ 	final static String LAB01 = "MSH|^~\\&|OPEN ENGINE|CLS|Egate|POSP|20101203122426||ORU^R01|Q199816391T198313508|P|2.3\r" + 
+ 			"PID|1|798274114^^^AB|2250008675^^^88000||MillMCK CB FSI, Karla||19701027|F||||83||\r" + 
+diff --git a/src/test/java/org/oscarehr/research/eaaps/TestConstants.java b/src/test/java/org/oscarehr/research/eaaps/TestConstants.java
+index 06d1ae5bdc..039afa4cc9 100644
+--- a/src/test/java/org/oscarehr/research/eaaps/TestConstants.java
++++ b/src/test/java/org/oscarehr/research/eaaps/TestConstants.java
+@@ -24,6 +24,8 @@
+ package org.oscarehr.research.eaaps;
+ 
+ public class TestConstants {
++	private TestConstants() {
++	}
+ 
+ 	public static final boolean ENABLED = false;
+ 	
+diff --git a/src/test/java/org/oscarehr/ws/BaseRestServiceTest.java b/src/test/java/org/oscarehr/ws/BaseRestServiceTest.java
+index 3f2234b9c3..f90cd605d0 100644
+--- a/src/test/java/org/oscarehr/ws/BaseRestServiceTest.java
++++ b/src/test/java/org/oscarehr/ws/BaseRestServiceTest.java
+@@ -77,6 +77,8 @@ import org.oscarehr.ws.rest.to.model.Sex1;
+  * 
+  */
+ public abstract class BaseRestServiceTest {
++	private BaseRestServiceTest() {
++	}
+ 
+ 	/**
+ 	 * Enables or disables WS test if no "enabling" settings can be found
