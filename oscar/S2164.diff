@@ -1,0 +1,414 @@
+diff --git a/src/main/java/org/caisi/tickler/web/TicklerPrinter.java b/src/main/java/org/caisi/tickler/web/TicklerPrinter.java
+index ed63c20dc6..5bd97552dd 100644
+--- a/src/main/java/org/caisi/tickler/web/TicklerPrinter.java
++++ b/src/main/java/org/caisi/tickler/web/TicklerPrinter.java
+@@ -55,7 +55,10 @@ public class TicklerPrinter {
+ 
+ 	private Document document;
+ 	private BaseFont bf;
+-	private Font font, boldFont;
++
++	private Font font;
++
++	private Font boldFont;
+ 	private boolean newPage = false;
+ 
+ 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+@@ -141,10 +144,10 @@ public class TicklerPrinter {
+ 		Rectangle page = document.getPageSize();
+ 		float width = page.getWidth();
+ 
+-		cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width / 2.0f), textBase - 20, 0);
++		cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width / (double) 2.0F , textBase - 20, 0);
+ 
+ 		strFooter = "-" + writer.getPageNumber() + "-";
+-		cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width / 2.0f), textBase - 10, 0);
++		cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width / (double) 2.0F , textBase - 10, 0);
+ 
+ 		cb.endText();
+ 		cb.restoreState();
+@@ -248,10 +251,10 @@ public class TicklerPrinter {
+ 			cb.setFontAndSize(font.getBaseFont(), FONTSIZE);
+ 			Rectangle page = document.getPageSize();
+ 			float width = page.getWidth();
+-			cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width / 2.0f), textBase - 20, 0);
++			cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width / (double) 2.0F , textBase - 20, 0);
+ 
+ 			strFooter = "-" + writer.getPageNumber() + "-";
+-			cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width / 2.0f), textBase - 10, 0);
++			cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width / (double) 2.0F , textBase - 10, 0);
+ 
+ 			cb.endText();
+ 			cb.restoreState();
+diff --git a/src/main/java/org/oscarehr/casemgmt/print/OscarChartPrinter.java b/src/main/java/org/oscarehr/casemgmt/print/OscarChartPrinter.java
+index 7308167477..da9aae6ba6 100644
+--- a/src/main/java/org/oscarehr/casemgmt/print/OscarChartPrinter.java
++++ b/src/main/java/org/oscarehr/casemgmt/print/OscarChartPrinter.java
+@@ -114,7 +114,10 @@ public class OscarChartPrinter {
+     private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+     private Document document;
+     private BaseFont bf;
+-    private Font font, boldFont;
++
++    private Font font;
++
++    private Font boldFont;
+     boolean newPage;
+     private PdfContentByte cb;
+ 
+@@ -894,10 +897,10 @@ public class OscarChartPrinter {
+             Rectangle page = document.getPageSize();
+             float width = page.getWidth();
+ 
+-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
++            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width/ (double) 2.0F, textBase - 20, 0);
+ 
+             strFooter = "-" + writer.getPageNumber() + "-";
+-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase-10, 0);
++            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width/ (double) 2.0F, textBase-10, 0);
+ 
+             cb.endText();
+             cb.restoreState();
+diff --git a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrintPdf.java b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrintPdf.java
+index 0ed067ada0..24991a1f4f 100644
+--- a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrintPdf.java
++++ b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrintPdf.java
+@@ -506,10 +506,10 @@ public class CaseManagementPrintPdf {
+             Rectangle page = document.getPageSize();
+             float width = page.getWidth();
+ 
+-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
++            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width/ (double) 2.0F, textBase - 20, 0);
+ 
+             strFooter = "-" + writer.getPageNumber() + "-";
+-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase-10, 0);
++            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width/ (double) 2.0F, textBase-10, 0);
+ 
+             cb.endText();
+             cb.restoreState();
+diff --git a/src/main/java/org/oscarehr/casemgmt/service/PageNumberStamper.java b/src/main/java/org/oscarehr/casemgmt/service/PageNumberStamper.java
+index 056c0602c1..0de739ad06 100644
+--- a/src/main/java/org/oscarehr/casemgmt/service/PageNumberStamper.java
++++ b/src/main/java/org/oscarehr/casemgmt/service/PageNumberStamper.java
+@@ -47,7 +47,7 @@ public class PageNumberStamper extends FooterSupport {
+ 		float textBase = document.bottom() - getBaseOffset();
+ 		float textSize = getFont().getWidthPoint(text, getFontSize());
+ 		float width = document.getPageSize().getWidth();
+-		float center = width / 2.0f;
++		float center = (double) width / (double) 2.0F ;
+ 
+ 		cb.beginText();
+ 		cb.setFontAndSize(getFont(), getFontSize());
+@@ -55,7 +55,7 @@ public class PageNumberStamper extends FooterSupport {
+ 		cb.setTextMatrix(document.left(), textBase);
+ 		cb.showTextAligned(PdfContentByte.ALIGN_CENTER, text, center, textBase, 0);
+ 		cb.endText();
+-		cb.addTemplate(total, center + (textSize / 2.0f), textBase);
++		cb.addTemplate(total, center + (double) textSize / (double) 2.0F , textBase);
+ 
+ 		cb.restoreState();
+ 	}
+diff --git a/src/main/java/org/oscarehr/casemgmt/service/PromoTextStamper.java b/src/main/java/org/oscarehr/casemgmt/service/PromoTextStamper.java
+index 8822ad1b84..17d55870ad 100644
+--- a/src/main/java/org/oscarehr/casemgmt/service/PromoTextStamper.java
++++ b/src/main/java/org/oscarehr/casemgmt/service/PromoTextStamper.java
+@@ -48,7 +48,7 @@ public class PromoTextStamper extends FooterSupport {
+ 
+ 		float textBase = document.bottom() - getBaseOffset();
+ 		float width = document.getPageSize().getWidth();
+-		float center = width / 2.0f;
++		float center = (double) width / (double) 2.0F ;
+ 
+ 		cb.beginText();
+ 		cb.setFontAndSize(getFont(), getFontSize());
+diff --git a/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java b/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
+index 4490e1ad73..b34f760a4e 100644
+--- a/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
++++ b/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
+@@ -110,7 +110,10 @@ public class PdfRecordPrinter {
+     private Document document;
+     //private PdfContentByte cb;
+     private BaseFont bf;
+-    private Font font, boldFont;
++
++  private Font font;
++
++  private Font boldFont;
+     private boolean newPage = false;
+ 
+     private SimpleDateFormat formatter;
+@@ -224,10 +227,10 @@ public class PdfRecordPrinter {
+         Rectangle page = document.getPageSize();
+         float width = page.getWidth();
+ 
+-        cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
++        cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width/ (double) 2.0F, textBase - 20, 0);
+ 
+         strFooter = "-" + writer.getPageNumber() + "-";
+-        cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase-10, 0);
++        cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width/ (double) 2.0F, textBase-10, 0);
+ 
+         cb.endText();
+         cb.restoreState();
+@@ -719,10 +722,10 @@ public class PdfRecordPrinter {
+             cb.setFontAndSize(font.getBaseFont(),FONTSIZE);
+             Rectangle page = document.getPageSize();
+             float width = page.getWidth();            
+-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
++            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width/ (double) 2.0F, textBase - 20, 0);
+ 
+             strFooter = "-" + writer.getPageNumber() + "-";
+-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase-10, 0);
++            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (double) width/ (double) 2.0F, textBase-10, 0);
+ 
+             cb.endText();
+             cb.restoreState();
+diff --git a/src/main/java/org/oscarehr/web/reports/ocan/NeedRatingOverTimeReportGenerator.java b/src/main/java/org/oscarehr/web/reports/ocan/NeedRatingOverTimeReportGenerator.java
+index 0fedf68311..2b78dcfd90 100644
+--- a/src/main/java/org/oscarehr/web/reports/ocan/NeedRatingOverTimeReportGenerator.java
++++ b/src/main/java/org/oscarehr/web/reports/ocan/NeedRatingOverTimeReportGenerator.java
+@@ -148,12 +148,12 @@ public class NeedRatingOverTimeReportGenerator {
+ 			PdfPTable summaryOfNeedsTable = null;
+ 			if(currentBeanList.size()==1) {
+ 				summaryOfNeedsTable = new PdfPTable(3);
+-				summaryOfNeedsTable.setWidthPercentage(100f-52.8f);
++				summaryOfNeedsTable.setWidthPercentage((double) 100.0F- (double) 52.8F);
+ 				summaryOfNeedsTable.setWidths(new float[]{0.26f,0.12f,0.12f});
+ 			}
+ 			if(currentBeanList.size()==2) {
+ 				summaryOfNeedsTable = new PdfPTable(6);
+-				summaryOfNeedsTable.setWidthPercentage(100f-26.4f);
++				summaryOfNeedsTable.setWidthPercentage((double) 100.0F- (double) 26.4F);
+ 				summaryOfNeedsTable.setWidths(new float[]{0.26f,0.12f,0.12f,0.024f,0.12f,0.12f});
+ 			}
+ 			if(currentBeanList.size()==3) {
+@@ -205,23 +205,23 @@ public class NeedRatingOverTimeReportGenerator {
+ 			if(currentBeanList.size()==1) {
+ 				if(lastBreakDownBean == null) {
+ 					summaryOfNeedsTable = new PdfPTable(3);
+-					summaryOfNeedsTable.setWidthPercentage(100f-52.8f);
++					summaryOfNeedsTable.setWidthPercentage((double) 100.0F- (double) 52.8F);
+ 					summaryOfNeedsTable.setWidths(new float[]{0.26f,0.12f,0.12f});
+ 				} else {
+ 					summaryOfNeedsTable = new PdfPTable(4);
+-					summaryOfNeedsTable.setWidthPercentage(100f-52.8f);
+-					summaryOfNeedsTable.setWidths(new float[]{0.26f-0.024f,0.024f,0.12f,0.12f});
++					summaryOfNeedsTable.setWidthPercentage((double) 100.0F- (double) 52.8F);
++					summaryOfNeedsTable.setWidths(new float[]{(double) 0.26F- (double) 0.024F,0.024F,0.12F,0.12F});
+ 				}
+ 			}
+ 			if(currentBeanList.size()==2) {
+ 				if(lastBreakDownBean == null) {
+ 					summaryOfNeedsTable = new PdfPTable(6);
+-					summaryOfNeedsTable.setWidthPercentage(100f-26.4f);
++					summaryOfNeedsTable.setWidthPercentage((double) 100.0F- (double) 26.4F);
+ 					summaryOfNeedsTable.setWidths(new float[]{0.26f,0.12f,0.12f,0.024f,0.12f,0.12f});
+ 				} else {
+ 					summaryOfNeedsTable = new PdfPTable(7);
+-					summaryOfNeedsTable.setWidthPercentage(100f-26.4f);
+-					summaryOfNeedsTable.setWidths(new float[]{0.26f-0.024f,0.024f,0.12f,0.12f,0.024f,0.12f,0.12f});
++					summaryOfNeedsTable.setWidthPercentage((double) 100.0F- (double) 26.4F);
++					summaryOfNeedsTable.setWidths(new float[]{(double) 0.26F- (double) 0.024F,0.024F,0.12F,0.12F,0.024F,0.12F,0.12F});
+ 				}
+ 			}
+ 			if(currentBeanList.size()==3) {
+@@ -232,7 +232,7 @@ public class NeedRatingOverTimeReportGenerator {
+ 				} else {
+ 					summaryOfNeedsTable = new PdfPTable(10);
+ 					summaryOfNeedsTable.setWidthPercentage(100f);
+-					summaryOfNeedsTable.setWidths(new float[]{0.26f-0.024f,0.024f,0.12f,0.12f,0.024f,0.12f,0.12f,0.024f,0.12f,0.12f});
++					summaryOfNeedsTable.setWidths(new float[]{(double) 0.26F- (double) 0.024F,0.024F,0.12F,0.12F,0.024F,0.12F,0.12F,0.024F,0.12F,0.12F});
+ 				}
+ 			}
+ 			summaryOfNeedsTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+diff --git a/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java b/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java
+index 3b63e14a93..86a91d3067 100644
+--- a/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java
++++ b/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java
+@@ -74,10 +74,10 @@ public final class FrmPdfGraphicAR extends FrmPdfGraphic {
+ 		if (xNum < fStartX || xNum > fEndX || yNum < fStartY || yNum > fEndY)
+ 			return;
+ 
+-		float deltaX = nMaxPixX / (fEndX - fStartX);
+-		float deltaY = nMaxPixY / (fEndY - fStartY);
+-		xNum = deltaX * (xNum - fStartX);
+-		yNum = deltaY * (yNum - fStartY);
++		float deltaX = nMaxPixX / ((double) fEndX - (double) fStartX);
++		float deltaY = nMaxPixY / ((double) fEndY - (double) fStartY);
++		xNum = deltaX * ((double) xNum - (double) fStartX);
++		yNum = deltaY * ((double) yNum - (double) fStartY);
+ 
+ 		prop.setProperty("" + xNum, "" + yNum);
+ 		return;
+diff --git a/src/main/java/oscar/form/graphic/FrmPdfGraphicGrowthChart.java b/src/main/java/oscar/form/graphic/FrmPdfGraphicGrowthChart.java
+index f8e94d17ef..4755c31e3e 100644
+--- a/src/main/java/oscar/form/graphic/FrmPdfGraphicGrowthChart.java
++++ b/src/main/java/oscar/form/graphic/FrmPdfGraphicGrowthChart.java
+@@ -26,10 +26,10 @@ public final class FrmPdfGraphicGrowthChart extends FrmPdfGraphic {
+         if (xNum < fStartX || xNum > fEndX || yNum < fStartY || yNum > fEndY)
+             return null;
+ 
+-        float deltaX = nMaxPixX / (fEndX - fStartX);
+-        float deltaY = nMaxPixY / (fEndY - fStartY);
+-        xNum = deltaX * (xNum - fStartX);
+-        yNum = deltaY * (yNum - fStartY);
++        float deltaX = nMaxPixX / ((double) fEndX - (double) fStartX);
++        float deltaY = nMaxPixY / ((double) fEndY - (double) fStartY);
++        xNum = deltaX * ((double) xNum - (double) fStartX);
++        yNum = deltaY * ((double) yNum - (double) fStartY);
+ 
+         ret[0] = "" + xNum;
+         ret[1] = "" + yNum;
+diff --git a/src/main/java/oscar/form/graphic/FrmPdfGraphicRourke.java b/src/main/java/oscar/form/graphic/FrmPdfGraphicRourke.java
+index 5134e7a97c..8e6bc066b3 100644
+--- a/src/main/java/oscar/form/graphic/FrmPdfGraphicRourke.java
++++ b/src/main/java/oscar/form/graphic/FrmPdfGraphicRourke.java
+@@ -73,7 +73,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
+                 str = prop.getProperty("__fEndX");
+                 fEndX = toFloat(str);
+                 
+-                float range = fEndX - fStartX;
++                float range = (double) fEndX - (double) fStartX ;
+                 if( range == 0 || range < 0 )
+                     range = 1;
+                 
+@@ -86,7 +86,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
+ 		str = prop.getProperty("__fEndY");
+                 fEndY = toFloat(str);
+                 
+-                range = fEndY - fStartY;
++                range = (double) fEndY - (double) fStartY ;
+                 if( range == 0 || range < 0 )
+                     range = 1;
+                 
+@@ -131,9 +131,12 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
+ 	return xyProp;
+     }
+     
+-    private void getGraphicXYProp(String xDate, String yHeight) {
+-        float xcoord,ycoord,smonth,emonth;
+-        float sday,eday;
++    private void getGraphicXYProp(String xDate, String yHeight) {float xcoord;
++        float ycoord;
++        float smonth;
++        float emonth;
++        float sday;
++        float eday;
+         GregorianCalendar curDate;
+         xDate = makeDateStr(xDate);
+         
+@@ -160,8 +163,8 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
+             //don't forget to add years
+             switch (xDateScale) {
+             case Calendar.YEAR:
+-            	smonth = (smonth/12.0f) + startDate.get(Calendar.YEAR);
+-                emonth = (emonth/12.0f) + curDate.get(Calendar.YEAR);
++            	smonth = (double) smonth/ (double) 12.0F + startDate.get(Calendar.YEAR);
++                emonth = (double) emonth/ (double) 12.0F + curDate.get(Calendar.YEAR);
+                 break;
+                 
+             case Calendar.MONTH:
+@@ -185,8 +188,8 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
+             MiscUtils.getLogger().debug("emonth,  smonth " + emonth + ", " + smonth);
+             
+             //calc xcoord and ycoord
+-            xcoord = deltaX * (emonth - smonth);            
+-            ycoord = deltaY * (ycoord - fStartY);
++            xcoord = deltaX * ((double) emonth - (double) smonth);            
++            ycoord = deltaY * ((double) ycoord - (double) fStartY);
+             
+             MiscUtils.getLogger().debug("Graphic x y: " + xcoord + ", " + ycoord );
+             
+diff --git a/src/main/java/oscar/form/pdfservlet/FrmCustomedPDFServlet.java b/src/main/java/oscar/form/pdfservlet/FrmCustomedPDFServlet.java
+index c55345adfc..241ad25cd9 100644
+--- a/src/main/java/oscar/form/pdfservlet/FrmCustomedPDFServlet.java
++++ b/src/main/java/oscar/form/pdfservlet/FrmCustomedPDFServlet.java
+@@ -348,7 +348,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
+ 				Phrase hPhrase = new Phrase(hStr.toString(), new Font(bf, 10));
+ 				head.addCell(hPhrase);
+ 				head.setTotalWidth(272f);
+-				head.writeSelectedRows(0, -1, 13f, height - 100f, cb);
++				head.writeSelectedRows(0, -1, 13.0F, (double) height - (double) 100.0F , cb);
+ 
+ 				bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+ 				writeDirectContent(cb, bf, 12, PdfContentByte.ALIGN_LEFT, "o s c a r", 21, page.getHeight() - 60, 90);
+@@ -390,7 +390,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
+ 				cb.setLineWidth(0.5f);
+ 				// cb.moveTo(13f, 20f);
+ 				cb.moveTo(13f, endPara - 60);
+-				cb.lineTo(13f, height - 15f);
++				cb.lineTo(13.0F, (double) height - (double) 15.0F );
+ 				cb.stroke();
+ 
+ 				// draw right line 285, 20, 285, 405, 0.5
+@@ -398,13 +398,13 @@ public class FrmCustomedPDFServlet extends HttpServlet {
+ 				cb.setLineWidth(0.5f);
+ 				// cb.moveTo(285f, 20f);
+ 				cb.moveTo(285f, endPara - 60);
+-				cb.lineTo(285f, height - 15f);
++				cb.lineTo(285.0F, (double) height - (double) 15.0F );
+ 				cb.stroke();
+ 				// draw top line 10, 405, 285, 405, 0.5
+ 				cb.setRGBColorStrokeF(0f, 0f, 0f);
+ 				cb.setLineWidth(0.5f);
+-				cb.moveTo(13f, height - 15f);
+-				cb.lineTo(285f, height - 15f);
++				cb.moveTo(13.0F, (double) height - (double) 15.0F );
++				cb.lineTo(285.0F, (double) height - (double) 15.0F );
+ 				cb.stroke();
+ 
+ 				// draw bottom line 10, 20, 285, 20, 0.5
+@@ -416,24 +416,24 @@ public class FrmCustomedPDFServlet extends HttpServlet {
+ 				cb.lineTo(285f, endPara - 60);
+ 				cb.stroke();
+ 				// Render "Signature:"
+-				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgSignature"), 20f, endPara - 30f, 0);// Render line for Signature 75, 55, 280, 55, 0.5
++				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, geti18nTagValue(locale, "RxPreview.msgSignature"), 20.0F, (double) endPara - (double) 30.0F , 0);// Render line for Signature 75, 55, 280, 55, 0.5
+ 				cb.setRGBColorStrokeF(0f, 0f, 0f);
+ 				cb.setLineWidth(0.5f);
+ 				// cb.moveTo(75f, 50f);
+ 				// cb.lineTo(280f, 50f);
+-				cb.moveTo(75f, endPara - 30f);
+-				cb.lineTo(280f, endPara - 30f);
++				cb.moveTo(75.0F, (double) endPara - (double) 30.0F );
++				cb.lineTo(280.0F, (double) endPara - (double) 30.0F );
+ 				cb.stroke();
+ 
+ 				if (this.imgPath != null) {
+ 					Image img = Image.getInstance(this.imgPath);
+ 					// image, image_width, 0, 0, image_height, x, y
+ 					//         131, 55, 375, 75, 0
+-					cb.addImage(img, 157, 0, 0, 40, 150f, endPara-30f);
++					cb.addImage(img, 157, 0, 0, 40, 150.0F, (double) endPara- (double) 30.0F);
+ 				}
+ 
+ 				// Render doctor name
+-				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 90, endPara - 40f, 0);
++				writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 90, (double) endPara - (double) 40.0F , 0);
+ 				// public void writeDirectContent(PdfContentByte cb, BaseFont bf, float fontSize, int alignment, String text, float x, float y, float rotation)
+ 				// render reprint origPrintDate and numPrint
+ 				if (origPrintDate != null && numPrint != null) {
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
+index 56ba162465..8f61857508 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java
+@@ -170,16 +170,16 @@ public class EctConsultationFormRequestPrintPdf {
+             float lineCount = (name.length() + text.length()) / 100;
+ 
+             // if there is not enough room on the page for the text start on the next page
+-            if ( (height - 264 - dynamicHeight - lineCount*LINEHEIGHT) < LINEHEIGHT*3 ){
++            if ( height - 264 - dynamicHeight - (double) lineCount* (double) LINEHEIGHT < LINEHEIGHT*3 ){
+                 nextPage(reqForm);
+                 dynamicHeight = LINEHEIGHT - 152;
+             }
+ 
+-            ct.setSimpleColumn(new Float(85), height - 264 - dynamicHeight - lineCount*LINEHEIGHT, new Float(526), height - 250 - dynamicHeight, LINEHEIGHT, Element.ALIGN_LEFT);
++            ct.setSimpleColumn(new Float(85), height - 264 - dynamicHeight - (double) lineCount* (double) LINEHEIGHT, new Float(526), height - 250 - dynamicHeight, LINEHEIGHT, Element.ALIGN_LEFT);
+             ct.addText(new Phrase(name, boldFont));
+             ct.addText(new Phrase(text, font));
+             ct.go();
+-            dynamicHeight += lineCount*LINEHEIGHT + LINEHEIGHT*2;
++            dynamicHeight += (double) lineCount* (double) LINEHEIGHT + LINEHEIGHT*2;
+         }
+ 
+         return dynamicHeight;

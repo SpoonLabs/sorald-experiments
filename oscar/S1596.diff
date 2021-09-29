@@ -1,0 +1,13 @@
+diff --git a/src/main/java/org/oscarehr/match/vacancy/VacancyTemplateData.java b/src/main/java/org/oscarehr/match/vacancy/VacancyTemplateData.java
+index cda86a1b51..9632101c99 100644
+--- a/src/main/java/org/oscarehr/match/vacancy/VacancyTemplateData.java
++++ b/src/main/java/org/oscarehr/match/vacancy/VacancyTemplateData.java
+@@ -179,7 +179,7 @@ public class VacancyTemplateData {
+ 		private long min;
+ 		private long max;
+ 		
+-		List<String> rangeString = Collections.EMPTY_LIST;
++		List<String> rangeString = Collections.emptyList();
+ 
+ 		public Range(long min, long max) {
+ 			this.min = min;

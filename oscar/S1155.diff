@@ -1,0 +1,2353 @@
+diff --git a/database/mysql/importCasemgmt.java b/database/mysql/importCasemgmt.java
+index d636d57f2d..010446f090 100644
+--- a/database/mysql/importCasemgmt.java
++++ b/database/mysql/importCasemgmt.java
+@@ -1,3 +1,10 @@
++import java.sql.DriverManager;
++import java.sql.PreparedStatement;
++import java.sql.SQLException;
++import java.sql.Statement;
++import java.sql.Date;
++import java.sql.ResultSet;
++import java.sql.Connection;
+ /*n
+  * 
+  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+@@ -70,9 +77,11 @@ public class importCasemgmt {
+                         
+                         String passwd = prop.getProperty("db_password");
+                         System.out.println("DB PASSWD " + passwd);
+-                        
+-			Statement stmt, stmtUpdate;
+-			ResultSet rs, rs1, rsUpdate;
++			Statement stmt;
++			Statement stmtUpdate;
++			ResultSet rs;
++			ResultSet rs1;
++			ResultSet rsUpdate;
+ 
+ 			Class.forName(driver);
+ 			
+@@ -130,7 +139,7 @@ public class importCasemgmt {
+                         
+                         rs.close();
+                         sql = "select provider_no, role_name from secUserRole where provider_no in (select provider_no from provider) ";
+-                        if( secObjs.size() > 0 )
++                        if(!secObjs.isEmpty() )
+                             sql += "and ";
+                         
+                         for( int idx = 0; idx < secObjs.size(); ++idx ) {
+@@ -145,7 +154,8 @@ public class importCasemgmt {
+                         //we got to watch out for duplicate entries
+                         //right now we default to first record as they are alpha sorted i.e. doctor locum nurse
+                         ArrayList<String> providers = new ArrayList<String>();
+-                        String role_name, prov;
++			String role_name;
++			String prov;
+                         int role_id;
+                         PreparedStatement insert = con.prepareStatement("insert into program_provider (program_id,provider_no,role_id) Values('" + programId + "',?,?)");
+                         PreparedStatement pcheck = con.prepareStatement("select id from program_provider where provider_no = ?");
+@@ -290,9 +300,11 @@ public class importCasemgmt {
+                                 "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
+                         pcheck = con.prepareStatement("select note_id from casemgmt_note where demographic_no = ? and (signing_provider_no = '000000' or (note = ? and update_date = ?))");
+                         UUID uuid;
+-                        String note;                        
+-                        ResultSet rs3,rs4;
+-                        long cIssueId, msecs;
++                        String note;
++			ResultSet rs3;
++			ResultSet rs4;
++			long cIssueId;
++			long msecs;
+                         Date d;
+                         while( rs.next() ) {
+                             pcheck.setString(1, rs.getString("demographicNo"));
+diff --git a/src/main/java/com/indivica/olis/Driver.java b/src/main/java/com/indivica/olis/Driver.java
+index 6186634fb7..c54c074e1c 100644
+--- a/src/main/java/com/indivica/olis/Driver.java
++++ b/src/main/java/com/indivica/olis/Driver.java
+@@ -419,7 +419,7 @@ public class Driver {
+ 		}
+ 
+ 		// no one wants to hear about the problem
+-		if (sendToProviderList.size() == 0) return;
++		if (sendToProviderList.isEmpty()) return;
+ 
+ 		String message = "OSCAR attempted to perform a fetch of OLIS data at " + new Date() + " but there was an error during the task.\n\nSee below for the error message:\n" + errorMsg;
+ 
+diff --git a/src/main/java/com/quatro/dao/LookupDao.java b/src/main/java/com/quatro/dao/LookupDao.java
+index 460947d402..c0bb4d45f3 100644
+--- a/src/main/java/com/quatro/dao/LookupDao.java
++++ b/src/main/java/com/quatro/dao/LookupDao.java
+@@ -67,7 +67,7 @@ public class LookupDao extends HibernateDaoSupport {
+ 		if (code == null || "".equals(code)) return null;
+ 		List lst = LoadCodeList(tableId, false, code, "");
+ 		LookupCodeValue lkv = null;
+-		if (lst.size() > 0) {
++		if (!lst.isEmpty()) {
+ 			lkv = (LookupCodeValue) lst.get(0);
+ 		}
+ 		return lkv;
+diff --git a/src/main/java/com/quatro/dao/security/SecProviderDao.java b/src/main/java/com/quatro/dao/security/SecProviderDao.java
+index b60a2609dc..e1b594b6a1 100644
+--- a/src/main/java/com/quatro/dao/security/SecProviderDao.java
++++ b/src/main/java/com/quatro/dao/security/SecProviderDao.java
+@@ -107,7 +107,7 @@ public class SecProviderDao extends HibernateDaoSupport {
+ 		try {
+ 			String sql ="from SecProvider where id=? and status=?";
+ 			List lst=this.getHibernateTemplate().find(sql,new Object[]{id,status});			
+-	        if(lst.size()==0)
++	        if(lst.isEmpty())
+ 	          return null;
+ 	        else
+ 	          return (SecProvider) lst.get(0);
+diff --git a/src/main/java/com/quatro/dao/security/SecobjprivilegeDao.java b/src/main/java/com/quatro/dao/security/SecobjprivilegeDao.java
+index fd1f93e201..103202895e 100644
+--- a/src/main/java/com/quatro/dao/security/SecobjprivilegeDao.java
++++ b/src/main/java/com/quatro/dao/security/SecobjprivilegeDao.java
+@@ -118,7 +118,7 @@ public class SecobjprivilegeDao extends HibernateDaoSupport {
+ 			String queryString = "select description from Secobjectname obj where obj.objectname='" + function_code+"'";
+ 			
+ 			List lst = getHibernateTemplate().find(queryString);
+-			if(lst.size()>0 && lst.get(0)!=null)
++			if(!lst.isEmpty() && lst.get(0)!=null)
+ 				return lst.get(0).toString();
+ 			else
+ 				return "";
+@@ -132,7 +132,7 @@ public class SecobjprivilegeDao extends HibernateDaoSupport {
+ 			String queryString = "select description from Secprivilege obj where obj.privilege='" + accessType_code +"'";
+ 			
+ 			List lst = getHibernateTemplate().find(queryString);
+-			if(lst.size()>0 && lst.get(0)!=null)
++			if(!lst.isEmpty() && lst.get(0)!=null)
+ 				return lst.get(0).toString();
+ 			else
+ 				return "";
+diff --git a/src/main/java/com/quatro/dao/security/SecroleDao.java b/src/main/java/com/quatro/dao/security/SecroleDao.java
+index 4a78fdc12d..449041222d 100644
+--- a/src/main/java/com/quatro/dao/security/SecroleDao.java
++++ b/src/main/java/com/quatro/dao/security/SecroleDao.java
+@@ -64,7 +64,7 @@ public class SecroleDao extends HibernateDaoSupport {
+         }
+ 
+         List lst = this.getHibernateTemplate().find("from Secrole r where r.roleName='" + roleName + "'");
+-        if(lst != null && lst.size() > 0)
++        if(lst != null && !lst.isEmpty() )
+         	result = (Secrole) lst.get(0);
+ 
+         logger.debug("getRoleByName: roleName=" + roleName + ",found=" + (result != null));
+diff --git a/src/main/java/com/quatro/service/security/UserAccessManager.java b/src/main/java/com/quatro/service/security/UserAccessManager.java
+index c2157e997e..02093920ae 100644
+--- a/src/main/java/com/quatro/service/security/UserAccessManager.java
++++ b/src/main/java/com/quatro/service/security/UserAccessManager.java
+@@ -38,7 +38,7 @@ public class UserAccessManager
+     	
+     	Hashtable functionList = new Hashtable();
+         List list = _dao.GetUserAccessList(providerNo,shelterId);
+-    	if (list.size()>0) {
++    	if (!list.isEmpty()) {
+ 	    	int startIdx = 0;
+ 	    	List orgList = getAccessListForFunction(list,startIdx);
+ 	    	UserAccessValue uav = (UserAccessValue)list.get(startIdx);
+@@ -56,7 +56,7 @@ public class UserAccessManager
+     	secManager.setUserFunctionAccessList(functionList);
+     	List orgs = _dao.GetUserOrgAccessList(providerNo,shelterId);
+     	String orgRoot = OscarProperties.getInstance().getProperty("ORGROOT");
+-    	if(orgs.size() > 0 && orgRoot!=null && orgRoot.equals(orgs.get(0))) 
++    	if(!orgs.isEmpty() && orgRoot!=null && orgRoot.equals(orgs.get(0))) 
+     	{
+     		orgs.clear();
+     	}
+diff --git a/src/main/java/org/caisi/core/web/DefaultEncounterIssueAction.java b/src/main/java/org/caisi/core/web/DefaultEncounterIssueAction.java
+index 3979de84bd..f99f0212d6 100644
+--- a/src/main/java/org/caisi/core/web/DefaultEncounterIssueAction.java
++++ b/src/main/java/org/caisi/core/web/DefaultEncounterIssueAction.java
+@@ -120,7 +120,7 @@ public class DefaultEncounterIssueAction extends DispatchAction {
+ 			}
+ 		}
+ 		
+-		if (issueIdSet.size() == 0) {
++		if (issueIdSet.isEmpty()) {
+ 			return mapping.findForward("list");
+ 		}
+ 		
+@@ -193,7 +193,7 @@ public class DefaultEncounterIssueAction extends DispatchAction {
+ 			}
+ 		}
+ 		
+-		if (issueIdSet.size() == 0) {
++		if (issueIdSet.isEmpty()) {
+ 			return list(mapping,form,request,response);
+ 		}
+ 		
+diff --git a/src/main/java/org/caisi/dao/DefaultIssueDao.java b/src/main/java/org/caisi/dao/DefaultIssueDao.java
+index 3a4793e69a..2500b83391 100644
+--- a/src/main/java/org/caisi/dao/DefaultIssueDao.java
++++ b/src/main/java/org/caisi/dao/DefaultIssueDao.java
+@@ -74,7 +74,7 @@ public class DefaultIssueDao extends AbstractDao<DefaultIssue> {
+ 		Query query = entityManager.createQuery("select x.issueIds from DefaultIssue x order by x.assignedtime");
+ 		query.setMaxResults(1);
+ 		List<String> issueIdsList = query.getResultList();
+-		if (issueIdsList.size() == 0) {
++		if (issueIdsList.isEmpty()) {
+ 			return new String[0];
+ 		}
+ 		Set<String> issueIdsSet = new HashSet<String>();
+diff --git a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorUpdateTask.java b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorUpdateTask.java
+index e76c3f74f7..42d10ee2bf 100644
+--- a/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorUpdateTask.java
++++ b/src/main/java/org/oscarehr/PMmodule/caisi_integrator/CaisiIntegratorUpdateTask.java
+@@ -532,7 +532,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
+ 		}
+ 		
+ 		List<Integer> allProgramIds = programDao.getRecordsByFacilityId(facility.getId());
+-		if(allProgramIds.size()>0) {
++		if(!allProgramIds.isEmpty()) {
+ 			out.writeUnshared(new ProgramDeleteIdWrapper(allProgramIds) );
+ 		}
+ 	}
+@@ -1419,7 +1419,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
+ 
+ 	private void pushLabReq2007(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws SQLException, IOException, ParseException {
+ 		List<Properties> records = FrmLabReq07Record.getPrintRecordsSince(demographicId,lastDataUpdated);
+-		if (records.size() == 0) return;
++		if (records.isEmpty()) return;
+ 
+ 		StringBuilder sentIds = new StringBuilder();
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/dao/FormsDAO.java b/src/main/java/org/oscarehr/PMmodule/dao/FormsDAO.java
+index 91a0c109ae..4958f39e35 100644
+--- a/src/main/java/org/oscarehr/PMmodule/dao/FormsDAO.java
++++ b/src/main/java/org/oscarehr/PMmodule/dao/FormsDAO.java
+@@ -58,7 +58,7 @@ public class FormsDAO extends HibernateDaoSupport {
+             className = className.substring(className.lastIndexOf(".")+1);
+         }
+         List results = this.getHibernateTemplate().find("from " + className + " f where f.DemographicNo=" + clientId);
+-        if(results.size()>0) {
++        if(!results.isEmpty()) {
+             result =  results.get(0);
+         }
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/dao/ProgramAccessDAO.java b/src/main/java/org/oscarehr/PMmodule/dao/ProgramAccessDAO.java
+index 4b9fda2f1f..0acef2e709 100644
+--- a/src/main/java/org/oscarehr/PMmodule/dao/ProgramAccessDAO.java
++++ b/src/main/java/org/oscarehr/PMmodule/dao/ProgramAccessDAO.java
+@@ -77,7 +77,7 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
+         String accessTypeIdString = accessTypeId.toString();
+         ProgramAccess result = null;
+         List results = this.getHibernateTemplate().find("from ProgramAccess pa where pa.ProgramId = ? and pa.AccessTypeId = ?", new Object[] {programId, accessTypeIdString});
+-        if (results.size() > 0) {
++        if (!results.isEmpty()) {
+             result = (ProgramAccess)results.get(0);
+         }
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/dao/ProgramFunctionalUserDAO.java b/src/main/java/org/oscarehr/PMmodule/dao/ProgramFunctionalUserDAO.java
+index 9c5b2721c3..0692d2e9ba 100644
+--- a/src/main/java/org/oscarehr/PMmodule/dao/ProgramFunctionalUserDAO.java
++++ b/src/main/java/org/oscarehr/PMmodule/dao/ProgramFunctionalUserDAO.java
+@@ -156,7 +156,7 @@ public class ProgramFunctionalUserDAO extends HibernateDaoSupport {
+         }finally {
+         	releaseSession(session);
+         }
+-        if (results.size() > 0) {
++        if (!results.isEmpty()) {
+             result = (Long)results.get(0);
+         }
+ 
+diff --git a/src/main/java/org/oscarehr/PMmodule/dao/ProgramProviderDAO.java b/src/main/java/org/oscarehr/PMmodule/dao/ProgramProviderDAO.java
+index 0efdb3acff..3a47daaab7 100644
+--- a/src/main/java/org/oscarehr/PMmodule/dao/ProgramProviderDAO.java
++++ b/src/main/java/org/oscarehr/PMmodule/dao/ProgramProviderDAO.java
+@@ -284,7 +284,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
+ 
+ 		String queryStr = "from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId = ?";
+ 		List results = getHibernateTemplate().find(queryStr, new Object[]{providerNo, Long.valueOf(programId.longValue())});
+-		if(results!=null && results.size()>0) {
++		if(results!=null && !results.isEmpty() ) {
+ 			return true;
+ 		} else {
+ 			return false;
+diff --git a/src/main/java/org/oscarehr/PMmodule/dao/WaitlistDao.java b/src/main/java/org/oscarehr/PMmodule/dao/WaitlistDao.java
+index 586e571705..fe724ef0fd 100755
+--- a/src/main/java/org/oscarehr/PMmodule/dao/WaitlistDao.java
++++ b/src/main/java/org/oscarehr/PMmodule/dao/WaitlistDao.java
+@@ -245,7 +245,7 @@ public class WaitlistDao {
+ 		
+ 		@SuppressWarnings("unchecked")
+ 		List<Object[]> rows = query.getResultList();
+-		if(rows.size()==0) return null;
++		if(rows.isEmpty()) return null;
+ 		Object[] cols = rows.get(0);
+ 		if(cols != null){
+ 			bo.setVacancyName((String)cols[0]);
+@@ -269,7 +269,7 @@ public class WaitlistDao {
+ 		
+ 		@SuppressWarnings("unchecked")
+ 		List<Object[]> rows = query.getResultList();
+-		if(rows.size()>0) {
++		if(!rows.isEmpty()) {
+ 			Object[] result = rows.get(0);
+ 			if(result != null){
+ 				bo.setRejectedCount(((BigInteger)result[0]).intValue());
+@@ -288,7 +288,7 @@ public class WaitlistDao {
+ 		
+ 		@SuppressWarnings("unchecked")
+ 		List<Integer> rows = query.getResultList();
+-		if(rows.size()==0) return null;
++		if(rows.isEmpty()) return null;
+ 		Integer result = rows.get(0);
+ 		
+ 		if(result != null){
+@@ -495,7 +495,7 @@ public class WaitlistDao {
+ 		
+ 		@SuppressWarnings("unchecked")
+ 		List<Object[]> rows = query.getResultList();
+-		if(rows.size()==0) return clientData;
++		if(rows.isEmpty()) return clientData;
+ 		for (Object[] cols : rows) {
+ 			Integer demographicId = (Integer)cols[0];
+ 			Integer formId = (Integer)cols[1];
+diff --git a/src/main/java/org/oscarehr/PMmodule/service/SurveyManager.java b/src/main/java/org/oscarehr/PMmodule/service/SurveyManager.java
+index 47a26fc4a5..9226bd5322 100644
+--- a/src/main/java/org/oscarehr/PMmodule/service/SurveyManager.java
++++ b/src/main/java/org/oscarehr/PMmodule/service/SurveyManager.java
+@@ -102,7 +102,7 @@ public class SurveyManager implements CustomReportDataSource {
+ 
+ 	public void deleteTmpsave(String instanceId, String formId, String clientId, String providerId) {
+ 		List tmpInstances = getTmpForms(instanceId,formId,clientId,providerId);
+-		if(tmpInstances.size()> 0 && tmpInstances!=null) {
++		if(!tmpInstances.isEmpty() && tmpInstances!=null) {
+ 			CaisiFormInstanceTmpSave tmpInstance = (CaisiFormInstanceTmpSave)tmpInstances.get(0);
+ 			/*
+ 			for(Iterator iter=tmpInstance.getData().iterator();iter.hasNext();) {
+diff --git a/src/main/java/org/oscarehr/PMmodule/task/ErProgramDischargeTask.java b/src/main/java/org/oscarehr/PMmodule/task/ErProgramDischargeTask.java
+index 6f95dcce23..56ddf63f49 100644
+--- a/src/main/java/org/oscarehr/PMmodule/task/ErProgramDischargeTask.java
++++ b/src/main/java/org/oscarehr/PMmodule/task/ErProgramDischargeTask.java
+@@ -97,7 +97,7 @@ public class ErProgramDischargeTask extends TimerTask {
+                 programDomain = providerManager.getProgramDomain(provider.getProviderNo());
+ 
+                 ProgramProvider programProvider = null;
+-                if (programDomain.size() > 0) {
++                if (!programDomain.isEmpty()) {
+                     programProvider = (ProgramProvider)programDomain.get(0);
+                 }
+                 if (programProvider != null) {
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/ClientManagerAction.java b/src/main/java/org/oscarehr/PMmodule/web/ClientManagerAction.java
+index e2aada42b3..686336ea59 100755
+--- a/src/main/java/org/oscarehr/PMmodule/web/ClientManagerAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/ClientManagerAction.java
+@@ -1319,7 +1319,7 @@ public class ClientManagerAction extends DispatchAction {
+ 		request.getSession().setAttribute("er_consent_map", consentMap);
+ 
+ 		List<?> programDomain = providerManager.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
+-		if (programDomain.size() > 0) {
++		if (!programDomain.isEmpty()) {
+ 			boolean doAdmit = true;
+ 			boolean doRefer = true;
+ 			ProgramProvider program = (ProgramProvider) programDomain.get(0);
+@@ -1925,7 +1925,7 @@ public class ClientManagerAction extends DispatchAction {
+ 			request.setAttribute("groupName", headClientDemo.getFormattedName() + " Group");
+ 		}
+ 
+-		if (relList != null && relList.size() > 0) {
++		if (relList != null && !relList.isEmpty() ) {
+ 			for (Map<String, Object> h : relList) {
+ 				String demographic = (String) h.get("demographicNo");
+ 				Integer demoLong = new Integer(demographic);
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java b/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java
+index 9a602a8f64..cba17a2273 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java
+@@ -734,7 +734,7 @@ public class ProgramManagerAction extends DispatchAction {
+ 			if (!("External".equals(request.getParameter("program.type")))) {
+ 				// Admission ad = admissionManager.getAdmission(Long.valueOf(request.getParameter("id")));
+ 				List admissions = admissionManager.getCurrentAdmissionsByProgramId(String.valueOf(program.getId()));
+-				if (admissions.size() > 0) {
++				if (!admissions.isEmpty()) {
+ 					ActionMessages messages = new ActionMessages();
+ 					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.client_in_the_program", program.getName()));
+ 					saveMessages(request, messages);
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/forms/SurveyExecuteAction.java b/src/main/java/org/oscarehr/PMmodule/web/forms/SurveyExecuteAction.java
+index 948b4fd46f..4a7e8dde7f 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/forms/SurveyExecuteAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/forms/SurveyExecuteAction.java
+@@ -250,7 +250,7 @@ public class SurveyExecuteAction extends DispatchAction {
+         if (!clientId.equals("0")) {
+             //instance = surveyManager.getLatestForm(surveyId, clientId);
+         	List tmpInstances = surveyManager.getTmpForms(formInstanceId, surveyId, clientId, String.valueOf(getUserId(request)));
+-        	if(tmpInstances.size()==0 || tmpInstances == null) {
++        	if(tmpInstances.isEmpty() || tmpInstances == null) {
+         		instance = surveyManager.getCurrentFormById(formInstanceId);
+         	} else {
+         		CaisiFormInstanceTmpSave tmpsave = (CaisiFormInstanceTmpSave)tmpInstances.get(0);
+@@ -740,7 +740,7 @@ public class SurveyExecuteAction extends DispatchAction {
+         CaisiFormInstanceTmpSave instance = new CaisiFormInstanceTmpSave();
+         boolean newForm;
+         List tmpInstanceForms = surveyManager.getTmpForms(formInstanceId, String.valueOf(formBean.getId()),String.valueOf(formBean.getClientId()), String.valueOf(getUserId(request)));
+-        if(tmpInstanceForms.size()==0 || tmpInstanceForms==null ) {
++        if(tmpInstanceForms.isEmpty() || tmpInstanceForms==null ) {
+         	newForm = true;
+         	instance.setInstanceId(Integer.valueOf(formInstanceId));
+         	instance.setClientId((int)formBean.getClientId());
+diff --git a/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementCPPDAO.java b/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementCPPDAO.java
+index 68b4d2ded2..b867225688 100644
+--- a/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementCPPDAO.java
++++ b/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementCPPDAO.java
+@@ -40,7 +40,7 @@ public class CaseManagementCPPDAO extends HibernateDaoSupport {
+     
+     public CaseManagementCPP getCPP(String demographic_no) {
+         List results = this.getHibernateTemplate().find("from CaseManagementCPP cpp where cpp.demographic_no = ? order by update_date desc", new Object[] {demographic_no});
+-        return (results.size() != 0)?(CaseManagementCPP)results.get(0):null;
++        return !results.isEmpty()?(CaseManagementCPP)results.get(0):null;
+     }
+ 
+     public void saveCPP(CaseManagementCPP cpp) {                        
+diff --git a/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteDAO.java b/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteDAO.java
+index 687308d018..7c2b4759a1 100644
+--- a/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteDAO.java
++++ b/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteDAO.java
+@@ -118,7 +118,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
+ 	}
+ 	
+ 	public List<CaseManagementNote> getNotes(List<Long> ids) {
+-		if(ids.size()==0)
++		if(ids.isEmpty())
+ 			return new ArrayList<CaseManagementNote>();
+ 		@SuppressWarnings("unchecked")
+ 		List<CaseManagementNote> notes = this.getHibernateTemplate().findByNamedParam("SELECT n FROM CaseManagementNote n WHERE n.id IN (:ids)","ids",ids);
+@@ -559,7 +559,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
+ 			SQLQuery query = session.createSQLQuery("select * from casemgmt_issue_notes where id=" + issid.longValue());
+ 			List results = query.list();
+ 			// log.info("haveIssue - DAO - # of results = " + results.size());
+-			if (results.size() > 0) return true;
++			if (!results.isEmpty()) return true;
+ 			return false;
+ 		} finally {
+ 			this.releaseSession(session);
+@@ -573,7 +573,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
+ 			SQLQuery query = session.createSQLQuery("select casemgmt_issue.id from casemgmt_issue_notes,casemgmt_issue,issue   where issue.issue_id=casemgmt_issue.issue_id and casemgmt_issue.id=casemgmt_issue_notes.id and demographic_no="+demographicId+" and issue.code='"+issueCode+"'");
+ 			List results = query.list();
+ 			// log.info("haveIssue - DAO - # of results = " + results.size());
+-			if (results.size() > 0) return true;
++			if (!results.isEmpty()) return true;
+ 			return false;
+ 		} finally {			
+ 			this.releaseSession(session);
+diff --git a/src/main/java/org/oscarehr/casemgmt/dao/IssueDAO.java b/src/main/java/org/oscarehr/casemgmt/dao/IssueDAO.java
+index 7bf3c8eec0..2d2c924f4d 100644
+--- a/src/main/java/org/oscarehr/casemgmt/dao/IssueDAO.java
++++ b/src/main/java/org/oscarehr/casemgmt/dao/IssueDAO.java
+@@ -164,7 +164,7 @@ public class IssueDAO extends HibernateDaoSupport {
+         logger.debug(sql);
+         List<Long> result = this.getHibernateTemplate().find(sql, new Object[] {search, search,roleList});
+ 
+-        if(result.size()>0) {
++        if(!result.isEmpty()) {
+         	return result.get(0).intValue();
+         }
+ 
+diff --git a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
+index 61a70e5cf2..343911e628 100644
+--- a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
++++ b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
+@@ -905,7 +905,7 @@ public class CaseManagementManager {
+ 	public boolean greaterEqualLevel(int level, String providerNo) {
+ 		if (level < 1 || level > 4) return false;
+ 		List pcrList = secRoleDao.findAllNames();
+-		if (pcrList.size() == 0) return false;
++		if (pcrList.isEmpty()) return false;
+ 		Iterator itr = pcrList.iterator();
+ 		while (itr.hasNext()) {
+ 			String pcr = (String) itr.next();
+@@ -1010,7 +1010,7 @@ public class CaseManagementManager {
+ 			Long pid = new Long(program_id);
+ 			ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, pid);
+ 		}
+-		if (ppList != null && ppList.size() > 0) rt = ((ProgramProvider) ppList.get(0)).getRole().getRoleName();
++		if (ppList != null && !ppList.isEmpty() ) rt = ((ProgramProvider) ppList.get(0)).getRole().getRoleName();
+ 		return rt;
+ 	}
+ 
+@@ -2061,7 +2061,7 @@ private String updateApptStatus(String status, String type) {
+ 		for (CaseManagementNote note : cmnList) {
+ 			noteIdList.add(note.getId());
+ 		}
+-		if (noteIdList.size() > 0) {
++		if (!noteIdList.isEmpty()) {
+ 			Collections.sort(noteIdList);
+ 			firstNoteId = noteIdList.get(0);
+ 			lastNoteId = noteIdList.get(noteIdList.size() - 1);
+diff --git a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrint.java b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrint.java
+index 48b32d8227..8d6bcff7b3 100644
+--- a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrint.java
++++ b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrint.java
+@@ -139,7 +139,7 @@ public class CaseManagementPrint {
+ 			}
+ 		}
+ 
+-		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled() && remoteNoteUUIDs.size() > 0) {
++		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled() && !remoteNoteUUIDs.isEmpty() ) {
+ 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs(loggedInInfo, loggedInInfo.getCurrentFacility());
+ 			List<CachedDemographicNote> remoteNotes = demographicWs.getLinkedCachedDemographicNotes(Integer.parseInt(demono));
+ 			for (CachedDemographicNote remoteNote : remoteNotes) {
+diff --git a/src/main/java/org/oscarehr/common/dao/BillingONPaymentDao.java b/src/main/java/org/oscarehr/common/dao/BillingONPaymentDao.java
+index 00556c9147..0bb1544e39 100644
+--- a/src/main/java/org/oscarehr/common/dao/BillingONPaymentDao.java
++++ b/src/main/java/org/oscarehr/common/dao/BillingONPaymentDao.java
+@@ -170,7 +170,7 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
+     	Query query = entityManager.createQuery("select bp.paymentType from BillingPaymentType bp where bp.id = ?1");
+     	query.setParameter(1, paymentTypeId);
+     	List<String> types = query.getResultList();
+-    	if(types!=null && types.size()>0)
++    	if(types!=null && !types.isEmpty() )
+     		return types.get(0);
+     	else 
+     		return null;
+diff --git a/src/main/java/org/oscarehr/common/dao/ConsultationRequestExtDao.java b/src/main/java/org/oscarehr/common/dao/ConsultationRequestExtDao.java
+index 643510bf4b..f69300c9aa 100644
+--- a/src/main/java/org/oscarehr/common/dao/ConsultationRequestExtDao.java
++++ b/src/main/java/org/oscarehr/common/dao/ConsultationRequestExtDao.java
+@@ -50,7 +50,7 @@ public class ConsultationRequestExtDao extends AbstractDao<ConsultationRequestEx
+         query.setParameter(1, new Integer(requestId));
+         query.setParameter(2, key);
+         List<String> results = query.getResultList();
+-        if(results.size()>0)
++        if(!results.isEmpty())
+         	return results.get(0);
+         return null;
+ 	}
+diff --git a/src/main/java/org/oscarehr/common/dao/DemographicCustDao.java b/src/main/java/org/oscarehr/common/dao/DemographicCustDao.java
+index d760066e3c..fd7021a9f9 100644
+--- a/src/main/java/org/oscarehr/common/dao/DemographicCustDao.java
++++ b/src/main/java/org/oscarehr/common/dao/DemographicCustDao.java
+@@ -91,7 +91,7 @@ public class DemographicCustDao extends AbstractDao<DemographicCust> {
+     	
+         @SuppressWarnings("unchecked")
+         List<Integer> results = query.getResultList();
+-        if(results.size()>0) {
++        if(!results.isEmpty()) {
+         	return results.get(0);
+         }
+         return null;
+@@ -105,7 +105,7 @@ public class DemographicCustDao extends AbstractDao<DemographicCust> {
+     	
+         @SuppressWarnings("unchecked")
+         List<Integer> results = query.getResultList();
+-        if(results.size()>0) {
++        if(!results.isEmpty()) {
+         	return results.get(0);
+         }
+         return null;
+@@ -119,7 +119,7 @@ public class DemographicCustDao extends AbstractDao<DemographicCust> {
+     	
+         @SuppressWarnings("unchecked")
+         List<Integer> results = query.getResultList();
+-        if(results.size()>0) {
++        if(!results.isEmpty()) {
+         	return results.get(0);
+         }
+         return null;
+diff --git a/src/main/java/org/oscarehr/common/dao/DemographicDao.java b/src/main/java/org/oscarehr/common/dao/DemographicDao.java
+index 52e1a56685..73b269a4ab 100644
+--- a/src/main/java/org/oscarehr/common/dao/DemographicDao.java
++++ b/src/main/java/org/oscarehr/common/dao/DemographicDao.java
+@@ -173,7 +173,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
+ 		String q = "FROM Demographic d WHERE d.DemographicNo = ?";
+ 		List rs = getHibernateTemplate().find(q, demographic_id);
+ 
+-		if (rs.size() == 0) return null;
++		if (rs.isEmpty()) return null;
+ 		else return (Demographic) rs.get(0);
+ 	}
+ 
+@@ -1582,28 +1582,28 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
+ 			params.add(firstName.trim());
+ 		}
+ 		if (lastName.trim().length() > 0) {
+-			if (params.size() > 0) {
++			if (!params.isEmpty()) {
+ 				whereClause.append(" AND ");
+ 			}
+ 			whereClause.append("LastName=?");
+ 			params.add(lastName.trim());
+ 		}
+ 		if (hPhone.trim().length() > 0) {
+-			if (params.size() > 0) {
++			if (!params.isEmpty()) {
+ 				whereClause.append(" AND ");
+ 			}
+ 			whereClause.append("Phone=?");
+ 			params.add(hPhone.trim());
+ 		}
+ 		if (wPhone.trim().length() > 0) {
+-			if (params.size() > 0) {
++			if (!params.isEmpty()) {
+ 				whereClause.append(" AND ");
+ 			}
+ 			whereClause.append("Phone2=?");
+ 			params.add(wPhone.trim());
+ 		}
+ 		if (email.trim().length() > 0) {
+-			if (params.size() > 0) {
++			if (!params.isEmpty()) {
+ 				whereClause.append(" AND ");
+ 			}
+ 			whereClause.append("Email=?");
+@@ -2115,7 +2115,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
+ 	}
+ 
+ 	public List<Demographic> getDemographics(List<Integer> demographicIds) {
+-		if (demographicIds.size() ==0) return(new ArrayList<Demographic>());
++		if (demographicIds.isEmpty()) return(new ArrayList<Demographic>());
+ 		if (demographicIds.size() > MAX_SELECT_SIZE) throw (new IllegalArgumentException("please chunk your requests to max : " + MAX_SELECT_SIZE));
+ 
+ 		String q = "FROM Demographic d WHERE d.DemographicNo in (:ids)";
+diff --git a/src/main/java/org/oscarehr/common/dao/EFormDataDao.java b/src/main/java/org/oscarehr/common/dao/EFormDataDao.java
+index 530e792aca..70c72b7014 100644
+--- a/src/main/java/org/oscarehr/common/dao/EFormDataDao.java
++++ b/src/main/java/org/oscarehr/common/dao/EFormDataDao.java
+@@ -370,7 +370,7 @@ public class EFormDataDao extends AbstractDao<EFormData> {
+ 	}
+ 
+ 	public List<EFormData> findByFdids(List<Integer> ids) {
+-		if (ids.size() == 0) return new ArrayList<EFormData>();
++		if (ids.isEmpty()) return new ArrayList<EFormData>();
+ 
+ 		Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.id in (:ids)");
+ 		query.setParameter("ids", ids);
+@@ -456,7 +456,7 @@ public class EFormDataDao extends AbstractDao<EFormData> {
+ 		}
+ 
+ 		//get list of _eform.???? permissions the caller has
+-		if (eformPerms != null && eformPerms.size() > 0) {
++		if (eformPerms != null && !eformPerms.isEmpty() ) {
+ 			sb.append(" AND (e.roleType in (:perms) OR e.roleType IS NULL OR e.roleType = '' OR e.roleType = 'null')");
+ 		}
+ 
+@@ -476,7 +476,7 @@ public class EFormDataDao extends AbstractDao<EFormData> {
+ 		if (status != null) {
+ 			query.setParameter("status", status);
+ 		}
+-		if (eformPerms != null && eformPerms.size() > 0) {
++		if (eformPerms != null && !eformPerms.isEmpty() ) {
+ 			query.setParameter("perms", eformPerms);
+ 		}
+ 		query.setFirstResult(offset);
+@@ -497,7 +497,7 @@ public class EFormDataDao extends AbstractDao<EFormData> {
+ 				return (results.get(0).intValue());
+ 			}
+ 			return null;
+-		} else if (results.size() == 0) return (null);
++		} else if (results.isEmpty()) return (null);
+ 
+ 		return null;
+ 	}
+diff --git a/src/main/java/org/oscarehr/common/dao/MyGroupDao.java b/src/main/java/org/oscarehr/common/dao/MyGroupDao.java
+index d6fcb55989..ccce4e046e 100644
+--- a/src/main/java/org/oscarehr/common/dao/MyGroupDao.java
++++ b/src/main/java/org/oscarehr/common/dao/MyGroupDao.java
+@@ -60,7 +60,7 @@ public class MyGroupDao extends AbstractDao<MyGroup> {
+         @SuppressWarnings("unchecked")
+         List<String> dList = query.getResultList();
+ 
+-        if (dList != null && dList.size() > 0) {
++        if (dList != null && !dList.isEmpty() ) {
+             return dList;
+         } else {
+             return null;
+diff --git a/src/main/java/org/oscarehr/common/dao/OscarAppointmentDao.java b/src/main/java/org/oscarehr/common/dao/OscarAppointmentDao.java
+index e190431600..ac160edb44 100644
+--- a/src/main/java/org/oscarehr/common/dao/OscarAppointmentDao.java
++++ b/src/main/java/org/oscarehr/common/dao/OscarAppointmentDao.java
+@@ -842,7 +842,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
+ 				getJoin4LatestDemographicExtValue("wPhoneExt", 4) +
+ 				"WHERE a.provider_no IN (:providers) AND a.appointment_date >= :startDate AND a.appointment_date <= :endDate";
+ 		Query query = entityManager.createNativeQuery(sql);
+-		query.setParameter("providers", providerNos != null && providerNos.size()>0 ? providerNos : Arrays.asList());
++		query.setParameter("providers", providerNos != null && !providerNos.isEmpty()  ? providerNos : Arrays.asList());
+ 		query.setParameter("startDate", sDate == null ? new Date(Long.MIN_VALUE) : sDate);
+ 		query.setParameter("endDate", eDate == null ? new Date(Long.MAX_VALUE) : eDate);
+ 		return query.getResultList();
+diff --git a/src/main/java/org/oscarehr/common/dao/SiteDao.java b/src/main/java/org/oscarehr/common/dao/SiteDao.java
+index d0bb2fcd0b..edd4726b7c 100644
+--- a/src/main/java/org/oscarehr/common/dao/SiteDao.java
++++ b/src/main/java/org/oscarehr/common/dao/SiteDao.java
+@@ -237,7 +237,7 @@ public class SiteDao extends AbstractDao<Site> {
+ 
+ 		@SuppressWarnings("unchecked")
+         List<String> list = query.getResultList();
+-		if(list.size()>0) {
++		if(!list.isEmpty()) {
+ 			return list.get(0);
+ 		}
+ 
+diff --git a/src/main/java/org/oscarehr/common/hl7/v2/HL7A04Data.java b/src/main/java/org/oscarehr/common/hl7/v2/HL7A04Data.java
+index b33f1cac63..666bf51cb5 100644
+--- a/src/main/java/org/oscarehr/common/hl7/v2/HL7A04Data.java
++++ b/src/main/java/org/oscarehr/common/hl7/v2/HL7A04Data.java
+@@ -341,7 +341,7 @@ public class HL7A04Data
+ 			
+ 			if (this.programs != null) {
+ 				String programId = "";
+-				if (this.programs.size() > 0) {
++				if (!this.programs.isEmpty()) {
+ 					Integer pId = (Integer)this.programs.get(0);
+ 					if (pId != null) {
+ 						programId = pId.toString();
+diff --git a/src/main/java/org/oscarehr/common/service/E2ESchedulerJob.java b/src/main/java/org/oscarehr/common/service/E2ESchedulerJob.java
+index 95ab4d841e..2d03a8e719 100644
+--- a/src/main/java/org/oscarehr/common/service/E2ESchedulerJob.java
++++ b/src/main/java/org/oscarehr/common/service/E2ESchedulerJob.java
+@@ -100,7 +100,7 @@ public class E2ESchedulerJob extends TimerTask {
+ 			logger.info(sbStart.toString());
+ 			StringBuilder sbStartRec = reuseStringBuilder(sb);
+ 			sbStartRec.append(ids.size()).append(" records pending");
+-			if(ids.size() > 0) {
++			if(!ids.isEmpty()) {
+ 				sbStartRec.append("\nRange: ").append(ids.get(0)).append(" - ").append(ids.get(ids.size()-1));
+ 				sbStartRec.append(", Median: ").append(ids.get((ids.size()-1)/2));
+ 			}
+diff --git a/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java b/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java
+index 9b3e4af6fd..58fb777856 100644
+--- a/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java
++++ b/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java
+@@ -95,7 +95,7 @@ public class DxresearchReportAction extends DispatchAction {
+         List codeSearch = (List)request.getSession().getAttribute("codeSearch");
+         List patientInfo = dxresearchdao.patientRegistedAll(codeSearch,providerNoList);
+         request.getSession().setAttribute("listview", patientInfo);
+-        if (patientInfo == null || patientInfo.size()==0)
++        if (patientInfo == null || patientInfo.isEmpty() )
+         {
+             request.getSession().setAttribute("Counter", 0);
+         }else
+@@ -157,7 +157,7 @@ public class DxresearchReportAction extends DispatchAction {
+         List codeSearch = (List)request.getSession().getAttribute("codeSearch");
+         List patientInfo = dxresearchdao.patientRegistedDistincted(codeSearch,providerNoList);
+         request.getSession().setAttribute("listview", patientInfo);
+-        if (patientInfo == null || patientInfo.size()==0)
++        if (patientInfo == null || patientInfo.isEmpty() )
+         {
+             request.getSession().setAttribute("Counter", 0);
+         }else
+@@ -191,7 +191,7 @@ public class DxresearchReportAction extends DispatchAction {
+         List codeSearch = (List)request.getSession().getAttribute("codeSearch");
+         List patientInfo = dxresearchdao.patientRegistedDeleted(codeSearch,providerNoList);
+         request.getSession().setAttribute("listview", patientInfo);
+-        if (patientInfo == null || patientInfo.size()==0)
++        if (patientInfo == null || patientInfo.isEmpty() )
+         {
+             request.getSession().setAttribute("Counter", 0);
+         }else
+@@ -215,7 +215,7 @@ public class DxresearchReportAction extends DispatchAction {
+         List codeSearch = (List)request.getSession().getAttribute("codeSearch");
+         List patientInfo = dxresearchdao.patientRegistedActive(codeSearch,providerNoList);
+         request.getSession().setAttribute("listview", patientInfo);
+-        if (patientInfo == null || patientInfo.size()==0)
++        if (patientInfo == null || patientInfo.isEmpty() )
+         {
+             request.getSession().setAttribute("Counter", 0);
+         }else
+@@ -239,7 +239,7 @@ public class DxresearchReportAction extends DispatchAction {
+         List codeSearch = (List)request.getSession().getAttribute("codeSearch");
+         List patientInfo = dxresearchdao.patientRegistedResolve(codeSearch,providerNoList);
+         request.getSession().setAttribute("listview", patientInfo);
+-        if (patientInfo == null || patientInfo.size()==0)
++        if (patientInfo == null || patientInfo.isEmpty() )
+         {
+             request.getSession().setAttribute("Counter", 0);
+         }else
+diff --git a/src/main/java/org/oscarehr/dashboard/handler/DrilldownQueryHandler.java b/src/main/java/org/oscarehr/dashboard/handler/DrilldownQueryHandler.java
+index effe091611..f53b87d6c1 100644
+--- a/src/main/java/org/oscarehr/dashboard/handler/DrilldownQueryHandler.java
++++ b/src/main/java/org/oscarehr/dashboard/handler/DrilldownQueryHandler.java
+@@ -128,7 +128,7 @@ public class DrilldownQueryHandler extends AbstractQueryHandler {
+ 			headingArray = new String[ headings.size() ];
+ 			headings.toArray( headingArray );
+ 			
+-		} else if( queryResult != null && queryResult.size() > 0 ) {
++		} else if( queryResult != null && !queryResult.isEmpty()  ) {
+ 			
+ 			Map<String, ?> firstRow = (Map<String, ?>) queryResult.get(0);
+ 			Set<String> keySet = firstRow.keySet();
+diff --git a/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java b/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java
+index e9732cafed..dcdbdee278 100644
+--- a/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java
++++ b/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java
+@@ -542,7 +542,7 @@ public class DSDemographicAccess {
+ 	        }
+ 
+ 	        ArrayList<String> warnings = mi.getWarnings();
+-	        if( warnings.size() == 0 ) {
++	        if(warnings.isEmpty() ) {
+ 	        	retval = true;
+ 	        }
+ 
+@@ -554,7 +554,7 @@ public class DSDemographicAccess {
+     public boolean flowsheetUptoDateAll(String flowsheetId) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+     public boolean flowsheetUptoDateNot(String flowsheetId) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+     public boolean flowsheetUptoDateNotall(String flowsheetId) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+-    public boolean flowsheetUptoDateNotany(String flowsheetId) { return !flowsheetUptoDateAny(flowsheetId); };
++    public boolean flowsheetUptoDateNotany(String flowsheetId) { return !flowsheetUptoDateAny(flowsheetId); }
+ 
+     public boolean paidAny(String searchStrings, Map<String,String> options ) {
+ 
+diff --git a/src/main/java/org/oscarehr/hospitalReportManager/HRMDownloadFileAction.java b/src/main/java/org/oscarehr/hospitalReportManager/HRMDownloadFileAction.java
+index 0a97e51581..45e23be4df 100644
+--- a/src/main/java/org/oscarehr/hospitalReportManager/HRMDownloadFileAction.java
++++ b/src/main/java/org/oscarehr/hospitalReportManager/HRMDownloadFileAction.java
+@@ -69,7 +69,7 @@ public class HRMDownloadFileAction extends DownloadAction{
+     	
+     	List<Integer> ids  = hrmDocumentDao.findByHash(hash);
+     	
+-    	if(ids == null || ids.size() == 0) {
++    	if(ids == null || ids.isEmpty() ) {
+     		throw new Exception("no documents found for hash - " + hash);
+     	}
+     	
+diff --git a/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java b/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
+index 623f8474ce..2f0d6ee60d 100644
+--- a/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
++++ b/src/main/java/org/oscarehr/hospitalReportManager/HRMReportParser.java
+@@ -228,7 +228,7 @@ public class HRMReportParser {
+ 		HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
+ 		List<Integer> exactMatchList = hrmDocumentDao.findByHash(noMessageIdHash);
+ 
+-		if (exactMatchList == null || exactMatchList.size() == 0) {
++		if (exactMatchList == null || exactMatchList.isEmpty() ) {
+ 			//this isn't a duplicate report.
+ 			List<HRMDocument> sameReportDifferentRecipientReportList = hrmDocumentDao.findByNoTransactionInfoHash(noTransactionInfoHash);
+ 
+@@ -278,7 +278,7 @@ public class HRMReportParser {
+ 				
+ 				
+ 			}
+-		} else if (exactMatchList != null && exactMatchList.size() > 0) {
++		} else if (exactMatchList != null && !exactMatchList.isEmpty() ) {
+ 			// We've seen this one before.  Increment the counter on how many times we've seen it before
+ 			//TODO: do we need to save more info about when we saw the duplicates!
+ 			logger.debug("We've seen this report before. Increment the counter on how many times we've seen it before, for file:"+report.getFileLocation());
+@@ -364,7 +364,7 @@ public class HRMReportParser {
+ 		// Check #1: Identify if this is a report that we received before, but was sent to the wrong demographic.
+ 		// we set the parent on those other reports to this one. this way we can display the other versions when viewing.
+ 		List<Integer> parentReportList = hrmDocumentDao.findAllWithSameNoDemographicInfoHash(mergedDocument.getReportLessDemographicInfoHash());
+-		if (parentReportList != null && parentReportList.size() > 0) {
++		if (parentReportList != null && !parentReportList.isEmpty() ) {
+ 			for (Integer id : parentReportList) {
+ 				if (id != null && id.intValue() != mergedDocument.getId().intValue()) {
+ 					HRMDocument hd = hrmDocumentDao.find(id);
+@@ -414,56 +414,54 @@ public class HRMReportParser {
+ 			}
+ 		}
+ 		
+-		/*
+-
+-		// Load all the reports for this demographic into memory -- check by name only
++		/* // Load all the reports for this demographic into memory -- check by name only
+ 		List<HRMReport> thisDemoHrmReportList = HRMReportParser.loadAllReportsRoutedToDemographic(loggedInInfo, report.getLegalName());
+ 
+ 		for (HRMReport loadedReport : thisDemoHrmReportList) {
+-			boolean hasSameReportContent = report.getFirstReportTextContent().equalsIgnoreCase(loadedReport.getFirstReportTextContent());
+-			boolean hasSameStatus = hasSameStatus(report,loadedReport);
+-			boolean hasSameClass = report.getFirstReportClass().equalsIgnoreCase(loadedReport.getFirstReportClass());
+-			boolean hasSameDate = false;
+-
+-			hasSameDate = HRMReportParser.getAppropriateDateFromReport(report).equals(HRMReportParser.getAppropriateDateFromReport(loadedReport));
+-
+-			Integer threshold = 0;
+-
+-			if (hasSameReportContent)
+-				threshold += 100;
+-			else
+-				threshold += 10;
+-
+-			if (hasSameStatus)
+-				threshold += 5;
+-			else
+-				threshold += 10;
+-
+-			if (hasSameClass)
+-				threshold += 10;
+-			else
+-				threshold += 10;
+-
+-			if (hasSameDate)
+-				threshold += 20;
+-			else
+-				threshold += 5;
+-
+-			if (threshold >= 45) {
+-				// This is probably a changed report addressed to the same demographic, so set the parent id (as long as this isn't the same report) and we're done!
+-				if (loadedReport.getHrmParentDocumentId() != null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
+-					mergedDocument.setParentReport(loadedReport.getHrmParentDocumentId());
+-					hrmDocumentDao.merge(mergedDocument);
+-					return;
+-				} else if (loadedReport.getHrmParentDocumentId() == null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
+-					mergedDocument.setParentReport(loadedReport.getHrmDocumentId());
+-					hrmDocumentDao.merge(mergedDocument);
+-					return;
+-				}
+-			}
+-			
++		boolean hasSameReportContent = report.getFirstReportTextContent().equalsIgnoreCase(loadedReport.getFirstReportTextContent());
++		boolean hasSameStatus = hasSameStatus(report,loadedReport);
++		boolean hasSameClass = report.getFirstReportClass().equalsIgnoreCase(loadedReport.getFirstReportClass());
++		boolean hasSameDate = false;
++
++		hasSameDate = HRMReportParser.getAppropriateDateFromReport(report).equals(HRMReportParser.getAppropriateDateFromReport(loadedReport));
++
++		Integer threshold = 0;
++
++		if (hasSameReportContent)
++		threshold += 100;
++		else
++		threshold += 10;
++
++		if (hasSameStatus)
++		threshold += 5;
++		else
++		threshold += 10;
++
++		if (hasSameClass)
++		threshold += 10;
++		else
++		threshold += 10;
++
++		if (hasSameDate)
++		threshold += 20;
++		else
++		threshold += 5;
++
++		if (threshold >= 45) {
++		// This is probably a changed report addressed to the same demographic, so set the parent id (as long as this isn't the same report) and we're done!
++		if (loadedReport.getHrmParentDocumentId() != null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
++		mergedDocument.setParentReport(loadedReport.getHrmParentDocumentId());
++		hrmDocumentDao.merge(mergedDocument);
++		return;
++		} else if (loadedReport.getHrmParentDocumentId() == null && loadedReport.getHrmDocumentId().intValue() != mergedDocument.getId().intValue()) {
++		mergedDocument.setParentReport(loadedReport.getHrmDocumentId());
++		hrmDocumentDao.merge(mergedDocument);
++		return;
++		}
++		}
++
+ 		}
+-		*/
++		 */
+ 	}
+ 
+ /*
+diff --git a/src/main/java/org/oscarehr/hospitalReportManager/SFTPConnector.java b/src/main/java/org/oscarehr/hospitalReportManager/SFTPConnector.java
+index 2dc85723e1..cc8e983173 100644
+--- a/src/main/java/org/oscarehr/hospitalReportManager/SFTPConnector.java
++++ b/src/main/java/org/oscarehr/hospitalReportManager/SFTPConnector.java
+@@ -715,7 +715,7 @@ public class SFTPConnector {
+ 	    	}
+ 	    }
+ 	    
+-	    if (sendToProviderList.size()==0) {
++	    if (sendToProviderList.isEmpty()) {
+ 	    	String providerNoTemp="999998";
+ 		    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) {
+ 		    	sendToProviderList.add(providerNoTemp);
+@@ -723,7 +723,7 @@ public class SFTPConnector {
+ 	    }
+ 
+ 	    // no one wants to hear about the problem
+-	    if (sendToProviderList.size()==0) {
++	    if (sendToProviderList.isEmpty()) {
+ 	    	return;
+ 	    }
+ 	    
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/mailbox/ReSubmitAction.java b/src/main/java/org/oscarehr/integration/mcedt/mailbox/ReSubmitAction.java
+index 62dd8d8b47..a90e48b1cc 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/mailbox/ReSubmitAction.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/mailbox/ReSubmitAction.java
+@@ -63,7 +63,7 @@ public class ReSubmitAction extends Action {
+ 			
+ 			ResourceResult result=null;
+ 			EDTDelegate delegate = DelegateFactory.newDelegate(serviceId);
+-			if (resourceIds.size()>0) result =delegate.submit(resourceIds);
++			if (!resourceIds.isEmpty()) result =delegate.submit(resourceIds);
+ 			for (ResponseResult edtResponse: result.getResponse()) {
+ 				if (edtResponse.getResult().getCode().equals("IEDTS0001")) {
+ 					saveMessages(request, ActionUtils.addMessage("uploadAction.submit.success", McedtMessageCreator.resourceResultToString(result)));
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/mailbox/UploadAction.java b/src/main/java/org/oscarehr/integration/mcedt/mailbox/UploadAction.java
+index e7d594f52f..ac8f6ef6a2 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/mailbox/UploadAction.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/mailbox/UploadAction.java
+@@ -88,7 +88,7 @@ public class UploadAction extends DispatchAction {
+ 			FileUtils.mkDir(sent);
+ 		
+ 		try {
+-			if (files!=null && files.size()>0) {
++			if (files!=null && !files.isEmpty() ) {
+ 				for (File file: files) {
+ 					ActionUtils.moveFileToDirectory(file, sent, false, true);
+ 				}
+@@ -265,7 +265,7 @@ public class UploadAction extends DispatchAction {
+ 						failUploads.add(edtResponse.getDescription()+": "+edtResponse.getResult().getMsg());
+ 					}
+ 				}
+-				if (ids.size()>0) {
++				if (!ids.isEmpty()) {
+ 					
+ 					try {
+ 						result =delegate.submit(ids);
+@@ -292,12 +292,12 @@ public class UploadAction extends DispatchAction {
+ 			ActionMessages messages = new ActionMessages();
+ 			// we don't need to find out if upload is successful, we rather get info about submit status of that file
+ 			//if ( successUploads!=null && successUploads.size()>0 ) messages = ActionUtils.addMoreMessage(messages, "uploadAction.upload.success", McedtMessageCreator.stringListToString(successUploads));
+-			if ( successSubmits!=null && successSubmits.size()>0 ) messages = ActionUtils.addMoreMessage(messages, "uploadAction.submit.success", McedtMessageCreator.stringListToString(successSubmits));
++			if ( successSubmits!=null && !successSubmits.isEmpty()  ) messages = ActionUtils.addMoreMessage(messages, "uploadAction.submit.success", McedtMessageCreator.stringListToString(successSubmits));
+ 			saveMessages(request, messages);
+ 
+ 			ActionMessages errors = new ActionMessages();
+-			if ( failUploads!=null && failUploads.size()>0 ) errors = ActionUtils.addMoreMessage(errors,"uploadAction.upload.failure", McedtMessageCreator.stringListToString(failUploads));
+-			if ( failSubmits!=null && failSubmits.size()>0 ) errors = ActionUtils.addMoreMessage(errors,"uploadAction.submit.failure", McedtMessageCreator.stringListToString(failSubmits));		
++			if ( failUploads!=null && !failUploads.isEmpty()  ) errors = ActionUtils.addMoreMessage(errors,"uploadAction.upload.failure", McedtMessageCreator.stringListToString(failUploads));
++			if ( failSubmits!=null && !failSubmits.isEmpty()  ) errors = ActionUtils.addMoreMessage(errors,"uploadAction.submit.failure", McedtMessageCreator.stringListToString(failSubmits));		
+ 			saveErrors(request, errors);
+ 			
+ 		} catch (IOException e) {
+diff --git a/src/main/java/org/oscarehr/jobs/OscarMsgReviewSender.java b/src/main/java/org/oscarehr/jobs/OscarMsgReviewSender.java
+index 5ecb940926..7566b39de3 100644
+--- a/src/main/java/org/oscarehr/jobs/OscarMsgReviewSender.java
++++ b/src/main/java/org/oscarehr/jobs/OscarMsgReviewSender.java
+@@ -99,7 +99,8 @@ public class OscarMsgReviewSender implements OscarRunnable {
+         List<ResidentOscarMsg> residentOscarMsgList;
+         String[] providers = new String[1];
+         MsgMessageData msgData = new MsgMessageData();
+-        ArrayList<MsgProviderData> providerListing, localProviderListing;
++        ArrayList<MsgProviderData> providerListing;
++        ArrayList<MsgProviderData> localProviderListing;
+         String curLoco = null;
+         String sentToWho = null;
+         String messageId = null;
+@@ -141,7 +142,7 @@ public class OscarMsgReviewSender implements OscarRunnable {
+             }
+         }
+         
+-        if( currentHour.equals(defaultHour) && currentMinute.equals(defaultMin) && providerNosList.size() > 0  ) {
++        if( currentHour.equals(defaultHour) && currentMinute.equals(defaultMin) && !providerNosList.isEmpty()   ) {
+             for( String p : providerNosList ) {
+                 String userProp = propertyDao.getStringValue(p, UserProperty.OSCAR_MSG_RECVD);
+                 
+diff --git a/src/main/java/org/oscarehr/managers/DrugProductManager.java b/src/main/java/org/oscarehr/managers/DrugProductManager.java
+index bd88ff4e61..26ab30d009 100644
+--- a/src/main/java/org/oscarehr/managers/DrugProductManager.java
++++ b/src/main/java/org/oscarehr/managers/DrugProductManager.java
+@@ -139,7 +139,7 @@ public class DrugProductManager {
+ 		List<String> results = drugProductDao.findUniqueDrugProductNames();
+ 		
+ 		//--- log action ---
+-		if (results.size()>0) {
++		if (!results.isEmpty()) {
+ 			LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.getUniqueDrugProductNames","");
+ 		}
+ 		
+@@ -153,7 +153,7 @@ public class DrugProductManager {
+ 		List<String> results = drugProductDao.findUniqueDrugProductLotsByName(productName);
+ 		
+ 		//--- log action ---
+-		if (results.size()>0) {
++		if (!results.isEmpty()) {
+ 			LogAction.addLogSynchronous(loggedInInfo,"DrugProductManager.getUniqueDrugProductNames","");
+ 		}
+ 		
+diff --git a/src/main/java/org/oscarehr/olis/OLISPoller.java b/src/main/java/org/oscarehr/olis/OLISPoller.java
+index 1f47b86b0a..471f6d00c2 100644
+--- a/src/main/java/org/oscarehr/olis/OLISPoller.java
++++ b/src/main/java/org/oscarehr/olis/OLISPoller.java
+@@ -119,7 +119,7 @@ public class OLISPoller {
+ 					break;
+ 				}
+ 				List<String> resultsList = olisPoller.parsePollResults(response);
+-				if (resultsList.size() == 0) { continue; }
++				if (resultsList.isEmpty()) { continue; }
+ 				olisPoller.importResults(loggedInInfo, resultsList);
+ 				
+ 				Pattern p = Pattern.compile("@OBR\\.22\\^(\\d{14}-\\d{4})~");
+@@ -173,7 +173,7 @@ public class OLISPoller {
+ 				return;
+ 			}
+ 			List<String> resultsList = olisPoller.parsePollResults(response);
+-			if (resultsList.size() == 0) { return; }
++			if (resultsList.isEmpty()) { return; }
+ 			olisPoller.importResults(loggedInInfo, resultsList);
+ 			
+ 			Pattern p = Pattern.compile("@OBR\\.22\\^(\\d{14}-\\d{4})~");
+diff --git a/src/main/java/org/oscarehr/phr/util/MumpsResultWrapper.java b/src/main/java/org/oscarehr/phr/util/MumpsResultWrapper.java
+index bf2dfa6eba..309bec9fd2 100644
+--- a/src/main/java/org/oscarehr/phr/util/MumpsResultWrapper.java
++++ b/src/main/java/org/oscarehr/phr/util/MumpsResultWrapper.java
+@@ -122,7 +122,7 @@ public final class MumpsResultWrapper {
+ 	{
+ 		ArrayList<String> answers=getAnswersByQuestionId(questionId);
+ 
+-		if (answers==null || answers.size()<1) return(null);
++		if (answers==null || !answers.isEmpty() ) return(null);
+ 		else return(answers.get(0));
+ 	}
+ }
+diff --git a/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java b/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
+index c090671522..602e9e4b6a 100644
+--- a/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
++++ b/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
+@@ -566,13 +566,13 @@ public class ReportBuilder {
+ 	              EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(item.getDemographicNo(),measurementType);
+ 	              logger.debug("getting followup data for "+item.getDemographicNo());
+ 	              Collection followupData = measurementDataHandler.getMeasurementsDataCollection();
+-	              if ( followupData.size() > 0 ){
++	              if (!followupData.isEmpty() ){
+ 	                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+ 	                  item.setLastFollowup(measurementData.getDateObservedAsDate());
+ 	                  item.setLastFollupProcedure(measurementData.getDataField());
+ 	              }
+ 	              item.setNextSuggestedProcedure("----");
+-	                //prd.numMonths ;
++	                // prd.numMonths ;
+ 	          }else if(item.getState().equals("Ineligible")){
+ 	                // Do nothing
+ 	        	  	item.setNextSuggestedProcedure("----");
+@@ -582,7 +582,7 @@ public class ReportBuilder {
+ 	              logger.debug("getting followup data for "+item.getDemographicNo());
+ 	              Collection followupData = measurementDataHandler.getMeasurementsDataCollection();
+ 
+-	              if ( followupData.size() > 0 ){
++	              if (!followupData.isEmpty() ){
+ 	                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+ 	                  item.setLastFollowup(measurementData.getDateObservedAsDate());
+ 	                  item.setLastFollupProcedure(measurementData.getDataField());
+diff --git a/src/main/java/org/oscarehr/util/WebUtilsOld.java b/src/main/java/org/oscarehr/util/WebUtilsOld.java
+index b3de7fe9c9..9e571616a7 100644
+--- a/src/main/java/org/oscarehr/util/WebUtilsOld.java
++++ b/src/main/java/org/oscarehr/util/WebUtilsOld.java
+@@ -49,7 +49,7 @@ public final class WebUtilsOld {
+ 
+ 		StringBuilder sb = new StringBuilder();
+ 
+-		if (al != null && al.size() > 0) {
++		if (al != null && !al.isEmpty() ) {
+ 			sb.append("<ul style=\"color:red\">");
+ 			
+ 			for (String s : al)
+@@ -70,7 +70,7 @@ public final class WebUtilsOld {
+ 
+ 		StringBuilder sb = new StringBuilder();
+ 
+-		if (al != null && al.size() > 0) {
++		if (al != null && !al.isEmpty() ) {
+ 			sb.append("<ul style=\"color:#009900\">");
+ 			
+ 			for (String s : al)
+@@ -91,7 +91,7 @@ public final class WebUtilsOld {
+ 
+ 		StringBuilder sb = new StringBuilder();
+ 
+-		if (al != null && al.size() > 0) {
++		if (al != null && !al.isEmpty() ) {
+ 			sb.append("<script type=\"text/javascript\">");
+ 			sb.append("alert('");
+ 			
+diff --git a/src/main/java/org/oscarehr/web/OcanReportUIBean.java b/src/main/java/org/oscarehr/web/OcanReportUIBean.java
+index 068c0659f4..01f00d2c9b 100644
+--- a/src/main/java/org/oscarehr/web/OcanReportUIBean.java
++++ b/src/main/java/org/oscarehr/web/OcanReportUIBean.java
+@@ -22,6 +22,10 @@
+  */
+ 
+ package org.oscarehr.web;
++import OCANv2SubmissionFileDocument;
++import ca.ehealthontario.ccim.ApplyToDocument.ApplyTo.Assessment;
++import org.oscarehr.ocan.ImmigExpListDocument.ImmigExpList.Value;
++import org.oscarehr.ocan.ReasonConsumerSelfAxNotCompletedListDocument.ReasonConsumerSelfAxNotCompletedList.Value;
+ 
+ import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
+@@ -1162,7 +1166,7 @@ public class OcanReportUIBean implements CallbackHandler {
+ 			mc_list.add(MedicalCondition.Enum.forString(itr.next()));
+ 		}
+ 		//medicalConditionList.setMedicalConditionArray(answers.toArray(new String[answers.size()]));
+-		if(answers.size()>0) {
++		if(!answers.isEmpty()) {
+ 			medicalConditionList.setMedicalConditionArray(mc_list.toArray(new MedicalCondition.Enum[answers.size()]));
+ 		}
+ 		medicalConditionList.setAutismDetail(getStaffAnswer("6_medical_conditions_autism",ocanStaffFormData));
+@@ -1182,7 +1186,7 @@ public class OcanReportUIBean implements CallbackHandler {
+ 		while(itr.hasNext()) {
+ 			alist.add(ConcernArea.Enum.forString(itr.next()));
+ 		}
+-		if(answers.size()>0)
++		if(!answers.isEmpty())
+ 			concernAreaList.setConcernAreaArray(alist.toArray(new ConcernArea.Enum[answers.size()]));
+ 		concernAreaList.setOtherConcernArea(getStaffAnswer("6_physical_health_details_other",ocanStaffFormData));
+ 		return concernAreaList;
+@@ -1629,7 +1633,7 @@ public class OcanReportUIBean implements CallbackHandler {
+ 
+ 		if("FULL".equals(ocanType)) {
+ 		List<String> immigrationExpAnswers = getMultipleStaffAnswer("immigration_issues",ocanStaffFormData);
+-		if(immigrationExpAnswers.size()>0) {
++		if(!immigrationExpAnswers.isEmpty()) {
+ 			ImmigExpList immigExpList = ImmigExpList.Factory.newInstance();
+ 			List<ImmigExpList.Value.Enum> immigExpListEnum = new ArrayList<ImmigExpList.Value.Enum>();
+ 			for(String answer:immigrationExpAnswers) {
+@@ -1646,7 +1650,7 @@ public class OcanReportUIBean implements CallbackHandler {
+ 		clientRecord.setImmigExpFreeText(getStaffAnswer("immigration_experience",ocanStaffFormData));
+ 
+ 		List<String> discriminationExpAnswers = getMultipleStaffAnswer("discrimination",ocanStaffFormData);
+-		if(discriminationExpAnswers.size()>0) {
++		if(!discriminationExpAnswers.isEmpty()) {
+ 			DiscrimExpList discrimExpList = null;
+ 			for(String answer:discriminationExpAnswers) {
+ 				if(discrimExpList==null) {
+diff --git a/src/main/java/org/oscarehr/ws/rest/ScheduleService.java b/src/main/java/org/oscarehr/ws/rest/ScheduleService.java
+index fbd343b77a..1b389eaeaf 100644
+--- a/src/main/java/org/oscarehr/ws/rest/ScheduleService.java
++++ b/src/main/java/org/oscarehr/ws/rest/ScheduleService.java
+@@ -463,7 +463,7 @@ public class ScheduleService extends AbstractServiceImpl {
+ 			List<Object[]> items = scheduleManager.listAppointmentsByPeriodProvider(getLoggedInInfo(), sDate, eDate, providers);
+ 
+ 			AppointmentExtResponse response = new AppointmentExtResponse();
+-			if(items != null && items.size()>0) {
++			if(items != null && !items.isEmpty() ) {
+ 				if(response.getContent() == null) response.setContent(new ArrayList<AppointmentExtTo>());
+ 				for(Object[] obj : items) {
+ 					Integer appointmentNo = (Integer) obj[0];
+@@ -519,7 +519,7 @@ public class ScheduleService extends AbstractServiceImpl {
+ 			List<Object[]> items = scheduleManager.listProviderAppointmentCounts(getLoggedInInfo(), sDateStr, eDateStr);
+ 
+ 			ProviderApptsCountResponse response = new ProviderApptsCountResponse();
+-			if(items != null && items.size()>0) {
++			if(items != null && !items.isEmpty() ) {
+ 				if(response.getContent() == null) response.setContent(new ArrayList<ProviderApptsCountTo>());
+ 				for(Object[] obj : items) {
+ 					String providerNo = (String)obj[0];
+diff --git a/src/main/java/oscar/dms/actions/CombinePDFAction.java b/src/main/java/oscar/dms/actions/CombinePDFAction.java
+index 9ee0e88170..64bb00ac49 100644
+--- a/src/main/java/oscar/dms/actions/CombinePDFAction.java
++++ b/src/main/java/oscar/dms/actions/CombinePDFAction.java
+@@ -70,7 +70,7 @@ public class CombinePDFAction extends Action {
+                String filename =  docData.getDocumentName(files[i]);
+                      alist.add(path+filename);
+             }
+-            if (alist.size() > 0 ){
++            if (!alist.isEmpty() ){
+                 response.setContentType("application/pdf");  //octet-stream
+                 if(ContentDisposition!=null && ContentDisposition.equals("inline")) {
+                     response.setHeader("Transfer-Encoding", "chunked"); 
+diff --git a/src/main/java/oscar/eform/EFormUtil.java b/src/main/java/oscar/eform/EFormUtil.java
+index 61ce43a60d..b519796f14 100644
+--- a/src/main/java/oscar/eform/EFormUtil.java
++++ b/src/main/java/oscar/eform/EFormUtil.java
+@@ -202,7 +202,7 @@ public class EFormUtil {
+ 	public static ArrayList<HashMap<String, ? extends Object>> listEForms(String sortBy, String deleted, String userRoles) {
+ 		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
+ 		ArrayList<HashMap<String, ? extends Object>> eForms = listEForms(sortBy, deleted);
+-		if (eForms.size() > 0) {
++		if (!eForms.isEmpty()) {
+ 			for (int i = 0; i < eForms.size(); i++) {
+ 				HashMap<String, ? extends Object> curForm = eForms.get(i);
+ 				// filter eform by role type
+diff --git a/src/main/java/oscar/eform/actions/ManageEFormAction.java b/src/main/java/oscar/eform/actions/ManageEFormAction.java
+index 829ceccbb7..446f70a3f0 100644
+--- a/src/main/java/oscar/eform/actions/ManageEFormAction.java
++++ b/src/main/java/oscar/eform/actions/ManageEFormAction.java
+@@ -86,7 +86,7 @@ public class ManageEFormAction extends DispatchAction {
+         EFormExportZip eFormExportZip = new EFormExportZip();
+         List<String> errors = eFormExportZip.importForm(zippedForm.getInputStream());
+         request.setAttribute("importErrors", errors);
+-        if(errors.size() > 0){
++        if(!errors.isEmpty()){
+         	return mapping.findForward("fail");
+         }else{
+ 	        request.setAttribute("status", "success");	
+diff --git a/src/main/java/oscar/eform/actions/PrintAction.java b/src/main/java/oscar/eform/actions/PrintAction.java
+index 683c564472..6fc270d8f6 100644
+--- a/src/main/java/oscar/eform/actions/PrintAction.java
++++ b/src/main/java/oscar/eform/actions/PrintAction.java
+@@ -210,7 +210,7 @@ public class PrintAction extends Action {
+                 alist.add(bis);
+             }
+             
+-			if (alist.size() > 0) {
++			if (!alist.isEmpty()) {
+ 				
+ 				bos = new ByteOutputStream();
+ 				ConcatPDF.concat(alist, bos);
+@@ -223,9 +223,7 @@ public class PrintAction extends Action {
+ 				response.getOutputStream().write(bos.getBytes(), 0, bos.getCount());
+ 			}
+ 			
+-			/*
+-			
+-			logger.info("Generating PDF for eform with fdid = " + formId);
++			/* logger.info("Generating PDF for eform with fdid = " + formId);
+ 
+ 			tempFile = File.createTempFile("EFormPrint." + formId, ".pdf");
+ 			//tempFile.deleteOnExit();
+@@ -234,47 +232,47 @@ public class PrintAction extends Action {
+ 			String viewUri = localUri + formId;
+ 			WKHtmlToPdfUtils.convertToPdf(viewUri, tempFile);
+ 			logger.info("Writing pdf to : "+tempFile.getCanonicalPath());
+-			
+-			
++
++
+ 			InputStream is = new BufferedInputStream(new FileInputStream(tempFile));
+ 			ByteOutputStream bos = new ByteOutputStream();
+ 			byte buffer[] = new byte[1024];
+ 			int read;
+ 			while (is.available() != 0) {
+-				read = is.read(buffer,0,1024);
+-				bos.write(buffer,0, read);
++			read = is.read(buffer,0,1024);
++			bos.write(buffer,0, read);
+ 			}
+-			
++
+ 			bos.flush();
+ 			// byte[] pdf = HtmlToPdfServlet.appendFooter(bos.getBytes());
+ 			byte[] pdf;
+-            try {
+-	            pdf = HtmlToPdfServlet.stamp(bos.getBytes());
+-            } catch (Exception e) {
+-            	throw new RuntimeException(e);
+-            }
+-			
++			try {
++			pdf = HtmlToPdfServlet.stamp(bos.getBytes());
++			} catch (Exception e) {
++			throw new RuntimeException(e);
++			}
++
+ 			//while (fos.read() != -1)
+ 			response.setContentType("application/pdf");  //octet-stream
+-            response.setHeader("Content-Disposition", "attachment; filename=\"EForm-"
+-            				+ formId + "-"
+-							+ UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")
+-							+ ".pdf\"");
++			response.setHeader("Content-Disposition", "attachment; filename=\"EForm-"
++			+ formId + "-"
++			+ UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")
++			+ ".pdf\"");
+ 			// response.getOutputStream().write(bos.getBytes(), 0, bos.getCount());
+-            HtmlToPdfServlet.stream(response, pdf, false);
+-            // response.getOutputStream().write(pdf);
+-			
++			HtmlToPdfServlet.stream(response, pdf, false);
++			// response.getOutputStream().write(pdf);
++
+ 			// Removing the consulation pdf.
+ 			tempFile.delete();	
+-			
++
+ 			// Removing the eform
+ 			if (skipSave) {
+-	        	 EFormDataDao eFormDataDao=(EFormDataDao) SpringUtils.getBean("EFormDataDao");
+-	        	 EFormData eFormData=eFormDataDao.find(Integer.parseInt(formId));
+-	        	 eFormData.setCurrent(false);
+-	        	 eFormDataDao.merge(eFormData);
++			EFormDataDao eFormDataDao=(EFormDataDao) SpringUtils.getBean("EFormDataDao");
++			EFormData eFormData=eFormDataDao.find(Integer.parseInt(formId));
++			eFormData.setCurrent(false);
++			eFormDataDao.merge(eFormData);
+ 			}
+-			*/
++			 */
+ 		} catch (DocumentException e) {
+ 			//logger.error("Error converting and sending eform. id=" + eFormId, e);
+ 			MiscUtils.getLogger().error("",e);
+diff --git a/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java b/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java
+index f69fddc436..0c633105d3 100644
+--- a/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java
++++ b/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java
+@@ -131,7 +131,7 @@ public class FrmFormRHPreventionAction extends Action{
+         Date endDate = UtilDateUtilities.StringToDate(dateToParse);   
+ 
+         //Currently open work flows ?
+-        if(currentWorkFlows != null && currentWorkFlows.size() > 0){
++        if(currentWorkFlows != null && !currentWorkFlows.isEmpty() ){
+             MiscUtils.getLogger().debug("size of current workflows "+currentWorkFlows.size());
+             request.setAttribute("currentWorkFlow",currentWorkFlows.get(0));
+              Hashtable h = (Hashtable) currentWorkFlows.get(0);
+diff --git a/src/main/java/oscar/form/pharmaForms/formBPMH/util/JsonUtil.java b/src/main/java/oscar/form/pharmaForms/formBPMH/util/JsonUtil.java
+index af6a7b4ffe..f21ea6613d 100644
+--- a/src/main/java/oscar/form/pharmaForms/formBPMH/util/JsonUtil.java
++++ b/src/main/java/oscar/form/pharmaForms/formBPMH/util/JsonUtil.java
+@@ -49,7 +49,7 @@ public class JsonUtil {
+ 		jsonArray.clear();
+ 		
+ 		Iterator<?> it = null;
+-		if(pojoList.size() > 0) {
++		if(!pojoList.isEmpty()) {
+ 			
+ 			it = pojoList.iterator();
+ 			while( it.hasNext() ) {
+diff --git a/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java b/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java
+index 28887a80cd..94bcc4b5b3 100644
+--- a/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java
++++ b/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java
+@@ -101,7 +101,7 @@ public class FrmStudyXMLClientSend {
+ 		//initial
+ 		aStudy.init(args[0], args[1]);
+ 		aStudy.getStudyContent();
+-		if (aStudy.studyContent.size() == 0) {return;}
++		if (aStudy.studyContent.isEmpty()) {return;}
+ 
+ 		//loop for each content record
+ 		for (int i = 0; i < aStudy.studyContent.size() ; i++ )	{
+diff --git a/src/main/java/oscar/form/study/HSFO/pageUtil/TransferHSFOXmlAction.java b/src/main/java/oscar/form/study/HSFO/pageUtil/TransferHSFOXmlAction.java
+index 0a443fc893..3037ddba62 100644
+--- a/src/main/java/oscar/form/study/HSFO/pageUtil/TransferHSFOXmlAction.java
++++ b/src/main/java/oscar/form/study/HSFO/pageUtil/TransferHSFOXmlAction.java
+@@ -93,7 +93,7 @@ public class TransferHSFOXmlAction extends Action
+ 		} else
+ 		{
+ 			message = tfutil.validateDoc(doc);
+-			if (message.size() != 0)
++			if (!message.isEmpty())
+ 			{
+ 				// set error message;
+ 				request.setAttribute("HSFOmessage", message.get(0));
+diff --git a/src/main/java/oscar/form/study/HSFO/pageUtil/XMLTransferUtil.java b/src/main/java/oscar/form/study/HSFO/pageUtil/XMLTransferUtil.java
+index b8fd50856c..4e28bb5de8 100644
+--- a/src/main/java/oscar/form/study/HSFO/pageUtil/XMLTransferUtil.java
++++ b/src/main/java/oscar/form/study/HSFO/pageUtil/XMLTransferUtil.java
+@@ -24,6 +24,7 @@
+ 
+ 
+ package oscar.form.study.HSFO.pageUtil;
++import HsfoHbpsDataDocument;
+ import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
+ import java.text.SimpleDateFormat;
+@@ -258,7 +259,7 @@ public class XMLTransferUtil
+ 	public VisitData getSignedVisit(String patientId)
+ 	{
+ 		List pList = hdao.nullSafeRetrVisitRecord(patientId);
+-		if (pList == null || pList.size() == 0)
++		if (pList == null || pList.isEmpty() )
+ 			return null;
+ 		VisitData vs = (VisitData) pList.get(0);
+ 		Date vd = vs.getFormEdited();
+@@ -478,7 +479,7 @@ public class XMLTransferUtil
+ 
+ 	{
+ 		List pList = hdao.nullSafeRetrVisitRecord(patientId);
+-		if (pList == null || pList.size() == 0)
++		if (pList == null || pList.isEmpty() )
+ 			return;
+ 		for (int i = 0; i < pList.size(); i++)
+ 		{
+@@ -1399,7 +1400,7 @@ public class XMLTransferUtil
+ 					if (pdata != null && pdata.getPatient_Id() != null)
+ 						addPatientToSite(loggedInInfo, site, pdata);
+ 				}
+-			if (patientIdList == null || patientIdList.size() == 0)
++			if (patientIdList == null || patientIdList.isEmpty() )
+ 				doc = null;
+ 		} else
+ 		{
+diff --git a/src/main/java/oscar/form/study/hsfo2/pageUtil/ManageHSFOAction.java b/src/main/java/oscar/form/study/hsfo2/pageUtil/ManageHSFOAction.java
+index a68544f253..164ef4d43b 100644
+--- a/src/main/java/oscar/form/study/hsfo2/pageUtil/ManageHSFOAction.java
++++ b/src/main/java/oscar/form/study/hsfo2/pageUtil/ManageHSFOAction.java
+@@ -70,7 +70,7 @@ public class ManageHSFOAction extends Action
+ 
+   public static enum FORM
+   {
+-    registration, flowsheet, graphs
++    registration, flowsheet, graphs;
+   }
+ 
+   /** Creates a new instance of ManageHSFOAction */
+@@ -166,7 +166,7 @@ public class ManageHSFOAction extends Action
+       //stay in regist form and treat as history
+       isRegistForm = true;
+       isHistoryForm = true;
+-      if( patientHistory.size() > 0 )
++      if(!patientHistory.isEmpty() )
+         formHsfo2Visit = (Hsfo2Visit)patientHistory.get( patientHistory.size() - 1 );
+     }
+     
+diff --git a/src/main/java/oscar/form/study/hsfo2/pageUtil/XMLTransferUtil.java b/src/main/java/oscar/form/study/hsfo2/pageUtil/XMLTransferUtil.java
+index d83b261b3e..70f1219984 100644
+--- a/src/main/java/oscar/form/study/hsfo2/pageUtil/XMLTransferUtil.java
++++ b/src/main/java/oscar/form/study/hsfo2/pageUtil/XMLTransferUtil.java
+@@ -23,6 +23,10 @@
+  */
+ 
+ package oscar.form.study.hsfo2.pageUtil;
++import StringFollowUpIntervalUnits;
++import HsfHmpDataDocument;
++import StringGoalView;
++import StringHtnDxType;
+ 
+ import java.io.ByteArrayOutputStream;
+ import java.io.File;
+@@ -188,7 +192,7 @@ public class XMLTransferUtil
+ 	private static Logger logger = MiscUtils.getLogger();
+   public static enum SoapElementKey
+   {
+-	  DataVaultStatusStrResult, StatusMessage, responseStatusCode, DataVaultResult, GetDataDateRangeResult, DataBeginDate, DataEndDate,
++	  DataVaultStatusStrResult, StatusMessage, responseStatusCode, DataVaultResult, GetDataDateRangeResult, DataBeginDate, DataEndDate;
+ 
+   }
+ 
+@@ -278,7 +282,7 @@ public class XMLTransferUtil
+   public Hsfo2Visit getSignedVisit( String patientId, String startDate, String endDate ) 
+   {
+     List pList = hdao.nullSafeRetrVisitRecord( patientId, startDate, endDate );
+-    if ( pList == null || pList.size() == 0 )
++    if ( pList == null || pList.isEmpty()  )
+       return null;
+     Hsfo2Visit vs = (Hsfo2Visit) pList.get( 0 );
+     Date vd = vs.getFormEdited();
+@@ -813,7 +817,7 @@ public class XMLTransferUtil
+   public void addAllPatientVisit( SitePatient patient, String patientId, String startDate, String endDate )
+   {
+     List pList = hdao.nullSafeRetrVisitRecord( patientId, startDate, endDate );
+-    if ( pList == null || pList.size() == 0 )
++    if ( pList == null || pList.isEmpty()  )
+       return;
+     for ( int i = 0; i < pList.size(); i++ )
+     {
+@@ -826,7 +830,7 @@ public class XMLTransferUtil
+   public void addAllPatientVisitFinalSection( SitePatient patient, String patientId, String startDateStr, String endDateStr, Calendar startDate, Calendar endDate, Calendar visitDateValue, XmlCalendar visitDate, XmlCalendar when, String who ) 
+   {
+     List pList = hdao.nullSafeRetrVisitRecord( patientId, startDateStr, endDateStr );
+-    if ( pList == null || pList.size() == 0 )
++    if ( pList == null || pList.isEmpty()  )
+       return;
+     for ( int i = 0; i < pList.size(); i++ )
+     {
+@@ -838,7 +842,7 @@ public class XMLTransferUtil
+     String visitDateStr = String.valueOf(visitDateValue.get(Calendar.YEAR)) + "-" + String.valueOf(visitDateValue.get(Calendar.MONTH)+1)+ "-" + String.valueOf(visitDateValue.get(Calendar.DATE)) ;
+ 
+     List pList2 = hdao.getLabWorkInDateRange( patientId, startDateStr, endDateStr, visitDateStr);
+-    if ( pList2 == null || pList2.size() == 0 )
++    if ( pList2 == null || pList2.isEmpty()  )
+       return;
+ 
+     //Only get the latest one
+@@ -1992,7 +1996,7 @@ public class XMLTransferUtil
+         	  addPatientToSite( site, pdata, null, dataBeginDate, dataEndDate); // FIXME: add parameter for first visit data        	  
+           }
+         }
+-      if ( patientIdList == null || patientIdList.size() == 0 )
++      if ( patientIdList == null || patientIdList.isEmpty()  )
+         doc = null;
+     }
+     else
+diff --git a/src/main/java/oscar/ocan/task/OcanSubmissionTask.java b/src/main/java/oscar/ocan/task/OcanSubmissionTask.java
+index b6141604ca..a58b76cf00 100644
+--- a/src/main/java/oscar/ocan/task/OcanSubmissionTask.java
++++ b/src/main/java/oscar/ocan/task/OcanSubmissionTask.java
+@@ -83,7 +83,7 @@ public class OcanSubmissionTask extends TimerTask {
+ 
+ 				List<Map<String, String>> intakes = genericIntakeManager.getIntakeListforOcan(after);
+ 
+-				if (intakes == null || intakes.size() == 0) {
++				if (intakes == null || intakes.isEmpty() ) {
+ 					logger.warn("getIntakeListforOcan() returned null or empty list - no data for submission.");
+ 					return;
+ 				}
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/administration/TeleplanCorrectionFormWCB.java b/src/main/java/oscar/oscarBilling/ca/bc/administration/TeleplanCorrectionFormWCB.java
+index 114340635c..aeb7cd6473 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/administration/TeleplanCorrectionFormWCB.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/administration/TeleplanCorrectionFormWCB.java
+@@ -42,8 +42,125 @@ public class TeleplanCorrectionFormWCB
+ 
+     private static Logger logger=MiscUtils.getLogger();
+ 
++    private String id = "";
+ 
+-    private String id = "",  demographicNumber = "",  lastName = "",  firstName = "",  yearOfBirth = "",  monthOfBirth = "",  dayOfBirth = "",  address = "",  city = "",  province = "",  postal = "",  hin = "",  practitioner = "",  billingUnit = "",  billingCode = "",  billingAmount = "",  serviceLocation = "",  date = "",  billingNo = "",  dataSeqNo = "",  w_reportype = "",  w_mname = "",  w_gender = "",  w_doi = "",  w_area = "",  w_phone = "",  w_empname = "",  w_emparea = "",  w_empphone = "",  w_wcbno = "",  w_opaddress = "",  w_opcity = "",  w_rphysician = "",  w_duration = "",  w_ftreatment = "",  w_problem = "",  w_servicedate = "",  w_diagnosis = "",  w_icd9 = "",  w_bp = "",  w_side = "",  w_noi = "",  w_work = "",  w_workdate = "",  w_clinicinfo = "",  w_capability = "",  w_capreason = "",  w_estimate = "",  w_rehab = "",  w_rehabtype = "",  w_estimatedate = "",  w_tofollow = "",  w_wcbadvisor = "",  w_feeitem = "",  w_extrafeeitem = "",  status = "",  formNeeded = "",  providerNo = "",  w_payeeno = "",  w_pracno = "";
++    private String demographicNumber = "";
++
++    private String lastName = "";
++
++    private String firstName = "";
++
++    private String yearOfBirth = "";
++
++    private String monthOfBirth = "";
++
++    private String dayOfBirth = "";
++
++    private String address = "";
++
++    private String city = "";
++
++    private String province = "";
++
++    private String postal = "";
++
++    private String hin = "";
++
++    private String practitioner = "";
++
++    private String billingUnit = "";
++
++    private String billingCode = "";
++
++    private String billingAmount = "";
++
++    private String serviceLocation = "";
++
++    private String date = "";
++
++    private String billingNo = "";
++
++    private String dataSeqNo = "";
++
++    private String w_reportype = "";
++
++    private String w_mname = "";
++
++    private String w_gender = "";
++
++    private String w_doi = "";
++
++    private String w_area = "";
++
++    private String w_phone = "";
++
++    private String w_empname = "";
++
++    private String w_emparea = "";
++
++    private String w_empphone = "";
++
++    private String w_wcbno = "";
++
++    private String w_opaddress = "";
++
++    private String w_opcity = "";
++
++    private String w_rphysician = "";
++
++    private String w_duration = "";
++
++    private String w_ftreatment = "";
++
++    private String w_problem = "";
++
++    private String w_servicedate = "";
++
++    private String w_diagnosis = "";
++
++    private String w_icd9 = "";
++
++    private String w_bp = "";
++
++    private String w_side = "";
++
++    private String w_noi = "";
++
++    private String w_work = "";
++
++    private String w_workdate = "";
++
++    private String w_clinicinfo = "";
++
++    private String w_capability = "";
++
++    private String w_capreason = "";
++
++    private String w_estimate = "";
++
++    private String w_rehab = "";
++
++    private String w_rehabtype = "";
++
++    private String w_estimatedate = "";
++
++    private String w_tofollow = "";
++
++    private String w_wcbadvisor = "";
++
++    private String w_feeitem = "";
++
++    private String w_extrafeeitem = "";
++
++    private String status = "";
++
++    private String formNeeded = "";
++
++    private String providerNo = "";
++
++    private String w_payeeno = "";
++
++    private String w_pracno = "";
+     private String xml_status;
+     private String adjType;
+     private String adjAmount;
+@@ -127,7 +244,7 @@ public class TeleplanCorrectionFormWCB
+    public TeleplanCorrectionFormWCB(List<Object[]> results) {
+ 	      super();
+ 	     
+-         if (results.size()>0) {
++         if (!results.isEmpty()) {
+         	 Object[] result = results.get(0);
+         	 
+             this.demographicNumber = String.valueOf(result[0]);
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/data/BillingCodeData.java b/src/main/java/oscar/oscarBilling/ca/bc/data/BillingCodeData.java
+index 13e6459d67..0aa882d2fc 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/data/BillingCodeData.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/data/BillingCodeData.java
+@@ -141,7 +141,7 @@ public final class BillingCodeData implements Comparable      {
+     List list = billingServiceDao.findBillingCodesByCode( code,BillingServiceDao.BC,date,1);
+ 
+     //List list = codeSearch("select * from billingservice where service_code like '" +code + "'" );
+-    if(list == null || list.size() ==0 ){
++    if(list == null || list.isEmpty()  ){
+         return null;
+     }
+     return (BillingService) list.get(0);
+@@ -153,7 +153,7 @@ public final class BillingCodeData implements Comparable      {
+   public BillingService getBillingCodeByCode(String code){
+     List list = billingServiceDao.findBillingCodesByCode( code,"BC");
+     //List list = codeSearch("select * from billingservice where service_code like '" +code + "'" );
+-    if(list == null || list.size() ==0 ){
++    if(list == null || list.isEmpty()  ){
+         return null;
+     }
+     return (BillingService) list.get(0);
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/data/BillingmasterDAO.java b/src/main/java/oscar/oscarBilling/ca/bc/data/BillingmasterDAO.java
+index d14060ffec..27401f179f 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/data/BillingmasterDAO.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/data/BillingmasterDAO.java
+@@ -155,7 +155,7 @@ public class BillingmasterDAO {
+ 	}
+ 
+ 	public int markListAsBilled(List<String> list) { //TODO: Should be set form CONST var
+-		if(list.size()==0) {
++		if(list.isEmpty()) {
+ 			return 0;
+ 		}
+ 		Query query = entityManager.createQuery("UPDATE Billingmaster b set b.billingstatus = 'B' where b.billingmasterNo in (:billingNumbers)");
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingAddCodeAction.java b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingAddCodeAction.java
+index fe645250e9..b1d065a879 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingAddCodeAction.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingAddCodeAction.java
+@@ -73,7 +73,7 @@ public final class BillingAddCodeAction
+     BillingCodeData bcd = new BillingCodeData();
+     List list = bcd.findBillingCodesByCode(code,1);
+ 
+-    if (list.size() == 0) {
++    if (list.isEmpty()) {
+       bcd.addBillingCode(code, desc, value);
+       returnMessage = "Code Added Successfully";
+     }else{
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java
+index 31c79cd3cd..1abc5640be 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java
+@@ -116,7 +116,7 @@ public class BillingSpecPrep {
+ 				val.getParameter("provider").indexOf("|") + 1));
+ 		claim1Header.setAppointment_no(val.getParameter("appointment_no")); // appointment_no;
+ 		claim1Header.setDemographic_name(val.getParameter("demo_name"));
+-		String temp[] = getPatientLF(val.getParameter("demo_name"));
++		String temp = getPatientLF(val.getParameter("demo_name"));
+ 		claim1Header.setLast_name(temp[0]);
+ 		claim1Header.setFirst_name(temp[1]);
+ 		claim1Header.setSex(val.getParameter("demo_sex"));
+@@ -133,7 +133,7 @@ public class BillingSpecPrep {
+ 		List tL;
+ 		for(int idx = 0; idx < codes.length; idx++  ) {
+ 			tL = tObj.getBillingCodeAttr(codes[idx].trim());
+-			total = (tL != null && tL.size()>0) ? (String) tL.get(2) : "0.0";
++			total = (tL != null && !tL.isEmpty() ) ? (String) tL.get(2) : "0.0";
+ 			runningTotal += Double.parseDouble(total);
+ 		}
+ 		
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java b/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java
+index 3a95dae28f..803393beeb 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/DemographicExportAction4.java
+@@ -513,7 +513,7 @@ public class DemographicExportAction4 extends Action {
+ 				enList.add(en);
+ 			}
+ 			
+-			if(enList.size()>0) {
++			if(!enList.isEmpty()) {
+ 				DemographicsDocument.Demographics.Enrolment demoEnrolment = demo.addNewEnrolment();
+ 				for(int x=0;x<enList.size();x++) {
+ 					EnrolmentHistory ehx = demoEnrolment.addNewEnrolmentHistory();
+@@ -1376,7 +1376,8 @@ public class DemographicExportAction4 extends Action {
+ 
+ 			// IMMUNIZATIONS & PASTHEALTH (Preventive tests)
+ 			ArrayList<Map<String,Object>> prevList = PreventionData.getPreventionData(loggedInInfo, Integer.valueOf(demoNo));
+-			String phSummary, imSummary;
++						String phSummary;
++						String imSummary;
+ 			int cnt = 0;
+ 			
+ 			for (Map<String, Object> prevMap : prevList) {
+@@ -2727,7 +2728,7 @@ public class DemographicExportAction4 extends Action {
+ 		out.newLine();
+ 		out.write("Number of errors				   : ");
+ 		out.write(String.valueOf(exportError.size()));
+-		if (exportError.size()>0) out.write(" (See ExportEvent.log for detail)");
++		if (!exportError.isEmpty()) out.write(" (See ExportEvent.log for detail)");
+ 		out.newLine();
+ 		out.write("Patient ID range				   : ");
+ 		out.write(getIDInExportFilename(fs.get(0).getName()));
+@@ -2816,7 +2817,7 @@ public class DemographicExportAction4 extends Action {
+ 			out.write(fillUp("",'-',tableWidth)); out.newLine();
+ 
+ 			//write any error that has occurred
+-			if (exportError.size()>0) {
++			if (!exportError.isEmpty()) {
+ 				out.write(exportError.get(0));
+ 				out.newLine();
+ 				for (int j=1; j<exportError.size(); j++) {
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/DemographicMergeRecordAction.java b/src/main/java/oscar/oscarDemographic/pageUtil/DemographicMergeRecordAction.java
+index 82ecd27eeb..c52fa8d9a3 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/DemographicMergeRecordAction.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/DemographicMergeRecordAction.java
+@@ -89,7 +89,7 @@ public class DemographicMergeRecordAction  extends Action {
+                     
+             }
+ 
+-        }else if(action.equals("unmerge") && records.size() > 0){
++        }else if(action.equals("unmerge") && !records.isEmpty() ){
+             outcome = "successUnMerge";
+             for (int i=0; i < records.size(); i++){
+                 String demographic_no = records.get(i);
+diff --git a/src/main/java/oscar/oscarEncounter/data/EctProgram.java b/src/main/java/oscar/oscarEncounter/data/EctProgram.java
+index 08ff4daf0f..092c68cbd8 100644
+--- a/src/main/java/oscar/oscarEncounter/data/EctProgram.java
++++ b/src/main/java/oscar/oscarEncounter/data/EctProgram.java
+@@ -59,7 +59,7 @@ public class EctProgram {
+ 		}
+ 		if (!defaultInList) defaultprogramId=0;
+ 		int OriprogramId=0;
+-		if (programBean.size()>0) OriprogramId=new Integer(((LabelValueBean) programBean.get(0)).getValue()).intValue();
++		if (!programBean.isEmpty()) OriprogramId=new Integer(((LabelValueBean) programBean.get(0)).getValue()).intValue();
+ 		int programId=0;
+ 		if (defaultprogramId!=0 && OriprogramId!=0) programId=defaultprogramId;
+ 		else {
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java
+index 30d85362ce..a7be189717 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java
+@@ -69,7 +69,7 @@ public class ConsultationPrintDocsAction extends Action {
+             alist.add(path+docs[i]);
+          
+ 
+-        if (alist.size() > 0 ){
++        if (!alist.isEmpty() ){
+             response.setContentType("application/pdf");  //octet-stream
+             response.setHeader("Content-Disposition", "attachment; filename=\"combinedPDF-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".pdf\"");
+             try {
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintAction2.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintAction2.java
+index 7aa8de8d27..7df91b1f3f 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintAction2.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintAction2.java
+@@ -216,7 +216,7 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
+ 				
+             }
+             
+-			if (alist.size() > 0) {
++			if (!alist.isEmpty()) {
+ 				response.setContentType("application/pdf"); // octet-stream
+ 				response.setHeader(
+ 						"Content-Disposition",
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java
+index 0c5431ff19..d1a0d76cd4 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java
+@@ -497,7 +497,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
+         public int numSibling = -1;
+ 
+         public Node getFirstChild() {
+-            if( children != null && children.size() > 0 ) {
++            if( children != null && !children.isEmpty()  ) {
+                 numSibling = 0;
+                 return children.get(numSibling);
+             }
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java
+index 007c7c5f06..7eb82f9be7 100755
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java
+@@ -130,7 +130,7 @@ public class EctFindMeasurementTypeUtil {
+         
+         //Find validation if not found add validation
+         Vector validations = mt.getValidationRules();
+-        if(validations.size()>0){
++        if(!validations.isEmpty()){
+             EctValidationsBean validation = (EctValidationsBean) validations.elementAt(0);  
+             EctValidationsBeanHandler vHd = new EctValidationsBeanHandler();
+             int validationId = vHd.findValidation(validation);
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java
+index c21058e390..4271941b11 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java
+@@ -83,7 +83,7 @@ public class MeasurementDSHelper {
+         log.debug("demo "+this.demographic_no+" type "+measurementType);
+         EctMeasurementsDataBeanHandler mdbh = new  EctMeasurementsDataBeanHandler(Integer.valueOf(this.demographic_no), measurementType);
+         Collection col = mdbh.getMeasurementsDataVector();
+-        if (col.size() >0){
++        if (!col.isEmpty()){
+             this.mdb = (EctMeasurementsDataBean) col.iterator().next();
+             setM = true;
+         }
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMeasurementsAction.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMeasurementsAction.java
+index eb6f3384d9..d75111441e 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMeasurementsAction.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMeasurementsAction.java
+@@ -256,7 +256,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
+ 					EctMeasurementsDataBeanHandler.addRemoteMeasurements(loggedInInfo,measures,data.getType(),demo);
+ 				}
+ 
+-				if (measures.size() > 0) {
++				if (!measures.isEmpty()) {
+ 					NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+ 					data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
+ 					Date date = data.getDateObservedAsDate();
+diff --git a/src/main/java/oscar/oscarLab/ca/all/download/SpireClient.java b/src/main/java/oscar/oscarLab/ca/all/download/SpireClient.java
+index 553da318ca..7c400e79d8 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/download/SpireClient.java
++++ b/src/main/java/oscar/oscarLab/ca/all/download/SpireClient.java
+@@ -67,7 +67,7 @@ public class SpireClient extends TimerTask {
+ 			
+ 			String saveDir = p.getSpireDownloadDir();
+ 			
+-			if (files.size() == 0) {
++			if (files.isEmpty()) {
+ 				logger.info("No files found.");
+ 			} else {
+ 				for (int i = 0; i < files.size() && i < 25; i++) {
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/GDMLHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/GDMLHandler.java
+index bc7589d6a8..597495cc91 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/GDMLHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/GDMLHandler.java
+@@ -780,7 +780,7 @@ public class GDMLHandler implements MessageHandler {
+ 
+ 		// if there have been no labs added to the database yet just return this
+ 		// lab
+-		if (ret.size() == 0)
++		if (ret.isEmpty())
+ 			ret.add(hl7Body);
+ 		return ret;
+ 	}    
+@@ -815,7 +815,7 @@ public class GDMLHandler implements MessageHandler {
+ 
+ 		// if there have been no labs added to the database yet just return this
+ 		// lab
+-		if (ret.size() == 0)
++		if (ret.isEmpty())
+ 			ret.add(hl7Body);
+ 		return ret;
+ 	}
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/HRMXMLHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/HRMXMLHandler.java
+index bfe66af6cf..3148ab5e59 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/HRMXMLHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/HRMXMLHandler.java
+@@ -124,7 +124,7 @@ public class HRMXMLHandler implements MessageHandler {
+ 
+ 		// if there have been no labs added to the database yet just return this
+ 		// lab
+-		if (ret.size() == 0)
++		if (ret.isEmpty())
+ 			ret.add(hl7Body);
+ 		return ret;
+ 	}
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/PFHTHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/PFHTHandler.java
+index e10961e6cd..ae83ca5016 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/PFHTHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/PFHTHandler.java
+@@ -138,7 +138,7 @@ public class PFHTHandler implements MessageHandler {
+ 	        }
+ 
+ 	        //if there have been no labs added to the database yet just return this lab
+-	        if (ret.size() == 0)
++	        if (ret.isEmpty())
+ 	            ret.add(hl7Body);
+ 	        return ret;
+ 	    }
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/TDISHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/TDISHandler.java
+index a5425dc50a..d3772a24d5 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/TDISHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/TDISHandler.java
+@@ -195,7 +195,7 @@ public class TDISHandler implements MessageHandler {
+ 
+ 		// if there have been no labs added to the database yet just return this
+ 		// lab
+-		if (ret.size() == 0)
++		if (ret.isEmpty())
+ 			ret.add(hl7Body);
+ 		return ret;
+ 	}
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/MessageUploader.java b/src/main/java/oscar/oscarLab/ca/all/upload/MessageUploader.java
+index 36da2afa33..9e5fcca404 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/MessageUploader.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/MessageUploader.java
+@@ -196,7 +196,7 @@ public final class MessageUploader {
+ 			ArrayList<String> disciplineArray = h.getHeaders();
+ 			String next = "";
+ 			
+-			if (disciplineArray != null && disciplineArray.size() > 0) { 
++			if (disciplineArray != null && !disciplineArray.isEmpty() ) { 
+ 				next = disciplineArray.get(0);
+ 			}
+ 			
+@@ -477,7 +477,7 @@ public final class MessageUploader {
+ 		
+ 		
+ 		ProviderLabRouting routing = new ProviderLabRouting();
+-		if (providerNums.size() > 0) {
++		if (!providerNums.isEmpty()) {
+ 			for (int i = 0; i < providerNums.size(); i++) {
+ 				String provider_no = providerNums.get(i);
+ 				routing.route(labId, provider_no, conn, "HL7");
+diff --git a/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java b/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java
+index 6309d96e14..7773872518 100644
+--- a/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java
++++ b/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java
+@@ -167,7 +167,7 @@ public class Message {
+ 					/////
+ 
+ 					ProviderLabRouting routing = new ProviderLabRouting();
+-					if (listOfProviderNo.size() > 0) { // provider found in database
++					if (!listOfProviderNo.isEmpty()) { // provider found in database
+ 						for (int p = 0; p < listOfProviderNo.size(); p++) {
+ 							String prov = listOfProviderNo.get(p);
+ 
+diff --git a/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java b/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java
+index 246843c164..21d5f54f32 100644
+--- a/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java
++++ b/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java
+@@ -194,7 +194,7 @@ public class CMLLabTest {
+ 
+ 		if (alist.size() == 1) {
+ 			dis = alist.get(0); //Only one item
+-		} else if (alist.size() != 0) {
++		} else if (!alist.isEmpty()) {
+ 			int lenAvail = 20 - (alist.size() - 1);
+ 			if (lenAvail > count) {
+ 				StringBuilder s = new StringBuilder();
+diff --git a/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java b/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java
+index 01627c0d8a..d97c3fe20f 100755
+--- a/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java
++++ b/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java
+@@ -199,7 +199,7 @@ public class SpireLabTest {
+ 
+ 			if (alist.size() == 1) {
+ 				dis = alist.get(0); //Only one item
+-			} else if (alist.size() != 0) {
++			} else if (!alist.isEmpty()) {
+ 				int lenAvail = 20 - (alist.size() - 1);
+ 				if (lenAvail > count) {
+ 					StringBuilder s = new StringBuilder();
+diff --git a/src/main/java/oscar/oscarLab/pageUtil/ForwardingRulesAction.java b/src/main/java/oscar/oscarLab/pageUtil/ForwardingRulesAction.java
+index b4a0117a6f..b17736922e 100644
+--- a/src/main/java/oscar/oscarLab/pageUtil/ForwardingRulesAction.java
++++ b/src/main/java/oscar/oscarLab/pageUtil/ForwardingRulesAction.java
+@@ -112,7 +112,7 @@ public class ForwardingRulesAction extends Action{
+                 logger.info("Found providers for frwd rules: " + temp);
+                 
+                 // check if there rules are set to forward the labs
+-                if (temp == null || temp.size() <= 0){
++                if (temp == null || !temp.isEmpty() ){
+                     // insert a new rule setting the status to final without forwarding
+                     if (status.equals("F")){
+                     	IncomingLabRules r =new IncomingLabRules();
+diff --git a/src/main/java/oscar/oscarPrevention/pageUtil/AddPreventionAction.java b/src/main/java/oscar/oscarPrevention/pageUtil/AddPreventionAction.java
+index 9564572644..cc1ed34e2c 100644
+--- a/src/main/java/oscar/oscarPrevention/pageUtil/AddPreventionAction.java
++++ b/src/main/java/oscar/oscarPrevention/pageUtil/AddPreventionAction.java
+@@ -212,7 +212,7 @@ public class AddPreventionAction  extends Action {
+          //let's do some validation
+          List<String> valid = validate(preventionType,demographic_no,id,delete,action,submitToDhir,given,prevDate,providerNo,nextDate,neverWarn,
+         		 snomedId,refused,extraData,lotItem,dose,doseUnit);
+-         if(valid != null && valid.size()>0) {
++         if(valid != null && !valid.isEmpty() ) {
+         	 request.setAttribute("errors", valid);
+         	 return mapping.findForward("form");
+          }
+diff --git a/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java b/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java
+index 0460b404fe..e9690b9b4a 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java
++++ b/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java
+@@ -93,9 +93,9 @@ public class ChildImmunizationReport implements PreventionReport{
+ 			PreventionData.addRemotePreventions(loggedInInfo, prevs4, demo,"MMR",null);
+ 			prevs4.addAll(PreventionData.getPreventionData(loggedInInfo, "MMRV", demo));
+ 			PreventionData.addRemotePreventions(loggedInInfo, prevs4, demo,"MMRV",null);
+-
+-             //need to compile accurate dtap numbers
+-			 Map<String, Object> hDtapIpv, hDtapIpvHib;
++                // need to compile accurate dtap numbers
++                Map<String, Object> hDtapIpv;
++                Map<String, Object> hDtapIpvHib;
+              boolean add;
+ 
+              for( int idx = 0; idx < prevsDtapIPVHIB.size(); ++idx ) {
+@@ -139,7 +139,7 @@ public class ChildImmunizationReport implements PreventionReport{
+                 prd.state = "No Info";
+                 prd.numMonths = "------";
+                 prd.color = "Magenta";
+-             }else if(  (  prevs1.size()> 0 &&  ineligible(prevs1.get(prevs1.size()-1))) || (  prevs2.size()> 0 && ineligible(prevs2.get(prevs2.size()-1))) || (  prevs4.size()> 0 && ineligible(prevs4.get(prevs4.size()-1))) ){
++             }else if(  !prevs1.isEmpty() &&  ineligible(prevs1.get(prevs1.size()-1)) || !prevs2.isEmpty() && ineligible(prevs2.get(prevs2.size()-1)) || !prevs4.isEmpty() && ineligible(prevs4.get(prevs4.size()-1)) ){
+                 prd.rank = 5;
+                 prd.lastDate = "------";
+                 prd.state = "Ineligible";
+@@ -154,7 +154,7 @@ public class ChildImmunizationReport implements PreventionReport{
+                 Date lastDate = null;
+                 String prevDateStr = "";
+ 
+-                if(prevs1.size() > 0){
++                if(!prevs1.isEmpty()){
+                 	Map<String, Object> hDtap = prevs1.get(prevs1.size()-1);
+                    if ( hDtap.get("refused") != null && ((String) hDtap.get("refused")).equals("1")){
+                       refused = true;
+@@ -165,7 +165,7 @@ public class ChildImmunizationReport implements PreventionReport{
+                    }catch (Exception e){MiscUtils.getLogger().error("Error", e);}
+                 }
+ 
+-                if(prevs4.size() > 0){
++                if(!prevs4.isEmpty()){
+                 	Map<String, Object> hMMR  = prevs4.get(0);  //Changed to get first MMR value instead of last value
+                    if ( hMMR.get("refused") != null && ((String) hMMR.get("refused")).equals("1")){
+                       refused = true;
+@@ -310,7 +310,7 @@ public class ChildImmunizationReport implements PreventionReport{
+ 
+               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+               //NO Contact
+-              if ( followupData.size() == 0 ){
++              if (followupData.isEmpty() ){
+                   prd.nextSuggestedProcedure = this.LETTER1;
+                   return this.LETTER1;
+               }else{ //There has been contact
+@@ -405,14 +405,14 @@ public class ChildImmunizationReport implements PreventionReport{
+               log.debug("2getting followup data for "+prd.demographicNo);
+               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+ 
+-              if ( followupData.size() > 0 ){
++              if (!followupData.isEmpty() ){
+                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                   prd.lastFollowup = measurementData.getDateObservedAsDate();
+                   prd.lastFollupProcedure = measurementData.getDataField();
+               }
+ 
+               prd.nextSuggestedProcedure = "----";
+-                //prd.numMonths ;
++                // prd.numMonths ;
+           }else if(prd.state.equals("Ineligible")){
+                 // Do nothing
+                 prd.nextSuggestedProcedure = "----";
+diff --git a/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java b/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java
+index edaaf2a4ac..8dcefc36fa 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java
++++ b/src/main/java/oscar/oscarPrevention/reports/MammogramReport.java
+@@ -59,7 +59,8 @@ public class MammogramReport implements PreventionReport{
+ 
+     public Hashtable runReport(LoggedInInfo loggedInInfo,ArrayList<ArrayList<String>> list,Date asofDate){
+         int inList = 0;
+-        double done= 0,doneWithGrace = 0;
++        double done = 0;
++        double doneWithGrace = 0;
+         ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
+ 
+         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
+@@ -82,7 +83,7 @@ public class MammogramReport implements PreventionReport{
+                 prd.numMonths = "------";
+                 prd.color = "grey";
+                 inList++;
+-             }else if (noFutureItems.size() == 0){// no info
++             }else if (noFutureItems.isEmpty()){// no info
+                 prd.rank = 1;
+                 prd.lastDate = "------";
+                 prd.state = "No Info";
+diff --git a/src/main/java/oscar/oscarPrevention/reports/PapReport.java b/src/main/java/oscar/oscarPrevention/reports/PapReport.java
+index 01dc3ce684..f9343806f2 100644
+--- a/src/main/java/oscar/oscarPrevention/reports/PapReport.java
++++ b/src/main/java/oscar/oscarPrevention/reports/PapReport.java
+@@ -60,7 +60,8 @@ public class PapReport implements PreventionReport {
+ 
+     public Hashtable runReport(LoggedInInfo loggedInInfo,ArrayList list,Date asofDate){
+         int inList = 0;
+-        double done= 0,doneWithGrace = 0;
++        double done = 0;
++        double doneWithGrace = 0;
+         ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
+ 
+         /////
+@@ -82,7 +83,7 @@ public class PapReport implements PreventionReport {
+                 prd.numMonths = "------";
+                 prd.color = "grey";
+                 inList++;
+-             }else if (noFutureItems.size() == 0){// no info
++             }else if (noFutureItems.isEmpty()){// no info
+                 prd.rank = 1;
+                 prd.lastDate = "------";
+                 prd.state = "No Info";
+@@ -313,7 +314,7 @@ public class PapReport implements PreventionReport {
+               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+               //NO Contact
+ 
+-              if ( followupData.size() == 0 ){
++              if (followupData.isEmpty() ){
+                   prd.nextSuggestedProcedure = this.LETTER1;
+                   return this.LETTER1;
+               }else{ //There has been contact
+@@ -399,13 +400,13 @@ public class PapReport implements PreventionReport {
+               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
+               log.debug("getting followup data for "+prd.demographicNo);
+               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+-              if ( followupData.size() > 0 ){
++              if (!followupData.isEmpty() ){
+                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                   prd.lastFollowup = measurementData.getDateObservedAsDate();
+                   prd.lastFollupProcedure = measurementData.getDataField();
+               }
+               prd.nextSuggestedProcedure = "----";
+-                //prd.numMonths ;
++                // prd.numMonths ;
+           }else if(prd.state.equals("Ineligible")){
+                 // Do nothing
+                 prd.nextSuggestedProcedure = "----";
+@@ -415,7 +416,7 @@ public class PapReport implements PreventionReport {
+               log.debug("getting followup data for "+prd.demographicNo);
+               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+ 
+-              if ( followupData.size() > 0 ){
++              if (!followupData.isEmpty() ){
+                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                   prd.lastFollowup = measurementData.getDateObservedAsDate();
+                   prd.lastFollupProcedure = measurementData.getDataField();
+diff --git a/src/main/java/oscar/oscarReport/pageUtil/RptCreateDemographicSetAction.java b/src/main/java/oscar/oscarReport/pageUtil/RptCreateDemographicSetAction.java
+index 894102aaf3..954f6ed529 100644
+--- a/src/main/java/oscar/oscarReport/pageUtil/RptCreateDemographicSetAction.java
++++ b/src/main/java/oscar/oscarReport/pageUtil/RptCreateDemographicSetAction.java
+@@ -61,7 +61,7 @@ public class RptCreateDemographicSetAction extends Action {
+          list.add(request.getParameter("demoNo"+i));         
+       }
+             
+-      if (list.size() > 0 ){
++      if (!list.isEmpty() ){
+          DemographicSets demoSet = new DemographicSets();
+          demoSet.addDemographicSet(setName,list);
+       }                                       
+diff --git a/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java b/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java
+index 6e1fe0bba6..3f26bba4d2 100644
+--- a/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java
++++ b/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java
+@@ -183,7 +183,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
+             try{
+                 Vector v = getMyDrugrefInfo(loggedInInfo,command, codes, provider, myDrugrefId);
+ 
+-                if (v !=null && v.size() > 0){
++                if (v !=null && !v.isEmpty() ){
+                     all.addAll(v);
+                 }
+ 
+@@ -501,7 +501,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
+ 		    		String requestURI = "/ws/api/" + procedureName;
+ 		    		
+ 		    		String requestURIWithParams = null;
+-		    		if(params != null && !params.isEmpty() && params.size() > 0) {
++		    		if(params != null && !params.isEmpty() && !params.isEmpty() ) {
+ 		    			requestURIWithParams = requestURI + "?";
+ 			    		for(int i=0;i<params.size();i++){
+ 							if(procedureName.contains("guidelines")) {
+diff --git a/src/main/java/oscar/oscarRx/util/RxUtil.java b/src/main/java/oscar/oscarRx/util/RxUtil.java
+index 2566af5a2b..80c0aa091b 100644
+--- a/src/main/java/oscar/oscarRx/util/RxUtil.java
++++ b/src/main/java/oscar/oscarRx/util/RxUtil.java
+@@ -1169,7 +1169,7 @@ public class RxUtil {
+ 			String din = rx.getRegionalIdentifier();
+ 			if (din != null && din.trim().length() > 0) {
+ 				retList = getDinPrevInstructions(din);
+-				if (retList.size() == 0) {
++				if (retList.isEmpty()) {
+ 					retList = getBNPrevInstructions(rx.getBrandName());
+ 					//if(retList.size()==0)
+ 					//retList=getGNPrevInstructions(rx.getGenericName());
+@@ -1179,7 +1179,7 @@ public class RxUtil {
+ 				if (bn != null && bn.trim().length() > 0) retList = getBNPrevInstructions(bn);
+ 			}
+ 		}
+-		if (retList.size() > 0) retList = trimMedHistoryList(rx, retList);
++		if (!retList.isEmpty()) retList = trimMedHistoryList(rx, retList);
+ 		return retList;
+ 	}
+ 
+@@ -1188,7 +1188,7 @@ public class RxUtil {
+ 		String customName = rx.getCustomName();
+ 		String bn = rx.getBrandName();
+ 		List<HashMap<String, String>> retList = new ArrayList<HashMap<String, String>>();
+-		if (l.size() > 0 || rx != null) {
++		if (!l.isEmpty() || rx != null) {
+ 			try {
+ 				for (HashMap<String, String> hm : l) {
+ 					String ins = hm.get("instruction");
+@@ -1218,7 +1218,7 @@ public class RxUtil {
+ 	private static List<HashMap<String, String>> commonUniqueMedHistory(List<HashMap<String, String>> l) {
+ 		MiscUtils.getLogger().debug("in commonUniqueMedHistory l=" + l);
+ 
+-		if (l != null && l.size() > 0) {
++		if (l != null && !l.isEmpty() ) {
+ 			HashMap<HashMap, Integer> elementCount = new HashMap<HashMap, Integer>();
+ 			List<HashMap<String, String>> retList = new ArrayList<HashMap<String, String>>();
+ 			for (HashMap<String, String> hm : l) {
+@@ -1471,7 +1471,7 @@ public class RxUtil {
+ 			myDrugrefId = prop.getValue();
+ 			MiscUtils.getLogger().debug("3myDrugrefId" + myDrugrefId);
+ 		}
+-		RxPrescriptionData.Prescription[] rxs = bean.getStash();
++		oscar.oscarRx.data.RxPrescriptionData.Prescription[]rxs = bean.getStash();
+ 		//acd contains all atccodes in stash
+ 		Vector<String> acd = new Vector<String>();
+ 		for (RxPrescriptionData.Prescription rxItem : rxs) {
+@@ -1485,7 +1485,7 @@ public class RxUtil {
+ 			try {
+ 				Vector v = getMyDrugrefInfo(command, acd, myDrugrefId);
+ 				MiscUtils.getLogger().debug("2v in for loop: " + v);
+-				if (v != null && v.size() > 0) {
++				if (v != null && !v.isEmpty() ) {
+ 					allInteractions.addAll(v);
+ 				}
+ 				MiscUtils.getLogger().debug("3after all.addAll(v): " + allInteractions);
+diff --git a/src/main/java/oscar/oscarSecurity/token/StJoesTokenManager.java b/src/main/java/oscar/oscarSecurity/token/StJoesTokenManager.java
+index 96f93646df..0eb3ed02eb 100644
+--- a/src/main/java/oscar/oscarSecurity/token/StJoesTokenManager.java
++++ b/src/main/java/oscar/oscarSecurity/token/StJoesTokenManager.java
+@@ -147,7 +147,7 @@ public class StJoesTokenManager extends SecurityTokenManager {
+         //be nice if this was in a common class.
+         Integer facilityId = null;
+         List<Integer> facilityIds = providerDao.getFacilityIds(st.getProviderNo());
+-        if(facilityIds.size()==0) {
++        if(facilityIds.isEmpty()) {
+         	List<Facility> facility = facilityDao.findAll(null);
+         	facilityId = facility.get(0).getId();
+         } else {
+diff --git a/src/main/java/oscar/util/CBIUtil.java b/src/main/java/oscar/util/CBIUtil.java
+index 03b758e10e..2f16d9d848 100644
+--- a/src/main/java/oscar/util/CBIUtil.java
++++ b/src/main/java/oscar/util/CBIUtil.java
+@@ -444,7 +444,7 @@ public class CBIUtil
+ 
+ 			
+ 			List<Integer> facilityIds = providerDao.getFacilityIds(providerNo);
+-			if (facilityIds == null || facilityIds.size() == 0)
++			if (facilityIds == null || facilityIds.isEmpty() )
+ 			{
+ 				// if provider not associated with facility then get the 1st one
+ 				// from facility table
+diff --git a/utils/tasks/src/ResourceCompareTask.java b/utils/tasks/src/ResourceCompareTask.java
+index a9797f85cc..eb937128e5 100755
+--- a/utils/tasks/src/ResourceCompareTask.java
++++ b/utils/tasks/src/ResourceCompareTask.java
+@@ -91,7 +91,7 @@ public class ResourceCompareTask {
+             out.println("####-----------------------" + english.getProperty(s));
+             out.println(s + "=" + translatedText);
+         }
+-        if (masterKeys.size() > 0){
++        if (!masterKeys.isEmpty()){
+            throw new Exception(compareLanguage.getName()+ " is missing "+masterKeys.size()+" keys");
+         }
+     }

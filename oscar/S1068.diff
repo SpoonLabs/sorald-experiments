@@ -1,0 +1,144 @@
+diff --git a/src/main/java/org/oscarehr/PMmodule/exporter/DATISNonClientService.java b/src/main/java/org/oscarehr/PMmodule/exporter/DATISNonClientService.java
+index 90aace3986..83dfdaeb3c 100644
+--- a/src/main/java/org/oscarehr/PMmodule/exporter/DATISNonClientService.java
++++ b/src/main/java/org/oscarehr/PMmodule/exporter/DATISNonClientService.java
+@@ -34,8 +34,6 @@ public class DATISNonClientService extends AbstractIntakeExporter {
+ 
+ 	private static final String FILE_PREFIX = "File6";
+ 	
+-	private static final Logger log = Logger.getLogger(DATISNonClientService.class);
+-	
+ 	@Override
+ 	protected String exportData() throws ExportException {
+ 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
+diff --git a/src/main/java/org/oscarehr/dashboard/display/DisplayIndicatorAction.java b/src/main/java/org/oscarehr/dashboard/display/DisplayIndicatorAction.java
+index 63f36db665..1ccd32244e 100644
+--- a/src/main/java/org/oscarehr/dashboard/display/DisplayIndicatorAction.java
++++ b/src/main/java/org/oscarehr/dashboard/display/DisplayIndicatorAction.java
+@@ -40,8 +40,6 @@ import org.oscarehr.util.SpringUtils;
+ 
+ public class DisplayIndicatorAction extends DispatchAction {
+ 	
+-	private static Logger logger = MiscUtils.getLogger();
+-	
+ 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+ 	private static DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
+ 	
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/mailbox/DownloadAction.java b/src/main/java/org/oscarehr/integration/mcedt/mailbox/DownloadAction.java
+index 20c6634e56..f71ba0b701 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/mailbox/DownloadAction.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/mailbox/DownloadAction.java
+@@ -58,7 +58,6 @@ import ca.ontario.health.edt.TypeListResult;
+ 
+ public class DownloadAction extends DispatchAction{
+ 	private static Logger logger = Logger.getLogger(DownloadAction.class);
+-	private boolean isFileToDownload=false;
+ 
+ 
+ 	@Override
+diff --git a/src/main/java/org/oscarehr/jobs/OscarMsgReviewSender.java b/src/main/java/org/oscarehr/jobs/OscarMsgReviewSender.java
+index 5ecb940926..f46045f189 100644
+--- a/src/main/java/org/oscarehr/jobs/OscarMsgReviewSender.java
++++ b/src/main/java/org/oscarehr/jobs/OscarMsgReviewSender.java
+@@ -56,7 +56,6 @@ import oscar.oscarMessenger.util.MsgDemoMap;
+ public class OscarMsgReviewSender implements OscarRunnable {
+     
+     private Provider provider = null;
+-    private Security security = null;
+     private static final String MESSAGE = "Hello, the following charts require your attention\n Sapere aude!";
+     private static final String SUBJECT = "Chart Review";
+     private static final Calendar DEFAULT_TIME = new GregorianCalendar(0, 0, 0, 9, 0);
+diff --git a/src/main/java/org/oscarehr/match/vacancy/VacancyTemplateData.java b/src/main/java/org/oscarehr/match/vacancy/VacancyTemplateData.java
+index cda86a1b51..a7840032e8 100644
+--- a/src/main/java/org/oscarehr/match/vacancy/VacancyTemplateData.java
++++ b/src/main/java/org/oscarehr/match/vacancy/VacancyTemplateData.java
+@@ -36,7 +36,6 @@ import org.oscarehr.util.MiscUtils;
+ public class VacancyTemplateData {
+ 	private static final Logger logger = MiscUtils.getLogger();
+ 	private static final int MAX_WEIGHT = 100;
+-	private static final int MIN_WEIGHT = 0;
+ 	private static final String GENDER = "gender";
+ 	private int weight = 1;
+ 	private String param;
+diff --git a/src/main/java/oscar/decision/DesAntenatalPlannerRisksHandler_99_12.java b/src/main/java/oscar/decision/DesAntenatalPlannerRisksHandler_99_12.java
+index 45f983e97a..dd9589e77b 100644
+--- a/src/main/java/oscar/decision/DesAntenatalPlannerRisksHandler_99_12.java
++++ b/src/main/java/oscar/decision/DesAntenatalPlannerRisksHandler_99_12.java
+@@ -32,10 +32,10 @@ import org.xml.sax.Locator;
+ import org.xml.sax.SAXException;
+ import org.xml.sax.helpers.DefaultHandler;
+ 
+-public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
++public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {private String results;
++
++	private String riskName;// currentElement
+ 
+-	private Locator locator;
+-	private String results, riskName; //currentElement
+ 	private int colcount = 0;
+ 	private int numcols = 1;
+ 	private int interiortable = 0;
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java
+index 3ef627c79b..10501707c2 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java
+@@ -44,8 +44,6 @@ public class BillingSessionBean implements java.io.Serializable{
+   private ArrayList<BillingItem> billitem;
+   private String xml_billtype = null;
+   private String xml_location = null;
+-  private String xml_starttime = null;
+-  private String xml_endtime = null;
+   private String xml_appointment_date = null;
+   private String xml_provider = null;
+   private String xml_visittype = null;
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/WCBForm.java b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/WCBForm.java
+index f581583e88..52f1b6ecd2 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/WCBForm.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/WCBForm.java
+@@ -106,11 +106,6 @@ public final class WCBForm
+   private String w_servicelocation; //--
+   private String formNeeded;
+   private List injuryLocations;
+-
+-  /**
+-   * @todo Database code should be moved out of the model and into an appropriate persistence class
+-   */
+-  private String demographic;
+   private String w_demographic;
+   private String w_providerno;
+   private boolean notBilled;
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java
+index de2ffbcc02..63e6037be6 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java
+@@ -35,7 +35,6 @@ import oscar.oscarBilling.ca.on.data.JdbcBillingPageUtil;
+ import oscar.util.UtilDateUtilities;
+ 
+ public class BillingDiskCreatePrep {
+-	private static final Logger _logger = Logger.getLogger(BillingDiskCreatePrep.class);
+ 	JdbcBillingClaimImpl dbObj = new JdbcBillingClaimImpl();
+ 	Properties propProOHIP = null;
+ 
+diff --git a/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java b/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java
+index 64db20c633..c089501079 100644
+--- a/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java
++++ b/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java
+@@ -62,8 +62,6 @@ import oscar.util.UtilDateUtilities;
+  */
+ public class CommonLabTestValues {
+ 
+-	private static Logger logger = MiscUtils.getLogger();
+-
+ 	private CommonLabTestValues() {
+ 		// prevent instantiation
+ 	}
+diff --git a/src/main/java/oscar/oscarPrevention/tld/PreventionTag.java b/src/main/java/oscar/oscarPrevention/tld/PreventionTag.java
+index ae5cc32b98..559fb81393 100644
+--- a/src/main/java/oscar/oscarPrevention/tld/PreventionTag.java
++++ b/src/main/java/oscar/oscarPrevention/tld/PreventionTag.java
+@@ -105,5 +105,4 @@ public class PreventionTag extends TagSupport {
+ 
+     private String demographicNo;
+     private int numWarnings;
+-    private int numReminders;
+ }

@@ -1,0 +1,753 @@
+diff --git a/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteDAO.java b/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteDAO.java
+index 687308d018..be880a66a1 100644
+--- a/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteDAO.java
++++ b/src/main/java/org/oscarehr/casemgmt/dao/CaseManagementNoteDAO.java
+@@ -199,7 +199,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
+ 
+ 	@SuppressWarnings("unchecked")
+     public List<CaseManagementNote> getNotesByDemographic(String demographic_no, String staleDate) {
+-		if (OscarProperties.getInstance().getDbType().equals("oracle")) {
++		if ("oracle".equals(OscarProperties.getInstance().getDbType())) {
+ 			return getHibernateTemplate().findByNamedQuery("mostRecentTimeOra", new Object[] { demographic_no, staleDate });
+ 		}
+ 		else {
+@@ -210,7 +210,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
+ 	// This was created by OSCAR. if all notes' UUID are same like null, it will only get one note.
+ 	@SuppressWarnings("unchecked")
+     public List<CaseManagementNote> getNotesByDemographic(String demographic_no) {
+-		if (OscarProperties.getInstance().getDbType().equals("oracle")) {
++		if ("oracle".equals(OscarProperties.getInstance().getDbType())) {
+ 			return getHibernateTemplate().findByNamedQuery("mostRecentOra", new Object[] { demographic_no });
+ 		}
+ 		else {
+@@ -253,7 +253,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
+ 
+ 	@SuppressWarnings("unchecked")
+     public List<CaseManagementNote> getNotesByDemographic(String demographic_no, Integer maxNotes) {
+-		if (OscarProperties.getInstance().getDbType().equals("oracle")) {
++		if ("oracle".equals(OscarProperties.getInstance().getDbType())) {
+ 			return getHibernateTemplate().findByNamedQuery("mostRecentOra", new Object[] { demographic_no });
+ 		}
+ 		else {
+diff --git a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrint.java b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrint.java
+index 48b32d8227..cdd7c9fced 100644
+--- a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrint.java
++++ b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementPrint.java
+@@ -156,7 +156,7 @@ public class CaseManagementPrint {
+ 		// we're not guaranteed any ordering of notes given to us, so sort by observation date
+ 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
+ 		String noteSort = p.getProperty("CMESort", "");
+-		if (noteSort.trim().equalsIgnoreCase("UP")) {
++		if ("UP".equalsIgnoreCase(noteSort.trim())) {
+ 			Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
+ 			Collections.reverse(notes);
+ 		} else { 
+@@ -194,8 +194,8 @@ public class CaseManagementPrint {
+ 						List<CaseManagementNoteExt> exts = caseManagementMgr.getExtByNote(tmpNotes.get(k).getId());
+ 						boolean exclude = false;
+ 						for (CaseManagementNoteExt ext : exts) {
+-							if (ext.getKeyVal().equals("Hide Cpp")) {
+-								if (ext.getValue().equals("1")) {
++							if ("Hide Cpp".equals(ext.getKeyVal())) {
++								if ("1".equals(ext.getValue())) {
+ 									exclude = true;
+ 								}
+ 							}
+@@ -260,7 +260,7 @@ public class CaseManagementPrint {
+ 		while (e.hasMoreElements()) {
+ 			String name = e.nextElement();
+ 			if (name.startsWith("extPrint")) {
+-				if (request.getParameter(name).equals("true")) {
++				if ("true".equals(request.getParameter(name))) {
+ 					ExtPrint printBean = (ExtPrint) SpringUtils.getBean(name);
+ 					if (printBean != null) {
+ 						printBean.printExt(printer, request);
+@@ -283,7 +283,7 @@ public class CaseManagementPrint {
+ 			for (int i = 0; i < labs.size(); i++) {
+ 				LabResultData result = labs.get(i);
+ 				if (result.isHL7TEXT()) {
+-					if (result.accessionNumber == null || result.accessionNumber.equals("")) {
++					if (result.accessionNumber == null || "".equals(result.accessionNumber) ) {
+ 						accessionMap.put("noAccessionNum" + i + result.labType, result);
+ 					} else {
+ 						if (!accessionMap.containsKey(result.accessionNumber + result.labType)) accessionMap.put(result.accessionNumber + result.labType, result);
+diff --git a/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java b/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java
+index 15bbd27a9f..7a6b7217a0 100644
+--- a/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java
++++ b/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java
+@@ -78,14 +78,14 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
+                 Iterator<String> j = doctorList.listIterator();
+                 while (j.hasNext()) {
+                  String providerNo = j.next();
+-                 if (providerNo.equalsIgnoreCase("*") || providerNo.equalsIgnoreCase(demoprovider)) {
++                 if ("*".equalsIgnoreCase(providerNo) || providerNo.equalsIgnoreCase(demoprovider)) {
+                      isDoctorPatient = true;
+                      break;
+                  }
+                 }
+ 
+ 
+-                if (isDoctorPatient && demo.getPatientStatus().equalsIgnoreCase("AC"))
++                if (isDoctorPatient && "AC".equalsIgnoreCase(demo.getPatientStatus()) )
+                 	rList.add(new DxRegistedPTInfo(demo.getFirstName(),demo.getLastName(),demo.getSex(),
+                                                 demo.getYearOfBirth()+"-"+demo.getMonthOfBirth()+"-"+demo.getDateOfBirth(),
+                                                 demo.getPhone(),demo.getHin(),dxres.getCodingSystem(),dxres.getDxresearchCode(),
+diff --git a/src/main/java/org/oscarehr/dashboard/handler/IndicatorQueryHandler.java b/src/main/java/org/oscarehr/dashboard/handler/IndicatorQueryHandler.java
+index 93dcf0e117..2a449eb8d6 100644
+--- a/src/main/java/org/oscarehr/dashboard/handler/IndicatorQueryHandler.java
++++ b/src/main/java/org/oscarehr/dashboard/handler/IndicatorQueryHandler.java
+@@ -181,7 +181,7 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
+ 			String key = it.next() + "";
+ 			Object value = null;
+ 
+-			if( key.equalsIgnoreCase("null") ) {
++			if("null".equalsIgnoreCase(key) ) {
+ 				key = "";
+ 			}
+ 			
+diff --git a/src/main/java/org/oscarehr/decisionSupport/prevention/DSPreventionDrools.java b/src/main/java/org/oscarehr/decisionSupport/prevention/DSPreventionDrools.java
+index 435838cd89..96858d3d36 100644
+--- a/src/main/java/org/oscarehr/decisionSupport/prevention/DSPreventionDrools.java
++++ b/src/main/java/org/oscarehr/decisionSupport/prevention/DSPreventionDrools.java
+@@ -235,7 +235,7 @@ public class DSPreventionDrools {
+             toParse = toParse.replaceFirst("!=","");
+             int eq = Integer.parseInt(toParse);
+             dsConditions.add(new DSCondition(method, param, "!=", ""+eq));
+-        }else if (!toParse.equals("")){ // less than style
++        }else if (!"".equals(toParse)){ // less than style
+             int eq = Integer.parseInt(toParse);
+             dsConditions.add(new DSCondition(method, param, "==", ""+eq));
+         }
+@@ -292,7 +292,7 @@ public class DSPreventionDrools {
+         		dsConditions.add(new DSCondition("getAgeInYears","","!=",valueToParse.replaceAll("y", "")));
+         	}
+             
+-        }else if (!valueToParse.equals("")){ // less than style
++        }else if (!"".equals(valueToParse)){ // less than style
+             int eq = Integer.parseInt(valueToParse);
+             if(valueToParse.indexOf("m") != -1){
+         		dsConditions.add(new DSCondition("getAgeInMonths","","==",valueToParse.replaceAll("m", "")));
+@@ -302,36 +302,35 @@ public class DSPreventionDrools {
+         }
+ 		
+ 
+-		/*
+-		 * String toParse = value;
+-            if (toParse.indexOf("-") != -1 && toParse.indexOf("-") != 0 ){ //between style
+-                String[] betweenVals = toParse.split("-");
+-                if (betweenVals.length == 2 ){
+-                    list.add(new DSCondition("getAge", "", ">=", betweenVals[0]));
+-                    list.add(new DSCondition("getAge", "", "<=", betweenVals[1]));
+-                }
+-            }else if (toParse.indexOf("&gt;") != -1 ||  toParse.indexOf(">") != -1 ){ // greater than style
+-                toParse = toParse.replaceFirst("&gt;","");
+-                toParse = toParse.replaceFirst(">","");
+-                int gt = Integer.parseInt(toParse);
+-                list.add(new DSCondition("getAge", "", ">", ""+gt));
++		/* String toParse = value;
++		if (toParse.indexOf("-") != -1 && toParse.indexOf("-") != 0 ){ //between style
++		String[] betweenVals = toParse.split("-");
++		if (betweenVals.length == 2 ){
++		list.add(new DSCondition("getAge", "", ">=", betweenVals[0]));
++		list.add(new DSCondition("getAge", "", "<=", betweenVals[1]));
++		}
++		}else if (toParse.indexOf("&gt;") != -1 ||  toParse.indexOf(">") != -1 ){ // greater than style
++		toParse = toParse.replaceFirst("&gt;","");
++		toParse = toParse.replaceFirst(">","");
++		int gt = Integer.parseInt(toParse);
++		list.add(new DSCondition("getAge", "", ">", ""+gt));
+ 
+-            }else if (toParse.indexOf("&lt;") != -1  ||  toParse.indexOf("<") != -1 ){ // less than style
+-                toParse = toParse.replaceFirst("&lt;","");
+-                toParse = toParse.replaceFirst("<","");
++		}else if (toParse.indexOf("&lt;") != -1  ||  toParse.indexOf("<") != -1 ){ // less than style
++		toParse = toParse.replaceFirst("&lt;","");
++		toParse = toParse.replaceFirst("<","");
+ 
+-                int lt = Integer.parseInt(toParse);
+-                list.add(new DSCondition("getAge", "", "<=", ""+lt));
+-                
+-            }else if (toParse.indexOf("!=") != -1 ){ // less than style
+-                toParse = toParse.replaceFirst("!=","");
+-                int eq = Integer.parseInt(toParse);
+-                list.add(new DSCondition("getAge", "", "!=", ""+eq));
+-                
+-            }else if (!toParse.equals("")){ // less than style
+-                int eq = Integer.parseInt(toParse);
+-                list.add(new DSCondition("getAge", "", "==", ""+eq));
+-            }
+-	    */
++		int lt = Integer.parseInt(toParse);
++		list.add(new DSCondition("getAge", "", "<=", ""+lt));
++
++		}else if (toParse.indexOf("!=") != -1 ){ // less than style
++		toParse = toParse.replaceFirst("!=","");
++		int eq = Integer.parseInt(toParse);
++		list.add(new DSCondition("getAge", "", "!=", ""+eq));
++
++		}else if (!toParse.equals("")){ // less than style
++		int eq = Integer.parseInt(toParse);
++		list.add(new DSCondition("getAge", "", "==", ""+eq));
++		}
++		 */
+     }
+ }
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/mailbox/ReSubmitAction.java b/src/main/java/org/oscarehr/integration/mcedt/mailbox/ReSubmitAction.java
+index 62dd8d8b47..ce6476e2a8 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/mailbox/ReSubmitAction.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/mailbox/ReSubmitAction.java
+@@ -57,7 +57,7 @@ public class ReSubmitAction extends Action {
+ 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+ 		List<BigInteger> resourceIds = getResourceIds(request);
+ 		String serviceId= getServiceId(request);
+-		if (serviceId==null || serviceId.trim().equals("")) serviceId= getDefaultServiceId();
++		if (serviceId==null || "".equals(serviceId.trim()) ) serviceId= getDefaultServiceId();
+ 
+ 		try{		
+ 			
+@@ -65,7 +65,7 @@ public class ReSubmitAction extends Action {
+ 			EDTDelegate delegate = DelegateFactory.newDelegate(serviceId);
+ 			if (resourceIds.size()>0) result =delegate.submit(resourceIds);
+ 			for (ResponseResult edtResponse: result.getResponse()) {
+-				if (edtResponse.getResult().getCode().equals("IEDTS0001")) {
++				if ("IEDTS0001".equals(edtResponse.getResult().getCode())) {
+ 					saveMessages(request, ActionUtils.addMessage("uploadAction.submit.success", McedtMessageCreator.resourceResultToString(result)));
+ 				} else {
+ 					saveErrors(request, ActionUtils.addMessage("uploadAction.submit.failure", edtResponse.getResult().getMsg()));			
+diff --git a/src/main/java/org/oscarehr/learning/web/CourseManagerAction.java b/src/main/java/org/oscarehr/learning/web/CourseManagerAction.java
+index f917a5f107..4c883517ac 100644
+--- a/src/main/java/org/oscarehr/learning/web/CourseManagerAction.java
++++ b/src/main/java/org/oscarehr/learning/web/CourseManagerAction.java
+@@ -126,7 +126,7 @@ public class CourseManagerAction extends DispatchAction {
+ 		List<Program> programs = programDao.getAllPrograms();
+ 		List<Program> results = new ArrayList<Program>();
+ 		for(Program p:programs) {
+-			if(p.getSiteSpecificField()!=null && p.getSiteSpecificField().equals("course")) {
++			if("course".equals(p.getSiteSpecificField())) {
+ 				results.add(p);
+ 			}
+ 		}
+diff --git a/src/main/java/org/oscarehr/phr/web/PHRUserManagementAction.java b/src/main/java/org/oscarehr/phr/web/PHRUserManagementAction.java
+index 632da6196c..dcf5eeffb8 100644
+--- a/src/main/java/org/oscarehr/phr/web/PHRUserManagementAction.java
++++ b/src/main/java/org/oscarehr/phr/web/PHRUserManagementAction.java
+@@ -259,22 +259,22 @@ public class PHRUserManagementAction extends DispatchAction {
+ 
+ 				if (cfgVal[4].indexOf(";") > -1) {
+ 					fontType = cfgVal[4].split(";");
+-					if (fontType[1].trim().equals("italic")) fontFlags = Font.ITALIC;
+-					else if (fontType[1].trim().equals("bold")) fontFlags = Font.BOLD;
+-					else if (fontType[1].trim().equals("bolditalic")) fontFlags = Font.BOLDITALIC;
++					if ("italic".equals(fontType[1].trim())) fontFlags = Font.ITALIC;
++					else if ("bold".equals(fontType[1].trim())) fontFlags = Font.BOLD;
++					else if ("bolditalic".equals(fontType[1].trim())) fontFlags = Font.BOLDITALIC;
+ 					else fontFlags = Font.NORMAL;
+ 				} else {
+ 					fontFlags = Font.NORMAL;
+ 					fontType = new String[] { cfgVal[4].trim() };
+ 				}
+ 
+-				if (fontType[0].trim().equals("BaseFont.HELVETICA")) {
++				if ("BaseFont.HELVETICA".equals(fontType[0].trim())) {
+ 					fontType[0] = BaseFont.HELVETICA;
+ 					encoding = BaseFont.CP1252; //latin1 encoding
+-				} else if (fontType[0].trim().equals("BaseFont.HELVETICA_OBLIQUE")) {
++				} else if ("BaseFont.HELVETICA_OBLIQUE".equals(fontType[0].trim())) {
+ 					fontType[0] = BaseFont.HELVETICA_OBLIQUE;
+ 					encoding = BaseFont.CP1252;
+-				} else if (fontType[0].trim().equals("BaseFont.ZAPFDINGBATS")) {
++				} else if ("BaseFont.ZAPFDINGBATS".equals(fontType[0].trim())) {
+ 					fontType[0] = BaseFont.ZAPFDINGBATS;
+ 					encoding = BaseFont.ZAPFDINGBATS;
+ 				} else {
+@@ -287,7 +287,7 @@ public class PHRUserManagementAction extends DispatchAction {
+ 				// write in a rectangle area
+ 				if (cfgVal.length >= 9) {
+ 					Font font = new Font(bf, Integer.parseInt(cfgVal[5].trim()), fontFlags);
+-					ct.setSimpleColumn(Integer.parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), Integer.parseInt(cfgVal[7].trim()), (height - Integer.parseInt(cfgVal[8].trim())), Integer.parseInt(cfgVal[9].trim()), (cfgVal[0].trim().equals("left") ? Element.ALIGN_LEFT : (cfgVal[0].trim().equals("right") ? Element.ALIGN_RIGHT : Element.ALIGN_CENTER)));
++					ct.setSimpleColumn(Integer.parseInt(cfgVal[1].trim()), height - Integer.parseInt(cfgVal[2].trim()), Integer.parseInt(cfgVal[7].trim()), height - Integer.parseInt(cfgVal[8].trim()), Integer.parseInt(cfgVal[9].trim()), "left".equals(cfgVal[0].trim()) ? Element.ALIGN_LEFT : "right".equals(cfgVal[0].trim()) ? Element.ALIGN_RIGHT : Element.ALIGN_CENTER);
+ 
+ 					ct.setText(new Phrase(12, props.getProperty(tempName.toString(), ""), font));
+ 					ct.go();
+@@ -307,14 +307,14 @@ public class PHRUserManagementAction extends DispatchAction {
+ 				} else if (tempName.toString().startsWith("__")) {
+ 					cb.beginText();
+ 					cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+-					cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? (cfgVal[6].trim()) : props.getProperty(tempName.toString(), "")), Integer.parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
++					cb.showTextAligned("left".equals(cfgVal[0].trim()) ? PdfContentByte.ALIGN_LEFT : "right".equals(cfgVal[0].trim()) ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER, cfgVal.length >= 7 ? (cfgVal[6].trim()) : props.getProperty(tempName.toString(), ""), Integer.parseInt(cfgVal[1].trim()), height - Integer.parseInt(cfgVal[2].trim()), 0);
+ 
+ 					cb.endText();
+-				} else if (tempName.toString().equals("forms_promotext")) {
++				} else if ("forms_promotext".equals(tempName.toString())) {
+ 					if (OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null) {
+ 						cb.beginText();
+ 						cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+-						cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER)), OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), Integer.parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
++						cb.showTextAligned("left".equals(cfgVal[0].trim()) ? PdfContentByte.ALIGN_LEFT : "right".equals(cfgVal[0].trim()) ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), Integer.parseInt(cfgVal[1].trim()), height - Integer.parseInt(cfgVal[2].trim()), 0);
+ 
+ 						cb.endText();
+ 					}
+@@ -322,7 +322,7 @@ public class PHRUserManagementAction extends DispatchAction {
+ 
+ 					cb.beginText();
+ 					cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+-					cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? ((props.getProperty(tempName.toString(), "").equals("") ? "" : cfgVal[6].trim())) : props.getProperty(tempName.toString(), "")), Integer.parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
++					cb.showTextAligned("left".equals(cfgVal[0].trim()) ? PdfContentByte.ALIGN_LEFT : "right".equals(cfgVal[0].trim()) ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER, cfgVal.length >= 7 ? "".equals(props.getProperty(tempName.toString(), "")) ? "" : cfgVal[6].trim() : props.getProperty(tempName.toString(), ""), Integer.parseInt(cfgVal[1].trim()), height - Integer.parseInt(cfgVal[2].trim()), 0);
+ 
+ 					cb.endText();
+ 				}
+diff --git a/src/main/java/org/oscarehr/research/eaaps/EaapsServiceClient.java b/src/main/java/org/oscarehr/research/eaaps/EaapsServiceClient.java
+index f168b93a5a..29e6c2c1a1 100644
+--- a/src/main/java/org/oscarehr/research/eaaps/EaapsServiceClient.java
++++ b/src/main/java/org/oscarehr/research/eaaps/EaapsServiceClient.java
+@@ -162,7 +162,7 @@ public class EaapsServiceClient {
+ 		
+ 		if (json.containsKey("code")) {
+ 			String code = json.getString("code");
+-			if (code != null && code.equals("InternalError")) {
++			if ("InternalError".equals(code)) {
+ 				String message = json.containsKey("message") ? json.getString("message") : "";
+ 				throw new Exception("eAAPS Web Service Error: " + message);
+ 			}
+diff --git a/src/main/java/org/oscarehr/ws/rest/ConsultationWebService.java b/src/main/java/org/oscarehr/ws/rest/ConsultationWebService.java
+index 835ce5f70e..464bde4fb7 100644
+--- a/src/main/java/org/oscarehr/ws/rest/ConsultationWebService.java
++++ b/src/main/java/org/oscarehr/ws/rest/ConsultationWebService.java
+@@ -477,7 +477,7 @@ public class ConsultationWebService extends AbstractServiceImpl {
+ 		List<Provider> providerList = providerDao.getActiveProviders();
+ 		for (Provider provider : providerList) {
+ 			String providerNo = provider.getProviderNo();
+-			if (providerNo.equals("-1")) continue; //skip user "system"
++			if ("-1".equals(providerNo)) continue; //skip user "system"
+ 
+ 			letterhead = new LetterheadTo1(providerNo, provider.getFormattedName());
+ 			
+diff --git a/src/main/java/oscar/form/FrmSF36CaregiverRecord.java b/src/main/java/oscar/form/FrmSF36CaregiverRecord.java
+index 8d1b9a036c..78a63198fc 100644
+--- a/src/main/java/oscar/form/FrmSF36CaregiverRecord.java
++++ b/src/main/java/oscar/form/FrmSF36CaregiverRecord.java
+@@ -95,7 +95,7 @@ public class FrmSF36CaregiverRecord extends FrmRecord {
+ 
+                                 String value;
+                                     MiscUtils.getLogger().debug(" name = "+name+" type = "+md.getColumnTypeName(i)+" scale = "+md.getScale(i));
+-                                if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))           
++                                if("TINY".equalsIgnoreCase(md.getColumnTypeName(i)))           
+                                 {
+ 
+                                     if(rs.getInt(i)==1)
+@@ -111,7 +111,7 @@ public class FrmSF36CaregiverRecord extends FrmRecord {
+                                 }
+                                 else
+                                 {
+-                                    if(md.getColumnTypeName(i).equalsIgnoreCase("date"))
++                                    if("date".equalsIgnoreCase(md.getColumnTypeName(i)))
+                                     {
+                                         value = UtilDateUtilities.DateToString(rs.getDate(i),"yyyy/MM/dd");
+                                     }
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java
+index 3e24e181c7..70115c0525 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java
+@@ -501,7 +501,7 @@ public class MSPReconcile {
+ 
+ 	public String getApptStyle(String s, String userno) {
+ 		String retval = "";
+-		if (s.equals("none")) {
++		if ("none".equals(s)) {
+ 			retval = "No Appt / INR";
+ 		} else {
+ 			if (s.equals(userno)) {
+@@ -554,7 +554,7 @@ public class MSPReconcile {
+ 
+ 		public boolean isWCB() {
+ 			boolean retval = false;
+-			if (billingtype.equals("WCB")) {
++			if ("WCB".equals(billingtype)) {
+ 				retval = true;
+ 			}
+ 			return retval;
+@@ -1157,7 +1157,7 @@ public class MSPReconcile {
+ 				b.amount = rs.getString("bill_amount");
+ 				b.code = rs.getString("billing_code");
+ 				b.dx1 = rs.getString("dx_code1");	
+-				b.serviceDate = rs.getString("service_date").equals("") ? "00000000" : rs.getString("service_date");
++				b.serviceDate = ("".equals(rs.getString("service_date"))) ? "00000000" : rs.getString("service_date");
+ 				b.mvaCode = rs.getString("mva_claim_code");
+ 				b.hin = rs.getString("phn");
+ 				b.serviceLocation = rs.getString("service_location");
+@@ -1200,7 +1200,7 @@ public class MSPReconcile {
+ 						}
+ 						b.explanations = explCodes;
+ 						b.rejectionDate = dets.get(7);
+-						if (b.rejectionDate == null || b.rejectionDate.equals("")) {
++						if (b.rejectionDate == null || "".equals(b.rejectionDate) ) {
+ 							b.rejectionDate = "00000000";
+ 						}
+ 					}
+@@ -1268,7 +1268,7 @@ public class MSPReconcile {
+ 	 */
+ 	public double getAmountOwing(String billingMasterNo, String amountBilled, String billingType) {
+ 
+-		amountBilled = (amountBilled != null && !amountBilled.equals("")) ? amountBilled : "0.0";
++		amountBilled = (amountBilled != null && !"".equals(amountBilled)) ? amountBilled : "0.0";
+ 		double dbltBilled = new Double(amountBilled).doubleValue();
+ 		//Gets the total 'paid' or adjusted for any type of bill from billinghistory
+ 		double totalPaidFromHistory = getTotalPaidFromHistory(billingMasterNo, false);
+@@ -1404,7 +1404,7 @@ public class MSPReconcile {
+ 					String adjCodeAmt = String.valueOf(adjCode1amt1 + adjCode1amt2 + adjCode1amt3 + adjCode1amt4 + adjCode1amt5 + adjCode1amt6 + adjCode1amt7);
+ 					b.adjustmentCodeAmt = adjCodeAmt;
+ 					b.adjustmentCodeDesc = getAdjustmentCodeDesc(b.adjustmentCode) + "(" + b.adjustmentCode + ")";
+-					if (b.adjustmentCodeDesc.equals("")) {
++					if ("".equals(b.adjustmentCodeDesc)) {
+ 						MiscUtils.getLogger().debug("no description for b.adjustmentCode:" + b.adjustmentCode);
+ 					}
+ 				}
+@@ -1619,7 +1619,7 @@ public class MSPReconcile {
+ 		if ("creation_date".equals(dateFieldOption)) {
+ 			dateField = "creation_date";
+ 		}
+-		if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
++		if (providerNo != null && !"all".equalsIgnoreCase(providerNo.trim())) {
+ 			if (MSPReconcile.REP_PAYREF.equals(repType)) {
+ 				String[] row = SqlUtils.getRow("select ohip_no from provider where provider_no = " + providerNo);
+ 				if (row != null && row.length > 0) {
+@@ -1633,17 +1633,17 @@ public class MSPReconcile {
+ 			}
+ 		}
+ 
+-		if (payeeNo != null && !payeeNo.trim().equalsIgnoreCase("all")) {
++		if (payeeNo != null && !"all".equalsIgnoreCase(payeeNo.trim())) {
+ 			criteriaQry += " and bm.payee_no = '" + payeeNo + "'";
+ 		}
+-		if (account != null && !account.trim().equalsIgnoreCase("all")) {
++		if (account != null && !"all".equalsIgnoreCase(account.trim())) {
+ 			criteriaQry += " and b.provider_no = '" + account + "'";
+ 		}
+-		if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
++		if (startDate != null && !"".equalsIgnoreCase(startDate.trim())) {
+ 			criteriaQry += " and ( to_days(" + dateField + ") >= to_days('" + startDate + "')) ";
+ 		}
+ 
+-		if (endDate != null && !endDate.trim().equalsIgnoreCase("")) {
++		if (endDate != null && !"".equalsIgnoreCase(endDate.trim())) {
+ 			criteriaQry += " and ( to_days(" + dateField + ") <= to_days('" + endDate + "')) ";
+ 		}
+ 		//put this crap in a Map and use an 'in' clause instead
+@@ -1863,7 +1863,7 @@ public class MSPReconcile {
+ 	 */
+ 	public static String convCurValue(String value) {
+ 		BigDecimal curValue = new BigDecimal(0.0);
+-		if (value == null || value.equals("")) {
++		if (value == null || "".equals(value) ) {
+ 			return "0.0";
+ 		}
+ 		try {
+diff --git a/src/main/java/oscar/oscarEncounter/data/EctMMSERecord.java b/src/main/java/oscar/oscarEncounter/data/EctMMSERecord.java
+index 7f2dc7dd92..8542d2ce2f 100644
+--- a/src/main/java/oscar/oscarEncounter/data/EctMMSERecord.java
++++ b/src/main/java/oscar/oscarEncounter/data/EctMMSERecord.java
+@@ -77,7 +77,7 @@ public class EctMMSERecord {
+ 
+                     String value;
+ 
+-                    if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))
++                    if("TINY".equalsIgnoreCase(md.getColumnTypeName(i)))
+                     {
+                         if(rs.getInt(i)==1)
+                         {
+@@ -90,7 +90,7 @@ public class EctMMSERecord {
+                     }
+                     else
+                     {
+-                        if(md.getColumnTypeName(i).equalsIgnoreCase("date"))
++                        if("date".equalsIgnoreCase(md.getColumnTypeName(i)))
+                         {
+                             value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
+                         }
+@@ -127,7 +127,7 @@ public class EctMMSERecord {
+         {
+             String name = md.getColumnName(i);
+ 
+-            if(name.equalsIgnoreCase("ID"))
++            if("ID".equalsIgnoreCase(name))
+             {
+                 rs.updateNull(name);
+             }
+@@ -135,11 +135,11 @@ public class EctMMSERecord {
+             {
+                 String value = props.getProperty(name, null);
+ 
+-                if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))
++                if("TINY".equalsIgnoreCase(md.getColumnTypeName(i)))
+                 {
+                     if(value!=null)
+                     {
+-                        if(value.equalsIgnoreCase("on"))
++                        if("on".equalsIgnoreCase(value))
+                         {
+                             rs.updateInt(name, 1);
+                         }
+@@ -155,11 +155,11 @@ public class EctMMSERecord {
+                 }
+                 else
+                 {
+-                    if(md.getColumnTypeName(i).equalsIgnoreCase("date"))
++                    if("date".equalsIgnoreCase(md.getColumnTypeName(i)))
+                     {
+                         java.util.Date d;
+ 
+-                        if(md.getColumnName(i).equalsIgnoreCase("formEdited"))
++                        if("formEdited".equalsIgnoreCase(md.getColumnName(i)))
+                         {
+                             d = new Date();
+                         }
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java
+index d7ffe41fba..5459fde1b2 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java
+@@ -161,7 +161,7 @@ public class EctConsultationFormRequestUtil {
+ 
+ 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+ 		for (String teamName : dao.getActiveTeams()) {
+-			if (teamName != null && !teamName.equals("")) {
++			if (teamName != null && !"".equals(teamName)) {
+ 				teamVec.add(teamName);
+ 			}
+ 		}
+@@ -174,7 +174,7 @@ public class EctConsultationFormRequestUtil {
+ 
+ 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+ 		for (String teamName : dao.getActiveTeams()) {
+-			if (teamName != null && !teamName.equals("")) {
++			if (teamName != null && !"".equals(teamName)) {
+ 				teamVec.add(teamName);
+ 			}
+ 		}
+@@ -186,7 +186,7 @@ public class EctConsultationFormRequestUtil {
+ 		teamVec = new Vector();
+ 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+ 		for (String teamName : dao.getActiveTeamsViaSites(providerNo)) {
+-			if (teamName!= null && !teamName.equals("")) {
++			if (teamName!= null && !"".equals(teamName)) {
+ 				teamVec.add(teamName);
+ 			}
+ 		}
+@@ -200,7 +200,7 @@ public class EctConsultationFormRequestUtil {
+ 
+ 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+ 		for (String teamName : dao.getUniqueTeams()) {
+-			if (teamName != null && !teamName.equals("")) {
++			if (teamName != null && !"".equals(teamName)) {
+ 				teamVec.add(teamName);
+ 			}
+ 		}
+@@ -250,7 +250,7 @@ public class EctConsultationFormRequestUtil {
+ 			signatureImg = cr.getSignatureImg();
+ 
+ 			appointmentNotes = cr.getStatusText();
+-			if (appointmentNotes == null || appointmentNotes.equals("null")) {
++			if (appointmentNotes == null || "null".equals(appointmentNotes) ) {
+ 				appointmentNotes = "";
+ 			}
+ 			estPatient(loggedInInfo, "" + cr.getDemographicId());
+@@ -260,7 +260,7 @@ public class EctConsultationFormRequestUtil {
+ 			}
+ 
+ 			String date = ConversionUtils.toDateString(cr.getAppointmentDate());
+-            if( date == null || date.equals("") ) {
++            if( date == null || "".equals(date)  ) {
+             	appointmentDate ="";
+             	appointmentHour = "";
+             	appointmentMinute = "";
+@@ -311,16 +311,16 @@ public class EctConsultationFormRequestUtil {
+ 			specAddr = ps.getStreetAddress();
+ 			specEmail = ps.getEmailAddress();
+ 			MiscUtils.getLogger().debug("getting Null" + specEmail + "<");
+-			if (specPhone == null || specPhone.equals("null")) {
++			if (specPhone == null || "null".equals(specPhone) ) {
+ 				specPhone = "";
+ 			}
+-			if (specFax == null || specFax.equals("null")) {
++			if (specFax == null || "null".equals(specFax) ) {
+ 				specFax = "";
+ 			}
+-			if (specAddr == null || specAddr.equals("null")) {
++			if (specAddr == null || "null".equals(specAddr) ) {
+ 				specAddr = "";
+ 			}
+-			if (specEmail == null || specEmail.equalsIgnoreCase("null")) {
++			if (specEmail == null || "null".equalsIgnoreCase(specEmail) ) {
+ 				specEmail = "";
+ 			}
+ 		}
+@@ -336,7 +336,7 @@ public class EctConsultationFormRequestUtil {
+ 		ProfessionalSpecialistDao dao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
+ 		ProfessionalSpecialist ps = dao.find(ConversionUtils.fromIntString(id));
+ 		if (ps != null) {
+-			if (specEmail == null || specEmail.equalsIgnoreCase("null")) {
++			if (specEmail == null || "null".equalsIgnoreCase(specEmail) ) {
+ 				specEmail = new String();
+ 			}
+ 			retval = specEmail;
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java
+index c21058e390..6704401530 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java
+@@ -143,7 +143,7 @@ public class MeasurementDSHelper {
+     
+     public boolean isMale(){
+        boolean ismale = false;
+-       if (sex != null && sex.trim().equalsIgnoreCase("M")){
++       if (sex != null && "M".equalsIgnoreCase(sex.trim()) ){
+           ismale = true;
+        }
+        return ismale;    
+@@ -151,7 +151,7 @@ public class MeasurementDSHelper {
+     
+     public boolean isFemale(){
+        boolean isfemale = false;
+-       if (sex != null && sex.trim().equalsIgnoreCase("F")){
++       if (sex != null && "F".equalsIgnoreCase(sex.trim()) ){
+           isfemale = true;
+        }
+        return isfemale;    
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayConsultAction.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayConsultAction.java
+index ec4d01726d..f90ccea405 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayConsultAction.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayConsultAction.java
+@@ -81,7 +81,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
+             UserProperty up = pref.getProp(bean.providerNo, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);           
+             String timeperiod = null;           
+ 
+-            if ( up != null && up.getValue() != null && !up.getValue().trim().equals("")){
++            if ( up != null && up.getValue() != null && !"".equals(up.getValue().trim())){
+               timeperiod = up.getValue(); 
+             }
+ 
+@@ -108,7 +108,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
+                     date = formatter.parse(dateStr);
+                     serviceDateStr = DateUtils.formatDate(date, request.getLocale());
+                     //if we are after cut off date and not completed set to red
+-                    if( date.before(cutoffDate) && !status.equals("4") ) {
++                    if( date.before(cutoffDate) && !"4".equals(status) ) {
+                         item.setColour(red);
+                     }
+                 }
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/CMLHandler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/CMLHandler.java
+index 85c482dafb..58d77aeefb 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/CMLHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/CMLHandler.java
+@@ -91,7 +91,7 @@ public class CMLHandler implements MessageHandler {
+ 		//OLIS requirements - need to see if this is a duplicate
+ 		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("CML", msg);
+ 		//if final
+-		if(h.getOrderStatus().equals("CM")) {
++		if("CM".equals(h.getOrderStatus())) {
+ 			String acc = h.getAccessionNum();
+ 			//do we have this?
+ 			List<Hl7TextInfo> dupResults = hl7TextInfoDao.searchByAccessionNumber(acc);
+diff --git a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/TRUENORTHHandler.java b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/TRUENORTHHandler.java
+index dac48179ee..2a13a463de 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/upload/handlers/TRUENORTHHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/upload/handlers/TRUENORTHHandler.java
+@@ -83,7 +83,7 @@ public class TRUENORTHHandler implements MessageHandler {
+ 		//OLIS requirements - need to see if this is a duplicate
+ 		oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("TRUENORTH", msg);
+ 		//if final		
+-		if(h.getOrderStatus().equals("F")) {
++		if("F".equals(h.getOrderStatus())) {
+ 			String fullAcc = h.getAccessionNum();
+ 			String acc = h.getAccessionNum();
+ 			if(acc.indexOf("-")!=-1) {
+diff --git a/src/main/java/oscar/oscarReport/data/VisitReportData.java b/src/main/java/oscar/oscarReport/data/VisitReportData.java
+index 0aa5daffb9..93cb94c531 100644
+--- a/src/main/java/oscar/oscarReport/data/VisitReportData.java
++++ b/src/main/java/oscar/oscarReport/data/VisitReportData.java
+@@ -55,8 +55,8 @@ public class VisitReportData {
+ 		providerNo = value;
+ 	}
+ 
+-	public String[] getCreatorCount() {
+-		String retval, retcount;
++	public String[] getCreatorCount() {String retval;
++		String retcount;
+ 		String[] retVisit = new String[6];
+ 		Arrays.fill(retVisit, "0");
+ 
+@@ -72,7 +72,7 @@ public class VisitReportData {
+ 
+ 		for (Object[] o : billingCounts) {
+ 			String visitType = String.valueOf(o[0]);
+-			if (visitType != null && !visitType.equals("")) {
++			if (visitType != null && !"".equals(visitType)) {
+ 				// get last character
+ 				visitType = visitType.substring(visitType.length() - 1);
+ 			} else {
+@@ -91,8 +91,8 @@ public class VisitReportData {
+ 		return retVisit;
+ 	}
+ 	
+-	public String[] getApptProviderCount() {
+-		String retval, retcount;
++	public String[] getApptProviderCount() {String retval;
++		String retcount;
+ 		String[] retVisit = new String[6];
+ 		Arrays.fill(retVisit, "0");
+ 
+@@ -108,7 +108,7 @@ public class VisitReportData {
+ 
+ 		for (Object[] o : billingCounts) {
+ 			String visitType = String.valueOf(o[0]);
+-			if (visitType != null && !visitType.equals("")) {
++			if (visitType != null && !"".equals(visitType)) {
+ 				// get last character
+ 				visitType = visitType.substring(visitType.length() - 1);
+ 			} else {
+diff --git a/src/main/java/oscar/oscarReport/reportByTemplate/UnusedMinutesReporter.java b/src/main/java/oscar/oscarReport/reportByTemplate/UnusedMinutesReporter.java
+index e4150d8cd4..f918c7da91 100644
+--- a/src/main/java/oscar/oscarReport/reportByTemplate/UnusedMinutesReporter.java
++++ b/src/main/java/oscar/oscarReport/reportByTemplate/UnusedMinutesReporter.java
+@@ -60,21 +60,28 @@ public class UnusedMinutesReporter implements Reporter{
+             request.setAttribute("templateid", templateId);
+             return false;
+         }
+-        
+         // String scheduleSQL = "select scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate >= '" + date_from + "' and scheduledate.sdate <= '" + date_to + "' and  scheduledate.provider_no='" + provider_no + "' and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate";
+         // String apptSQL = "select start_time, end_time from appointment where provider_no = '" + provider_no + "' and appointment_date = '";
+-        int booked, unbooked;
++        int booked;
++        int unbooked;
+         booked = unbooked = 0;
+         
+         try {
+             int duration;
+-            String timecodes, code;
++            String timecodes;
++            String code;
+                        
+             String apptTime;
+             int dayMins = 24*60;
+-            int iHours,iMins,apptHour_s,apptMin_s,apptHour_e,apptMin_e;
+-            int codePos;            
+-            int latestApptHour, latestApptMin;
++            int iHours;
++            int iMins;
++            int apptHour_s;
++            int apptMin_s;
++            int apptHour_e;
++            int apptMin_e;
++            int codePos;
++            int latestApptHour;
++            int latestApptMin;
+             
+             ScheduleTemplateDao dao = SpringUtils.getBean(ScheduleTemplateDao.class);
+             OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
+@@ -120,7 +127,7 @@ public class UnusedMinutesReporter implements Reporter{
+                         
+                     }
+                     
+-                    if( code.equalsIgnoreCase("1") || code.equalsIgnoreCase("2") || code.equalsIgnoreCase("3") || code.equalsIgnoreCase("4") || code.equalsIgnoreCase("6") ) {
++                    if( "1".equalsIgnoreCase(code) || "2".equalsIgnoreCase(code)  || "3".equalsIgnoreCase(code)  || "4".equalsIgnoreCase(code)  || "6".equalsIgnoreCase(code)  ) {
+                         if( iHours > latestApptHour || (iHours == latestApptHour && iMins > latestApptMin)) {
+                             unbooked += duration;
+                         }

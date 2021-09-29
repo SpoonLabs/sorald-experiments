@@ -1,0 +1,785 @@
+diff --git a/src/main/java/org/caisi/core/web/SystemMessageAction.java b/src/main/java/org/caisi/core/web/SystemMessageAction.java
+index d9063f75c4..925bfa8043 100644
+--- a/src/main/java/org/caisi/core/web/SystemMessageAction.java
++++ b/src/main/java/org/caisi/core/web/SystemMessageAction.java
+@@ -85,7 +85,7 @@ public class SystemMessageAction extends DispatchAction {
+ 		msg.setCreationDate(new Date());
+ 		int messageId = 0;
+ 		String messageId_str= (String)request.getSession().getAttribute("systemMessageId");
+-		if(messageId_str!=null && messageId_str!="") {
++		if(messageId_str!=null && !messageId_str.equals("") ) {
+ 			messageId = Integer.valueOf(messageId_str).intValue();
+ 		}
+ 		
+diff --git a/src/main/java/org/oscarehr/PMmodule/service/GenericIntakeManager.java b/src/main/java/org/oscarehr/PMmodule/service/GenericIntakeManager.java
+index 6490833bcf..3ab2433dff 100644
+--- a/src/main/java/org/oscarehr/PMmodule/service/GenericIntakeManager.java
++++ b/src/main/java/org/oscarehr/PMmodule/service/GenericIntakeManager.java
+@@ -679,9 +679,9 @@ public class GenericIntakeManager {
+ 		for (Integer i : eqNodeIds.keySet()) {
+ 			int nid = -1;
+ 			for (Integer j : eqNodeIds.keySet()) {
+-				if (i == j)
++				if (i.equals(j))
+ 					continue;
+-				if (eqNodeIds.get(i) == eqNodeIds.get(j)) {
++				if (eqNodeIds.get(i).equals(eqNodeIds.get(j))) {
+ 					nid = i > j ? i : j;
+ 				}
+ 			}
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/OcanFormAction.java b/src/main/java/org/oscarehr/PMmodule/web/OcanFormAction.java
+index 18dcf66459..41e8b7fb07 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/OcanFormAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/OcanFormAction.java
+@@ -89,7 +89,7 @@ public class OcanFormAction {
+ 	public static void addOcanStaffFormData(Integer ocanStaffFormId, String question, String answer)
+ 	{
+ 		answer=StringUtils.trimToNull(answer);
+-		if (answer==null || answer=="") return;
++		if (answer==null || answer.equals("") ) return;
+ 		OcanStaffFormData ocanStaffFormData;
+ 		//if(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question).isEmpty()) {
+ 			ocanStaffFormData=new OcanStaffFormData();
+@@ -97,13 +97,13 @@ public class OcanFormAction {
+ 			ocanStaffFormData.setQuestion(question);
+ 			ocanStaffFormData.setAnswer(answer);			
+ 			ocanStaffFormDataDao.persist(ocanStaffFormData); //create
+-		//} else {
+-		//	ocanStaffFormData = ocanStaffFormDataDao.findLatestByQuestion(ocanStaffFormId, question);
+-		//	ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
+-		//	ocanStaffFormData.setQuestion(question);
+-		//	ocanStaffFormData.setAnswer(answer);			
+-		//	ocanStaffFormDataDao.merge(ocanStaffFormData); //update
+-		//}
++		// } else {
++		// ocanStaffFormData = ocanStaffFormDataDao.findLatestByQuestion(ocanStaffFormId, question);
++		// ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
++		// ocanStaffFormData.setQuestion(question);
++		// ocanStaffFormData.setAnswer(answer);
++		// ocanStaffFormDataDao.merge(ocanStaffFormData); //update
++		// }
+ 		
+ 	}
+ 	
+diff --git a/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java b/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java
+index 9a602a8f64..f0eb92fe50 100644
+--- a/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java
++++ b/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java
+@@ -193,7 +193,7 @@ public class ProgramManagerAction extends DispatchAction {
+ 			return list(mapping, form, request, response);
+ 		}
+ 
+-		if (id != null && id!="") {
++		if (id != null && !id.equals("") ) {
+ 			Program program = programManager.getProgram(id);
+ 			
+ 			if (program == null) {
+@@ -223,7 +223,7 @@ public class ProgramManagerAction extends DispatchAction {
+ 
+ 		setEditAttributes(request, id);
+ 		
+-		if (id != null && id!="") {
++		if (id != null && !id.equals("") ) {
+ 			request.setAttribute("service_restrictions", clientRestrictionManager.getActiveRestrictionsForProgram(Integer.valueOf(id), new Date()));
+ 			request.setAttribute("disabled_service_restrictions", clientRestrictionManager.getDisabledRestrictionsForProgram(Integer.valueOf(id), new Date()));
+ 		}
+@@ -1252,7 +1252,7 @@ public class ProgramManagerAction extends DispatchAction {
+ 	private void setEditAttributes(HttpServletRequest request, String programId) {
+ 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+ 		
+-		if (programId != null && programId!="") {
++		if (programId != null && !programId.equals("") ) {
+ 			request.setAttribute("id", programId);
+ 			request.setAttribute("programName", programManager.getProgram(programId).getName());
+ 			request.setAttribute("providers", programManager.getProgramProviders(programId));
+diff --git a/src/main/java/org/oscarehr/billing/Clinicaid/util/ClinicaidCommunication.java b/src/main/java/org/oscarehr/billing/Clinicaid/util/ClinicaidCommunication.java
+index 12da43e419..8238ba14a2 100644
+--- a/src/main/java/org/oscarehr/billing/Clinicaid/util/ClinicaidCommunication.java
++++ b/src/main/java/org/oscarehr/billing/Clinicaid/util/ClinicaidCommunication.java
+@@ -149,7 +149,7 @@ public class ClinicaidCommunication {
+ 
+ 			// If no appointment provider exists, try to get the patients 
+ 			// provider to use for billing
+-			if(provider_no == null || provider_no == "")
++			if(provider_no == null || provider_no.equals("") )
+ 			{
+ 				try
+ 				{
+@@ -178,7 +178,7 @@ public class ClinicaidCommunication {
+ 
+ 			// If no patient or appointment provider was found, use the 
+ 			// current user for billing
+-			if(provider_no == null || provider_no == "")
++			if(provider_no == null || provider_no.equals("") )
+ 			{
+ 				try
+ 				{
+diff --git a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
+index 61a70e5cf2..de548ed440 100644
+--- a/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
++++ b/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java
+@@ -2065,7 +2065,7 @@ private String updateApptStatus(String status, String type) {
+ 			Collections.sort(noteIdList);
+ 			firstNoteId = noteIdList.get(0);
+ 			lastNoteId = noteIdList.get(noteIdList.size() - 1);
+-			if (firstNoteId != lastNoteId) {
++			if (!firstNoteId.equals(lastNoteId)) {
+ 				CaseManagementNote firstNote = getNote(firstNoteId.toString());
+ 				if (firstNote.isDocumentNote()) {
+ 					Long tableId = EDocUtil.getTableIdFromNoteId(firstNote.getId());
+diff --git a/src/main/java/org/oscarehr/casemgmt/web/CaseManagementEntryAction.java b/src/main/java/org/oscarehr/casemgmt/web/CaseManagementEntryAction.java
+index be5b8663c1..30f876f672 100644
+--- a/src/main/java/org/oscarehr/casemgmt/web/CaseManagementEntryAction.java
++++ b/src/main/java/org/oscarehr/casemgmt/web/CaseManagementEntryAction.java
+@@ -1258,22 +1258,22 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
+ 		}
+ 
+ 		String hourOfEncounterTime = request.getParameter("hourOfEncounterTime");
+-		if (hourOfEncounterTime != null && hourOfEncounterTime != "") {
++		if (hourOfEncounterTime != null && !hourOfEncounterTime.equals("") ) {
+ 			note.setHourOfEncounterTime(Integer.valueOf(hourOfEncounterTime));
+ 		}
+ 
+ 		String minuteOfEncounterTime = request.getParameter("minuteOfEncounterTime");
+-		if (minuteOfEncounterTime != null && minuteOfEncounterTime != "") {
++		if (minuteOfEncounterTime != null && !minuteOfEncounterTime.equals("") ) {
+ 			note.setMinuteOfEncounterTime(Integer.valueOf(minuteOfEncounterTime));
+ 		}
+ 
+ 		String hourOfEncTransportationTime = request.getParameter("hourOfEncTransportationTime");
+-		if (hourOfEncTransportationTime != null && hourOfEncTransportationTime != "") {
++		if (hourOfEncTransportationTime != null && !hourOfEncTransportationTime.equals("") ) {
+ 			note.setHourOfEncTransportationTime(Integer.valueOf(hourOfEncTransportationTime));
+ 		}
+ 
+ 		String minuteOfEncTransportationTime = request.getParameter("minuteOfEncTransportationTime");
+-		if (minuteOfEncTransportationTime != null && minuteOfEncTransportationTime != "") {
++		if (minuteOfEncTransportationTime != null && !minuteOfEncTransportationTime.equals("") ) {
+ 			note.setMinuteOfEncTransportationTime(Integer.valueOf(minuteOfEncTransportationTime));
+ 		}
+ 
+diff --git a/src/main/java/org/oscarehr/common/web/PregnancyAction.java b/src/main/java/org/oscarehr/common/web/PregnancyAction.java
+index af8eccc398..a71cd6944a 100644
+--- a/src/main/java/org/oscarehr/common/web/PregnancyAction.java
++++ b/src/main/java/org/oscarehr/common/web/PregnancyAction.java
+@@ -92,7 +92,7 @@ public class PregnancyAction extends DispatchAction {
+ 	static String labReqVersion;
+ 	static {
+ 		labReqVersion = OscarProperties.getInstance().getProperty("onare_labreqver", "07");
+-		if(labReqVersion == "") {
++		if(labReqVersion.equals("")) {
+ 			labReqVersion="10";
+ 		}
+ 	}
+diff --git a/src/main/java/org/oscarehr/e2e/model/PatientExport.java b/src/main/java/org/oscarehr/e2e/model/PatientExport.java
+index 26c5f3aa1b..1a5f5e91b4 100644
+--- a/src/main/java/org/oscarehr/e2e/model/PatientExport.java
++++ b/src/main/java/org/oscarehr/e2e/model/PatientExport.java
+@@ -329,7 +329,7 @@ public class PatientExport {
+ 			List<LabComponent> tempLabComponents = new ArrayList<LabComponent>();
+ 			for(LabComponent labComponent : allLabComponents) {
+ 				String componentLabNumber = labComponent.getMeasurementsMap().get(Constants.MeasurementsExtKeys.lab_no.toString());
+-				if(Integer.valueOf(componentLabNumber) == labNumber) {
++				if(Integer.valueOf(componentLabNumber).equals(labNumber)) {
+ 					if(EverestUtils.isNullorEmptyorWhitespace(labObservation.getRequestDate())) {
+ 						labObservation.setRequestDate(labComponent.getMeasurementsMap().get(Constants.MeasurementsExtKeys.request_datetime.toString()));
+ 					}
+@@ -346,7 +346,7 @@ public class PatientExport {
+ 					Integer currOrganizer = parseOtherID(rawOtherId)[0];
+ 
+ 					// Create New LabOrganizer Group
+-					if(prevOrganizer != currOrganizer) {
++					if(!prevOrganizer.equals(currOrganizer)) {
+ 						labObservation.getLabOrganizer().add(tempLabOrganizer);
+ 						prevOrganizer = currOrganizer;
+ 						tempLabOrganizer = new LabOrganizer(prevOrganizer, labReport.getReportStatus());
+diff --git a/src/main/java/org/oscarehr/eyeform/web/ExaminationHistoryAction.java b/src/main/java/org/oscarehr/eyeform/web/ExaminationHistoryAction.java
+index 16db397ce8..e508b212f9 100644
+--- a/src/main/java/org/oscarehr/eyeform/web/ExaminationHistoryAction.java
++++ b/src/main/java/org/oscarehr/eyeform/web/ExaminationHistoryAction.java
+@@ -162,7 +162,7 @@ public class ExaminationHistoryAction extends DispatchAction {
+ 		//narrow the window using the refpage variable (page number)
+ 		appointments = filterByRefPage(appointments,refPage);
+ 		
+-		Measurement simpleFields[][] = new Measurement[simpleFieldNames.size()][appointments.size()];				
++		Measurement simpleFields = new Measurement[simpleFieldNames.size()][appointments.size()];				
+ 		for(int x=0;x<simpleFields.length;x++) {
+ 			for(int y=0;y<simpleFields[x].length;y++) {				
+ 				String field =simpleFieldNames.get(x);
+@@ -174,7 +174,7 @@ public class ExaminationHistoryAction extends DispatchAction {
+ 		request.setAttribute("simpleFieldNames", simpleFieldNames);
+ 		request.setAttribute("simpleFields", simpleFields);
+ 		request.setAttribute("appointments", appointments);
+-		if(refPage == null || refPage=="") { refPage="1";}
++		if(refPage == null || refPage.equals("") ) { refPage="1";}
+ 		request.setAttribute("refPage", Integer.parseInt(refPage));
+ 		
+ 		
+diff --git a/src/main/java/org/oscarehr/integration/fhir/model/Practitioner.java b/src/main/java/org/oscarehr/integration/fhir/model/Practitioner.java
+index 00e8bc2e95..0658856774 100644
+--- a/src/main/java/org/oscarehr/integration/fhir/model/Practitioner.java
++++ b/src/main/java/org/oscarehr/integration/fhir/model/Practitioner.java
+@@ -1,4 +1,6 @@
+ package org.oscarehr.integration.fhir.model;
++import org.oscarehr.integration.fhir.interfaces.ResourceAttributeFilterInterface.OptionalFHIRAttribute;
++import org.oscarehr.integration.fhir.interfaces.ResourceAttributeFilterInterface.MandatoryFHIRAttribute;
+ /**
+  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+  * This software is published under the GPL GNU General Public License.
+@@ -33,7 +35,7 @@ import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
+ 
+ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
+ 
+-	public enum LicenseType { CPSO, CNORNP, CNORN, CNORPN, OCP, DEFAULT, CMO }
++	public enum LicenseType { CPSO, CNORNP, CNORN, CNORPN, OCP, DEFAULT, CMO; }
+ 
+ 	public Practitioner( Provider provider ) {
+ 		super( new org.hl7.fhir.dstu3.model.Practitioner(), provider );
+@@ -113,7 +115,7 @@ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.m
+ 		//TODO these codes cannot be hard coded like this. Temporary hack
+ 		String licensetype = getOscarResource().getPractitionerNoType();
+ 		
+-		if( licensetype == null || licensetype == "" )  {
++		if( licensetype == null || licensetype.equals("")  )  {
+ 			licensetype = LicenseType.DEFAULT.name();
+ 		}
+ 
+diff --git a/src/main/java/org/oscarehr/renal/web/RenalAction.java b/src/main/java/org/oscarehr/renal/web/RenalAction.java
+index 997aad7e3f..cadc9f867d 100644
+--- a/src/main/java/org/oscarehr/renal/web/RenalAction.java
++++ b/src/main/java/org/oscarehr/renal/web/RenalAction.java
+@@ -83,7 +83,7 @@ public class RenalAction extends DispatchAction {
+ 	static String labReqVersion;
+ 	static {
+ 		labReqVersion = OscarProperties.getInstance().getProperty("orn_labreqver", "07");
+-		if(labReqVersion == "") {
++		if(labReqVersion.equals("")) {
+ 			labReqVersion="10";
+ 		}
+ 	}
+diff --git a/src/main/java/org/oscarehr/ws/rest/NotesService.java b/src/main/java/org/oscarehr/ws/rest/NotesService.java
+index 3b90a9b373..a0f352ae41 100644
+--- a/src/main/java/org/oscarehr/ws/rest/NotesService.java
++++ b/src/main/java/org/oscarehr/ws/rest/NotesService.java
+@@ -99,7 +99,7 @@ import oscar.oscarEncounter.pageUtil.EctSessionBean;
+ @Component("notesService")
+ public class NotesService extends AbstractServiceImpl {
+ 
+-	public static String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
++	public static String cppCodes = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors","OcularMedication","TicklerNote"};
+ 	
+ 	private static Logger logger = MiscUtils.getLogger();
+ 	
+@@ -1760,7 +1760,7 @@ public class NotesService extends AbstractServiceImpl {
+ 		
+ 		if (!noteList.containsKey(providerNo)) { // only check for other editing user when initializing flag
+ 			for (String key : noteList.keySet()) {
+-				if (key!=providerNo) {
++				if (!key.equals(providerNo)) {
+ 					resp.setSuccess(false);
+ 					break;
+ 				}
+@@ -1801,7 +1801,7 @@ public class NotesService extends AbstractServiceImpl {
+ 		long myEditTime = 0;
+ 		if (noteList.containsKey(providerNo)) myEditTime = noteList.get(providerNo);
+ 		for (String key : noteList.keySet()) {
+-			if (key!=providerNo) {
++			if (!key.equals(providerNo)) {
+ 				if (noteList.get(key)>myEditTime) {
+ 					resp.setSuccess(false);
+ 					break;
+diff --git a/src/main/java/oscar/Misc.java b/src/main/java/oscar/Misc.java
+index 97590c568a..351448ba8a 100644
+--- a/src/main/java/oscar/Misc.java
++++ b/src/main/java/oscar/Misc.java
+@@ -383,7 +383,7 @@ public final class Misc {
+ 	}
+ 
+ 	public static String check(String check, String checkAgainst, String defaultValue) {
+-		return ((check == checkAgainst) ? defaultValue : check);
++		return check.equals(checkAgainst) ? defaultValue : check;
+ 	}
+ 
+ 	public static String check(String check, String defaultValue) {
+diff --git a/src/main/java/oscar/OBChecklistHandler_99_12.java b/src/main/java/oscar/OBChecklistHandler_99_12.java
+index 70384ad6fd..68986a6f12 100644
+--- a/src/main/java/oscar/OBChecklistHandler_99_12.java
++++ b/src/main/java/oscar/OBChecklistHandler_99_12.java
+@@ -45,8 +45,10 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
+ 	private boolean dispitem = true;
+ 	private boolean checkbox = false;
+ 	private Properties savedar1params;
+-	
+-	GregorianCalendar cal, now;
++
++	GregorianCalendar cal;
++
++	GregorianCalendar now;
+ 	int[] weekDivisions = { 0, 12, 16, 20, 24, 28, 32, 34, 36, 37, 38, 39, 40 };
+ 	String[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", 
+ 								   "September", "October", "November", "December" };
+@@ -95,7 +97,7 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
+ 
+ 		if (localName.equals("week")) { 
+   		for (int i=0; i < atts.getLength(); i++) {
+-	  		if (atts.getLocalName(i) == "number") {
++	  		if (atts.getLocalName(i).equals("number")) {
+ 		  		count = Integer.parseInt(atts.getValue(i));
+ 			  }
+ 			}
+@@ -120,9 +122,9 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
+ 			String riskname = "";
+   		for (int i=0; i < atts.getLength(); i++) {
+   			count = 1;
+-	  		if (atts.getLocalName(i) == "name") clname = atts.getValue(i);
+-	  		if (atts.getLocalName(i) == "risk") riskname = atts.getValue(i);
+-	  		if (atts.getLocalName(i) == "checkbox") checkbox = true;
++	  		if (atts.getLocalName(i).equals("name")) clname = atts.getValue(i);
++	  		if (atts.getLocalName(i).equals("risk")) riskname = atts.getValue(i);
++	  		if (atts.getLocalName(i).equals("checkbox")) checkbox = true;
+ 	  	}
+ 
+       if(riskname.equals("") || savedar1params.getProperty(riskname)!=null ) {
+diff --git a/src/main/java/oscar/OBRisksHandler_99_12.java b/src/main/java/oscar/OBRisksHandler_99_12.java
+index c2c30fa236..3c1187b845 100644
+--- a/src/main/java/oscar/OBRisksHandler_99_12.java
++++ b/src/main/java/oscar/OBRisksHandler_99_12.java
+@@ -36,7 +36,11 @@ import org.xml.sax.helpers.DefaultHandler;
+ public class OBRisksHandler_99_12 extends DefaultHandler {
+ 
+ 	private Locator locator;
+-	private String results, riskName; //currentElement
++
++	private String results;
++
++	private String riskName;// currentElement
++
+ 	private int colcount = 0;
+ 	private int numcols = 5;
+ 	private int interiortable = 0;
+@@ -122,18 +126,18 @@ public class OBRisksHandler_99_12 extends DefaultHandler {
+ 			results += "<tr><td align='center'><font size=-2><b>\n";
+ 		}
+ 		for (int i=0; i < atts.getLength(); i++) {
+-			if (atts.getLocalName(i) == "name") {
++			if (atts.getLocalName(i).equals("name")) {
+ 				riskName = atts.getValue(i);
+         results += "<input type=checkbox name=\"xml_" + riskName + "\" value='checked' datafld='xml_" +riskName+ "'></font></td><td width="+100/numcols+"% >"; 
+ 			}
+-			if (atts.getLocalName(i) == "href") {
++			if (atts.getLocalName(i).equals("href")) {
+ 				results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
+ 				href = 1; //there is a href there
+ 			}
+ 
+ 		}
+ 		for (int i=0; i < atts.getLength(); i++) {
+-		  if (atts.getLocalName(i) == "riskno") {
++		  if (atts.getLocalName(i).equals("riskno")) {
+ 		  	riskNameObj.setProperty(atts.getValue(i), "xml_"+riskName);
+         break;
+ 		  }
+diff --git a/src/main/java/oscar/RscheduleBean.java b/src/main/java/oscar/RscheduleBean.java
+index a4fd890cd1..c9f5a9155b 100644
+--- a/src/main/java/oscar/RscheduleBean.java
++++ b/src/main/java/oscar/RscheduleBean.java
+@@ -40,8 +40,8 @@ public class RscheduleBean {
+   public String avail_hour = "";
+   public String creator = "";
+   public String active = "A";
+-  private String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
+-  private String sitedaytag[] = {"A7","A1","A2","A3","A4","A5","A6"};
++  private String weekdaytag = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
++  private String sitedaytag = {"A7","A1","A2","A3","A4","A5","A6"};
+ 
+   public RscheduleBean() {}
+   public RscheduleBean( String provider_no1, String sdate1,String edate1,String bAvailable1, String day_of_week1, String avail_hourB1, String avail_hour1, String creator1) {
+@@ -141,7 +141,7 @@ public class RscheduleBean {
+     
+   public String getDateAvailHour(GregorianCalendar aDate) { 
+   	String val = "";
+-    if(provider_no!="") {
++    if(!provider_no.equals("")) {
+       int j = aDate.get(Calendar.DAY_OF_WEEK)-1;
+ 	    int i = j==7?0:j;
+   	  if(this.available.compareTo("A")==0) {
+@@ -154,7 +154,7 @@ public class RscheduleBean {
+   }
+   public String getSiteAvail(GregorianCalendar aDate) { 
+ 	  	String val = "";
+-	    if(provider_no!="") {
++	    if(!provider_no.equals("")) {
+ 	      int j = aDate.get(Calendar.DAY_OF_WEEK)-1;
+ 		    int i = j==7?0:j;
+ 	  	  if(this.available.compareTo("A")==0) {
+diff --git a/src/main/java/oscar/decision/DesAnnualReviewPlannerChecklistHandler.java b/src/main/java/oscar/decision/DesAnnualReviewPlannerChecklistHandler.java
+index de004046be..120e96fbc5 100644
+--- a/src/main/java/oscar/decision/DesAnnualReviewPlannerChecklistHandler.java
++++ b/src/main/java/oscar/decision/DesAnnualReviewPlannerChecklistHandler.java
+@@ -39,7 +39,10 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
+     private Locator locator;
+     private String results = ""; //currentElement
+     private boolean display = false;
+-    private String risks, sectionno;
++
++    private String risks;
++
++    private String sectionno;
+     private Properties savedar1params;
+ 
+     public DesAnnualReviewPlannerChecklistHandler(String savedltcrisks) {
+@@ -77,7 +80,10 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
+     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
+             throws SAXException {
+         MiscUtils.getLogger().debug("startElement: localName " + localName + " rawName " + rawName);
+-        String starttag, endtag, riskName, clName;
++        String starttag;
++        String endtag;
++        String riskName;
++        String clName;
+ 
+         if ((rawName.toLowerCase()).equals("section")) {
+             sectionno = "";
+@@ -94,7 +100,7 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
+         if (rawName.equals("risk")) {
+ 
+             for (int i = 0; i < atts.getLength(); i++) {
+-                if (atts.getQName(i) == "riskname") { //not riskname
++                if (atts.getQName(i).equals("riskname")) { //not riskname
+                     riskName = atts.getValue(i);
+                     MiscUtils.getLogger().debug("Mapping ends for prefix :" + riskName);
+                     
+@@ -119,7 +125,7 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
+         if (rawName.equals("item") && display) {
+             results += "<tr>";
+             for (int i = 0; i < atts.getLength(); i++) {
+-                if (atts.getQName(i) == "clname") {
++                if (atts.getQName(i).equals("clname")) {
+                     clName = atts.getValue(i);
+                     results += "<td width='5%'>";
+                     results += "<input type=checkbox name=\"checklist_" + clName
+diff --git a/src/main/java/oscar/decision/DesAnnualReviewPlannerRiskHandler.java b/src/main/java/oscar/decision/DesAnnualReviewPlannerRiskHandler.java
+index f26bea275b..56b4e3eb75 100644
+--- a/src/main/java/oscar/decision/DesAnnualReviewPlannerRiskHandler.java
++++ b/src/main/java/oscar/decision/DesAnnualReviewPlannerRiskHandler.java
+@@ -36,7 +36,11 @@ import org.xml.sax.helpers.DefaultHandler;
+ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
+ 
+     private Locator locator;
+-    private String results, riskName; //currentElement
++
++    private String results;
++
++    private String riskName;// currentElement
++
+     private int colcount = 0;
+     private int numcols = 1;
+     private int interiortable = 0;
+@@ -114,11 +118,11 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
+             results += "<tr><td align='center'><font size=-2><b>\n";
+         }
+         for (int i = 0; i < atts.getLength(); i++) {
+-            if (atts.getQName(i) == "name") {
++            if (atts.getQName(i).equals("name")) {
+                 riskName = atts.getValue(i);
+                 riskNameObj.setProperty(riskName, "risk_" + riskName);
+             }
+-            if (atts.getQName(i) == "href") {
++            if (atts.getQName(i).equals("href")) {
+                 results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
+                 href = 1; //there is a href there
+             }
+diff --git a/src/main/java/oscar/decision/DesAntenatalPlannerChecklistHandler_99_12.java b/src/main/java/oscar/decision/DesAntenatalPlannerChecklistHandler_99_12.java
+index 5b7fc5a65b..a5fadcb39b 100644
+--- a/src/main/java/oscar/decision/DesAntenatalPlannerChecklistHandler_99_12.java
++++ b/src/main/java/oscar/decision/DesAntenatalPlannerChecklistHandler_99_12.java
+@@ -45,8 +45,10 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
+ 	private boolean dispitem = true;
+ 	private boolean checkbox = false;
+ 	private Properties savedar1params;
+-	
+-	GregorianCalendar cal, now;
++
++	GregorianCalendar cal;
++
++	GregorianCalendar now;
+ 	int[] weekDivisions = { 0, 12, 16, 20, 24, 28, 32, 34, 36, 37, 38, 39, 40 };
+ 	String[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+ 
+@@ -79,7 +81,7 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
+             
+             if (rawName.equals("week")) {
+                 for (int i=0; i < atts.getLength(); i++) {
+-                    if (atts.getQName(i) == "number") {
++                    if (atts.getQName(i).equals("number")) {
+                         count = Integer.parseInt(atts.getValue(i));
+                     }
+                 }
+@@ -104,9 +106,9 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
+                 String riskname = "";
+                 for (int i=0; i < atts.getLength(); i++) {
+                     count = 1;
+-                    if (atts.getQName(i) == "name") clname = atts.getValue(i);
+-                    if (atts.getQName(i) == "risk") riskname = atts.getValue(i);
+-                    if (atts.getQName(i) == "checkbox") checkbox = true;
++                    if (atts.getQName(i).equals("name")) clname = atts.getValue(i);
++                    if (atts.getQName(i).equals("risk")) riskname = atts.getValue(i);
++                    if (atts.getQName(i).equals("checkbox")) checkbox = true;
+                 }
+ 
+                 if(riskname.equals("") || savedar1params.getProperty(riskname)!=null ) {
+diff --git a/src/main/java/oscar/decision/DesAntenatalPlannerRisksHandler_99_12.java b/src/main/java/oscar/decision/DesAntenatalPlannerRisksHandler_99_12.java
+index 45f983e97a..1654883a18 100644
+--- a/src/main/java/oscar/decision/DesAntenatalPlannerRisksHandler_99_12.java
++++ b/src/main/java/oscar/decision/DesAntenatalPlannerRisksHandler_99_12.java
+@@ -35,7 +35,11 @@ import org.xml.sax.helpers.DefaultHandler;
+ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
+ 
+ 	private Locator locator;
+-	private String results, riskName; //currentElement
++
++	private String results;
++
++	private String riskName;// currentElement
++
+ 	private int colcount = 0;
+ 	private int numcols = 1;
+ 	private int interiortable = 0;
+@@ -106,23 +110,23 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
+                 results += "<tr><td align='center'><font size=-2><b>\n";
+             }
+             for (int i=0; i < atts.getLength(); i++) {
+-                if (atts.getQName(i) == "name") {
++                if (atts.getQName(i).equals("name")) {
+                     riskName = atts.getValue(i);
+                     results += "<input type=checkbox name=\"risk_" + riskName + "\" value='checked' id='risk_" +riskName+ "'></font></td><td width="+100/numcols+"% >";
+                     riskNameObj.setProperty(riskName, "checked");
+                 }
+-                if (atts.getQName(i) == "href") {
++                if (atts.getQName(i).equals("href")) {
+                     results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
+                     href = 1; //there is a href there
+                 }
+ 
+             }
+-            //for (int i=0; i < atts.getLength(); i++) {
+-            //  if (atts.getQName(i) == "riskno") {
+-            //  	riskNameObj.setProperty(atts.getValue(i), "risk_"+riskName);
+-            //    break;
+-            //  }
+-            //}
++            // for (int i=0; i < atts.getLength(); i++) {
++            // if (atts.getQName(i) == "riskno") {
++            // riskNameObj.setProperty(atts.getValue(i), "risk_"+riskName);
++            // break;
++            // }
++            // }
+         }
+ 
+ 	public void endElement(String namespaceURI, String localName, String rawName) throws SAXException {
+diff --git a/src/main/java/oscar/form/FrmConsultantRecord.java b/src/main/java/oscar/form/FrmConsultantRecord.java
+index 7ccf42ac22..0492429043 100644
+--- a/src/main/java/oscar/form/FrmConsultantRecord.java
++++ b/src/main/java/oscar/form/FrmConsultantRecord.java
+@@ -113,11 +113,12 @@ public class FrmConsultantRecord extends FrmRecord {
+ 
+                 String sql = "SELECT family_doctor FROM demographic WHERE demographic_no = '" + demo_no + "';";
+                 ResultSet rs = DBHandler.GetSQL(sql);
+-                String refdocno, docno;
++		String refdocno;
++		String docno;
+                 if (rs.next()){
+                     docno = oscar.Misc.getString(rs, "family_doctor");
+                     refdocno = docno.substring( 8, docno.indexOf("</rdohip>"));
+-                    if ( refdocno != ""){
++                    if (!refdocno.equals("")){
+                         props.setProperty("refdocno", refdocno);
+                     }
+                 }
+diff --git a/src/main/java/oscar/form/study/hsfo2/pageUtil/SaveRegistrationAction.java b/src/main/java/oscar/form/study/hsfo2/pageUtil/SaveRegistrationAction.java
+index f2de809ba5..1613abf820 100644
+--- a/src/main/java/oscar/form/study/hsfo2/pageUtil/SaveRegistrationAction.java
++++ b/src/main/java/oscar/form/study/hsfo2/pageUtil/SaveRegistrationAction.java
+@@ -113,7 +113,7 @@ public class SaveRegistrationAction extends DispatchAction
+     String parameterValue = request.getParameter( parameterName );
+     
+     //if both are null, treat as equal
+-    if( value == parameterValue )
++    if(value.equals(parameterValue) )
+       return true;
+     
+     if( parameterValue == null )
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java
+index f52b7f60f1..70544730f9 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java
+@@ -84,7 +84,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
+ 
+ 		String filename = request.getParameter("filename") == null ? "null" : request.getParameter("filename");
+ 		
+-		if (filename == "null") {
++		if (filename.equals("null")) {
+ 			if (!saveFile(file1)) {
+ 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.fileNotAdded"));
+ 				saveErrors(request, errors);
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
+index f33e3c05c6..4f11095151 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctSessionBean.java
+@@ -157,17 +157,17 @@ public class EctSessionBean implements java.io.Serializable {
+         roster = d.getRosterStatus();
+         patientSex = d.getSex();
+ 
+-        if (yearOfBirth.equals("null") || yearOfBirth=="") {
++        if (yearOfBirth.equals("null") || yearOfBirth.equals("") ) {
+             yearOfBirth = "0";
+         }
+-        if (monthOfBirth.equals("null") || monthOfBirth=="") {
++        if (monthOfBirth.equals("null") || monthOfBirth.equals("") ) {
+             monthOfBirth = "0";
+         }
+-        if (dateOfBirth.equals("null") || dateOfBirth=="") {
++        if (dateOfBirth.equals("null") || dateOfBirth.equals("") ) {
+             dateOfBirth = "0";
+         }
+     
+-        if(yearOfBirth!="" && yearOfBirth!=null)
++        if(!yearOfBirth.equals("") && yearOfBirth!=null)
+         	patientAge = UtilDateUtilities
+                 .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
+ 
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/AlphaHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/AlphaHandler.java
+index c5f1b8d022..08b244f52f 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/AlphaHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/AlphaHandler.java
+@@ -545,7 +545,7 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
+             
+             // if accessionNum can't be found in the OBR record of the first observation,
+             //  look for it in subsequent observation records
+-            if (accessionNum != ""){
++            if (!accessionNum.equals("")){
+                 return(accessionNum);
+             }
+ 
+@@ -555,7 +555,7 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
+             	} else {
+                     accessionNum = getString(msg23.getRESPONSE().getORDER_OBSERVATION(j).getOBR().getFillerOrderNumber().getEntityIdentifier().getValue());
+             	}
+-                if (accessionNum != ""){
++                if (!accessionNum.equals("")){
+                     return(accessionNum);
+                 }
+             }
+diff --git a/src/main/java/oscar/oscarLab/ca/all/parsers/ICLHandler.java b/src/main/java/oscar/oscarLab/ca/all/parsers/ICLHandler.java
+index 20f2b556a2..b52ef7fe23 100644
+--- a/src/main/java/oscar/oscarLab/ca/all/parsers/ICLHandler.java
++++ b/src/main/java/oscar/oscarLab/ca/all/parsers/ICLHandler.java
+@@ -174,13 +174,13 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler
+ 
+             // if accessionNum can't be found in the OBR record of the first observation,
+             //  look for it in subsequent observation records
+-            if (accessionNum != ""){
++            if (!accessionNum.equals("")){
+                 return(accessionNum.substring(0,accessionNum.indexOf("-")));
+             }
+ 
+             for (int j=1; j < obrCount; j++){
+                 accessionNum = getString(msg.getRESPONSE().getORDER_OBSERVATION(j).getOBR().getFillerOrderNumber().getEntityIdentifier().getValue());
+-                if (accessionNum != ""){
++                if (!accessionNum.equals("")){
+                     return(accessionNum.substring(0,accessionNum.indexOf("-")));
+                 }
+             }
+diff --git a/src/main/java/oscar/oscarMessenger/pageUtil/MsgSessionBean.java b/src/main/java/oscar/oscarMessenger/pageUtil/MsgSessionBean.java
+index 04ec10a4d2..a4841d1bd5 100644
+--- a/src/main/java/oscar/oscarMessenger/pageUtil/MsgSessionBean.java
++++ b/src/main/java/oscar/oscarMessenger/pageUtil/MsgSessionBean.java
+@@ -108,7 +108,7 @@ public class MsgSessionBean implements java.io.Serializable {
+ 			currentAtt = this.getPDFAttachment();
+ 		}
+ 
+-		if (binStr != "" && binStr != null) {
++		if (!binStr.equals("") && binStr != null) {
+ 			this.setPDFAttachment(currentAtt + " " + getPDFStartTag() + getStatusTag("OK") + getPDFTitleTag(pdfTitle) + getContentTag(binStr) + getPDFEndTag());
+ 		} else {
+ 			this.setPDFAttachment(currentAtt + " " + getPDFStartTag() + getStatusTag("BAD") + getPDFTitleTag(pdfTitle + " (N/A)") + getContentTag(binStr) + getPDFEndTag());
+diff --git a/src/main/java/oscar/oscarReport/reportByTemplate/ReportManager.java b/src/main/java/oscar/oscarReport/reportByTemplate/ReportManager.java
+index c1471bf80c..89466da355 100644
+--- a/src/main/java/oscar/oscarReport/reportByTemplate/ReportManager.java
++++ b/src/main/java/oscar/oscarReport/reportByTemplate/ReportManager.java
+@@ -212,7 +212,7 @@ public class ReportManager {
+ 	@SuppressWarnings("unchecked")
+     public String loadInReports() {
+ 		String xml = getTemplateXml("1");
+-		if (xml == "") return "Error: Could not save the template file in the database.";
++		if (xml.equals("")) return "Error: Could not save the template file in the database.";
+ 		try {
+ 			SAXBuilder parser = new SAXBuilder();
+ 			xml = UtilXML.escapeXML(xml); //escapes anomalies such as "date >= {mydate}" the '>' character
+diff --git a/src/main/java/oscar/oscarReport/reportByTemplate/SQLReporter.java b/src/main/java/oscar/oscarReport/reportByTemplate/SQLReporter.java
+index 86e18c7a3c..a9e4e5b061 100644
+--- a/src/main/java/oscar/oscarReport/reportByTemplate/SQLReporter.java
++++ b/src/main/java/oscar/oscarReport/reportByTemplate/SQLReporter.java
+@@ -59,7 +59,7 @@ public class SQLReporter implements Reporter {
+         }
+         
+         String sql = curReport.getPreparedSQL(parameterMap);
+-        if (sql == "" || sql == null) {
++        if (sql.equals("") || sql == null) {
+             request.setAttribute("errormsg", "Error: Cannot find all parameters for the query.  Check the template.");
+             request.setAttribute("templateid", templateId);
+             return false;
+@@ -98,7 +98,7 @@ public class SQLReporter implements Reporter {
+         int x=0;
+         String sql = null;
+         while((sql = curReport.getPreparedSQL(x, parameterMap)) != null) {
+-        	if (sql == "") {
++        	if (sql.equals("")) {
+                 request.setAttribute("errormsg", "Error: Cannot find all parameters for the query.  Check the template.");
+                 request.setAttribute("templateid", templateId);
+                 return false;
+diff --git a/src/main/java/oscar/oscarRx/util/RxUtil.java b/src/main/java/oscar/oscarRx/util/RxUtil.java
+index 2566af5a2b..7e333d53ba 100644
+--- a/src/main/java/oscar/oscarRx/util/RxUtil.java
++++ b/src/main/java/oscar/oscarRx/util/RxUtil.java
+@@ -1234,12 +1234,11 @@ public class RxUtil {
+ 					while (iter.hasNext()) {
+ 						HashMap key = (HashMap) iter.next();
+ 						Integer value = elementCount.get(key);
+-						if (value == count.get(i)) {
++						if (value.equals(count.get(i))) {
+ 							retList.add(key);
+ 							elementCount.remove(key);
+ 							break;
+-						} else
+-						;
++						} 
+ 					}
+ 				}
+ 			} catch (Exception e) {
+diff --git a/src/main/java/oscar/util/ConversionUtils.java b/src/main/java/oscar/util/ConversionUtils.java
+index 3ccf857722..1a3ebdd2f7 100644
+--- a/src/main/java/oscar/util/ConversionUtils.java
++++ b/src/main/java/oscar/util/ConversionUtils.java
+@@ -228,7 +228,7 @@ public class ConversionUtils {
+ 	 * 		Returns 0 for false or null instance or "1" otherwise.
+ 	 */
+ 	public static String toBoolString(Boolean b) {
+-		if (b == null || b == Boolean.FALSE) {
++		if (b == null || b.equals(Boolean.FALSE) ) {
+ 			return ZERO_STRING;
+ 		}
+ 		return "1";
+diff --git a/src/main/java/oscar/util/UtilDateUtilities.java b/src/main/java/oscar/util/UtilDateUtilities.java
+index 660a77dda2..2cad822944 100644
+--- a/src/main/java/oscar/util/UtilDateUtilities.java
++++ b/src/main/java/oscar/util/UtilDateUtilities.java
+@@ -99,7 +99,7 @@ public class UtilDateUtilities {
+     }
+     
+     public static Date calcDate(String s, String s1, String s2)    {
+-    	if (s==null || s1==null || s2==null || s=="" || s1=="" || s2=="") return(null);
++    	if (s==null || s1==null || s2==null || s.equals("")  || s1.equals("")  || s2.equals("") ) return(null);
+     	
+         int i = Integer.parseInt(s);
+         int j = Integer.parseInt(s1) - 1;

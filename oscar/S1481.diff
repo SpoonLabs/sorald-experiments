@@ -1,0 +1,710 @@
+diff --git a/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java b/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java
+index f903a20e2b..3626908231 100644
+--- a/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java
++++ b/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java
+@@ -1397,7 +1397,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
+ 		request.setAttribute("Notes", notes);
+ 
+ 		ArrayList<NoteDisplay> remoteNotes = new ArrayList<NoteDisplay>();
+-		ArrayList<String> issueCodes = new ArrayList<String>(Arrays.asList(codes));
+ 		addRemoteNotes(loggedInInfo,remoteNotes, Integer.parseInt(demoNo), issues, programId);
+ 
+ 		if (remoteNotes.size() > 0) {
+diff --git a/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java b/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
+index 4490e1ad73..6f363aa6e1 100644
+--- a/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
++++ b/src/main/java/org/oscarehr/common/service/PdfRecordPrinter.java
+@@ -110,7 +110,10 @@ public class PdfRecordPrinter {
+     private Document document;
+     //private PdfContentByte cb;
+     private BaseFont bf;
+-    private Font font, boldFont;
++
++  private Font font;
++
++  private Font boldFont;
+     private boolean newPage = false;
+ 
+     private SimpleDateFormat formatter;
+@@ -1222,8 +1225,6 @@ public class PdfRecordPrinter {
+     		}
+     		img.scaleToFit(getDocument().getPageSize().getWidth()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().getHeight());
+     		
+-    		Chunk chunk = new Chunk(img,getDocument().getPageSize().getWidth()-getDocument().leftMargin()-getDocument().rightMargin(), getDocument().getPageSize().getHeight());
+-    		
+     		Paragraph p = new Paragraph(); 
+     		p.add(img);    		
+     		p.add(new Phrase("Description:"+doc.getDocdesc(),getFont()));
+diff --git a/src/main/java/org/oscarehr/fax/util/PdfCoverPageCreator.java b/src/main/java/org/oscarehr/fax/util/PdfCoverPageCreator.java
+index 5b4c92ae21..c98599d021 100644
+--- a/src/main/java/org/oscarehr/fax/util/PdfCoverPageCreator.java
++++ b/src/main/java/org/oscarehr/fax/util/PdfCoverPageCreator.java
+@@ -54,8 +54,6 @@ public class PdfCoverPageCreator {
+ 		ByteArrayOutputStream os = new ByteArrayOutputStream();
+ 		
+ 		try {
+-			
+-	        PdfWriter pdfWriter = PdfWriter.getInstance(document, os);
+ 	        document.open();
+ 	        
+ 	        PdfPTable table = new PdfPTable(1);
+diff --git a/src/main/java/org/oscarehr/integration/mcedt/mailbox/ResourceAction.java b/src/main/java/org/oscarehr/integration/mcedt/mailbox/ResourceAction.java
+index 1db1c16d3a..17c2df6eec 100644
+--- a/src/main/java/org/oscarehr/integration/mcedt/mailbox/ResourceAction.java
++++ b/src/main/java/org/oscarehr/integration/mcedt/mailbox/ResourceAction.java
+@@ -120,8 +120,7 @@ public class ResourceAction extends DispatchAction {
+ 		ResourceForm resourceForm = (ResourceForm) form;
+ 		//resourceForm.setStatus("");
+ 		resetPage(form);
+-		List<DetailDataCustom> resourceList;		
+-		List<DetailDataCustom> resourceListFiltered = new ArrayList<DetailDataCustom>();
++		List<DetailDataCustom> resourceList;
+ 		
+ 		try{
+ 			if(request.getSession().getAttribute("resourceTypeList")==null){
+diff --git a/src/main/java/org/oscarehr/olis/OLISAddToInboxAction.java b/src/main/java/org/oscarehr/olis/OLISAddToInboxAction.java
+index 9d010a0379..060c5333e6 100644
+--- a/src/main/java/org/oscarehr/olis/OLISAddToInboxAction.java
++++ b/src/main/java/org/oscarehr/olis/OLISAddToInboxAction.java
+@@ -84,19 +84,15 @@ public class OLISAddToInboxAction extends DispatchAction {
+ 	
+ 	public ActionForward bulkAddToInbox(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+ 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+-		String providerNo=loggedInInfo.getLoggedInProviderNo();
+ 		String encodedData = request.getParameter("data");
+ 		String data = new String(Base64.decodeBase64(encodedData));
+ 		JSONObject obj = new JSONObject(data);
+ 		JSONArray arr = obj.getJSONArray("items");
+-		
+-		List<String> errors = new ArrayList<String>();
+ 		List<String> successful = new ArrayList<String>();
+ 		
+ 		
+ 		for(int x=0;x<arr.length();x++) {
+ 			JSONObject item = arr.getJSONObject(x);
+-			String uuidToAdd = item.getString("uuid");
+ 		}
+ 		
+ 		JSONObject obj2 = new JSONObject();
+@@ -190,7 +186,6 @@ public class OLISAddToInboxAction extends DispatchAction {
+ 		String length = request.getParameter("length");
+ 
+ 		String orderingColumnIndex = request.getParameter("order[0][column]"); //idx (eg 0)
+-		String orderingColumnDirection = request.getParameter("order[0][dir]"); //asc,desc
+ 
+ 		
+ 		//setup a column map from request parameters
+@@ -204,8 +199,6 @@ public class OLISAddToInboxAction extends DispatchAction {
+ 			idx++;
+ 		}
+ 
+-		String orderBy = null;
+-
+ 		if (!StringUtils.isEmpty(orderingColumnIndex)) {
+ 			ColumnInfo columnInfo = columnMap.get(Integer.parseInt(orderingColumnIndex));
+ 			if ("transaction_date".equals(columnInfo.getData())) {
+diff --git a/src/main/java/org/oscarehr/olis/OLISUploadSimulationDataAction.java b/src/main/java/org/oscarehr/olis/OLISUploadSimulationDataAction.java
+index 70da2ad082..4a5a880ac9 100644
+--- a/src/main/java/org/oscarehr/olis/OLISUploadSimulationDataAction.java
++++ b/src/main/java/org/oscarehr/olis/OLISUploadSimulationDataAction.java
+@@ -33,8 +33,6 @@ public class OLISUploadSimulationDataAction extends DispatchAction {
+ 	
+ 	@Override
+     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+-
+-		Logger logger = MiscUtils.getLogger();
+ 		
+ 		String simulationData = null;
+ 		boolean simulationError = false;
+diff --git a/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java b/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
+index c090671522..49e6593f7c 100644
+--- a/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
++++ b/src/main/java/org/oscarehr/prevention/reports/ReportBuilder.java
+@@ -150,7 +150,6 @@ public class ReportBuilder {
+ 	
+ 	private List<Prevention> removeFutureItems(List<Prevention> list,Date asOfDate){
+ 		List<Prevention> noFutureItems = new ArrayList<Prevention>();
+-	      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+ 	      for(Prevention prevention:list) {
+ 	    	  	if(prevention.getPreventionDate() != null && prevention.getPreventionDate().before(asOfDate)) {
+ 	    	  		noFutureItems.add(prevention);
+@@ -607,7 +606,6 @@ public class ReportBuilder {
+ 		Integer yearStyle = frm.getAgeCalc();
+ 		String startYear = frm.getAge1();
+ 		String endYear = frm.getAge2();
+-		String rosterStatus = frm.getRosterStat();
+ 		
+ 		// Should this be passed in, or put in the  String provider = frm.getProviderNo();
+ 
+@@ -625,8 +623,6 @@ public class ReportBuilder {
+ 		
+ 		boolean theWhereFlag = true;
+ 		boolean theFirstFlag = true;
+-
+-		boolean getprovider = false;
+ /*
+ 		int yStyle = 0;
+ 		if(yearStyle != null && yearStyle == 1) {
+@@ -755,7 +751,6 @@ public class ReportBuilder {
+ 		
+ 
+ 		logger.debug("SEARCH SQL STATEMENT \n" + stringBuffer.toString());
+-		java.util.ArrayList<ArrayList<String>> searchedArray = new java.util.ArrayList<ArrayList<String>>();
+ 		try {
+ 			MiscUtils.getLogger().info(stringBuffer.toString());
+ 
+diff --git a/src/main/java/org/oscarehr/sharingcenter/SharingCenterUtil.java b/src/main/java/org/oscarehr/sharingcenter/SharingCenterUtil.java
+index 3024d38f26..d3d6d226ab 100644
+--- a/src/main/java/org/oscarehr/sharingcenter/SharingCenterUtil.java
++++ b/src/main/java/org/oscarehr/sharingcenter/SharingCenterUtil.java
+@@ -1441,9 +1441,6 @@ public class SharingCenterUtil {
+     public static boolean submitFolder(FolderMetaData folder, AffinityDomainDataObject domain) {
+         boolean retVal = false;
+ 
+-        // create the affinity domain object
+-        ClinicInfoDataObject clinicData = clinicInfoDao.getClinic();
+-
+         IheConfiguration iheConfig = convertAffinityDomainDataObject(domain);
+ 
+         IDocumentRegisterable registrable = XdStarUtility.createCommunicatorByInteraction(iheConfig, IDocumentRegisterable.class);
+@@ -1459,9 +1456,6 @@ public class SharingCenterUtil {
+     public static boolean submitDocumentContainer(DocumentContainerMetaData container, AffinityDomainDataObject domain) {
+         boolean retVal = false;
+ 
+-        // create the affinity domain object
+-        ClinicInfoDataObject clinicData = clinicInfoDao.getClinic();
+-
+         IheConfiguration iheConfig = convertAffinityDomainDataObject(domain);
+ 
+         IDocumentRegisterable registrable = XdStarUtility.createCommunicatorByInteraction(iheConfig, IDocumentRegisterable.class);
+@@ -1477,9 +1471,6 @@ public class SharingCenterUtil {
+     public static boolean submitSingleDocument(DocumentMetaData document, AffinityDomainDataObject domain) {
+         boolean retVal = false;
+ 
+-        // create the affinity domain object
+-        ClinicInfoDataObject clinicData = clinicInfoDao.getClinic();
+-
+         IheConfiguration iheConfig = convertAffinityDomainDataObject(domain);
+ 
+         IDocumentRegisterable registrable = XdStarUtility.createCommunicatorByInteraction(iheConfig, IDocumentRegisterable.class);
+diff --git a/src/main/java/org/oscarehr/ws/rest/AppService.java b/src/main/java/org/oscarehr/ws/rest/AppService.java
+index 747831d9a1..6d8a78d2dc 100644
+--- a/src/main/java/org/oscarehr/ws/rest/AppService.java
++++ b/src/main/java/org/oscarehr/ws/rest/AppService.java
+@@ -204,7 +204,6 @@ public class AppService extends AbstractServiceImpl {
+ 	@Path("/PHRActive/consentGiven/{demographicNo}")
+ 	@Produces("application/json")
+ 	public GenericRESTResponse isPHRActiveAndConsentGiven(@Context HttpServletRequest request,@PathParam("demographicNo") Integer demographicNo){
+-		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+     	
+ 		GenericRESTResponse response = null;
+ 		Integer id = appManager.getAppDefinitionConsentId(getLoggedInInfo(), "PHR");
+@@ -346,11 +345,7 @@ public class AppService extends AbstractServiceImpl {
+ 		
+ 		try {
+ 			Response reps = callPHR("configurEMRConnection",getLoggedInInfo().getLoggedInProviderNo(),jojb.toString());
+-			//InputStream in = (InputStream) reps.getEntity();
+-			//BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+-			//String response = IOUtils.toString(bufferedReader);
+-			String response = (String)  reps.getEntity();
+-			//bufferedReader.close();
++			// bufferedReader.close();
+ 		}catch(Exception e) {
+ 			logger.error("error",e);
+ 			return new GenericRESTResponse(false,"ERROR connecting to PHR");
+@@ -435,11 +430,7 @@ public class AppService extends AbstractServiceImpl {
+ 		
+ 		try {
+ 			Response reps = callPHR("configurEMRConnection",getLoggedInInfo().getLoggedInProviderNo(),jojb.toString());
+-			//InputStream in = (InputStream) reps.getEntity();
+-			//BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+-			//String response = IOUtils.toString(bufferedReader);
+-			String response = (String)  reps.getEntity();
+-			//bufferedReader.close();
++			// bufferedReader.close();
+ 		}catch(Exception e) {
+ 			logger.error("error",e);
+ 			return new GenericRESTResponse(false,"ERROR connecting to PHR");
+diff --git a/src/main/java/org/oscarehr/ws/rest/ReportingService.java b/src/main/java/org/oscarehr/ws/rest/ReportingService.java
+index 7b142e59a7..c82186de9a 100644
+--- a/src/main/java/org/oscarehr/ws/rest/ReportingService.java
++++ b/src/main/java/org/oscarehr/ws/rest/ReportingService.java
+@@ -258,8 +258,7 @@ public class ReportingService extends AbstractServiceImpl {
+ 	@Path("/preventionReport/runReport/{id}")
+ 	@Produces("application/json")
+ 	@Consumes("application/json")
+-	public javax.ws.rs.core.Response runPreventionReport(@PathParam("id") Integer id,JSONObject jSONObject) { // will need to change provider to an ojbect
+-		GenericRESTResponse response = new GenericRESTResponse();
++	public javax.ws.rs.core.Response runPreventionReport(@PathParam("id") Integer id,JSONObject jSONObject) {
+ 		Report report = null;
+ 		//Next thing to do is to save the JSON object to the database
+ 		String providerNo = jSONObject.optString("providerNo");
+@@ -294,11 +293,7 @@ public class ReportingService extends AbstractServiceImpl {
+ 	@Path("/preventionReport/getReport/{id}")
+ 	@Produces("application/json")
+ 	@Consumes("application/json")
+-	public javax.ws.rs.core.Response getPreventionReport(@PathParam("id") Integer id,JSONObject jSONObject) { // will need to change provider to an ojbect
+-		GenericRESTResponse response = new GenericRESTResponse();
+-		Report report = null;
+-		//Next thing to do is to save the JSON object to the database
+-		String providerNo = jSONObject.optString("providerNo");
++	public javax.ws.rs.core.Response getPreventionReport(@PathParam("id") Integer id,JSONObject jSONObject) {
+ 		
+ 		
+ 		PreventionReport pr = preventionReportDao.find(id);
+@@ -318,8 +313,7 @@ public class ReportingService extends AbstractServiceImpl {
+ 	@Path("/preventionReport/dectivateReport/{id}")
+ 	@Produces("application/json")
+ 	@Consumes("application/json")
+-	public javax.ws.rs.core.Response getPreventionReport(@PathParam("id") Integer id) { // will need to change provider to an ojbect
+-		GenericRESTResponse response = new GenericRESTResponse();
++	public javax.ws.rs.core.Response getPreventionReport(@PathParam("id") Integer id) {
+ 		
+ 		PreventionReport pr = preventionReportDao.find(id);
+ 		pr.setActive(false);
+diff --git a/src/main/java/org/oscarehr/ws/rest/conversion/summary/RxSummary.java b/src/main/java/org/oscarehr/ws/rest/conversion/summary/RxSummary.java
+index 8e125c61ec..1489b27b49 100644
+--- a/src/main/java/org/oscarehr/ws/rest/conversion/summary/RxSummary.java
++++ b/src/main/java/org/oscarehr/ws/rest/conversion/summary/RxSummary.java
+@@ -74,8 +74,6 @@ public class RxSummary implements Summary{
+             if(drug.isHideFromDrugProfile()) {
+             	continue;
+             }
+-
+-            String styleColor = "";
+             if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
+                 styleColor="style=\"color:orange;font-weight:bold;\"";
+             }else if (drug.isCurrent() )  {
+diff --git a/src/main/java/oscar/eform/actions/PrintAction.java b/src/main/java/oscar/eform/actions/PrintAction.java
+index 683c564472..59a334eba7 100644
+--- a/src/main/java/oscar/eform/actions/PrintAction.java
++++ b/src/main/java/oscar/eform/actions/PrintAction.java
+@@ -114,8 +114,6 @@ public class PrintAction extends Action {
+ 	 * This method will take eforms and send them to a PHR.
+ 	 */
+ 	public void printForm(HttpServletRequest request, LoggedInInfo loggedInInfo, String formId, String providerId) {
+-		
+-		File tempFile = null;
+ 
+ 		byte[] buffer;
+ 		ByteInputStream bis;
+diff --git a/src/main/java/oscar/entities/MSPBill.java b/src/main/java/oscar/entities/MSPBill.java
+index f8265dd8d6..c906a65f86 100644
+--- a/src/main/java/oscar/entities/MSPBill.java
++++ b/src/main/java/oscar/entities/MSPBill.java
+@@ -402,7 +402,6 @@ public class MSPBill {
+     catch (Exception e) {
+       MiscUtils.getLogger().error("Error", e);
+     }
+-    oscar.util.DateUtils ut = new oscar.util.DateUtils();
+     long daysOld = DateUtils.getDifDays(new Date(), dt);
+     if (daysOld >= 0 && daysOld <= 30) {
+       ret = "1";
+diff --git a/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java b/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java
+index 3b63e14a93..8cd2998ba8 100644
+--- a/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java
++++ b/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java
+@@ -36,7 +36,6 @@ public final class FrmPdfGraphicAR extends FrmPdfGraphic {
+ 
+ 	//only for "yyyy MM dd"
+ 	public boolean checkDateStr(String strDate) {
+-		boolean ret = true;
+ 		if (dateFormat == null || strDate == null || strDate.equals("") )
+ 			return false;
+ 
+@@ -160,7 +159,6 @@ public final class FrmPdfGraphicAR extends FrmPdfGraphic {
+ 			return false;
+ 
+ 		int N = str.length();
+-		StringBuilder sb = new StringBuilder(N);
+ 		for (int i = 0; i < N; i++) {
+ 			char c = str.charAt(i);
+ 			if (c >= '0' && c <= '9')
+diff --git a/src/main/java/oscar/form/pdfservlet/FrmCustomedPDFServlet.java b/src/main/java/oscar/form/pdfservlet/FrmCustomedPDFServlet.java
+index c55345adfc..d58b813d01 100644
+--- a/src/main/java/oscar/form/pdfservlet/FrmCustomedPDFServlet.java
++++ b/src/main/java/oscar/form/pdfservlet/FrmCustomedPDFServlet.java
+@@ -596,7 +596,6 @@ public class FrmCustomedPDFServlet extends HttpServlet {
+ 			// however the same graphic will be applied to all pages
+ 			// ie. __graphicPage=2&__graphicPage=3
+ 			String[] cfgGraphicFile = req.getParameterValues("__cfgGraphicFile");
+-			int cfgGraphicFileNo = cfgGraphicFile == null ? 0 : cfgGraphicFile.length;
+ 			if (cfgGraphicFile != null) {
+ 				// for (String s : cfgGraphicFile) {
+ 				// p("cfgGraphicFile", s);
+@@ -604,7 +603,6 @@ public class FrmCustomedPDFServlet extends HttpServlet {
+ 			}
+ 
+ 			String[] graphicPage = req.getParameterValues("__graphicPage");
+-			ArrayList<String> graphicPageArray = new ArrayList<String>();
+ 			if (graphicPage != null) {
+ 				// for (String s : graphicPage) {
+ 				// p("graphicPage", s);
+diff --git a/src/main/java/oscar/oscarBilling/ca/bc/MSP/DocumentTeleplanReportUploadServlet.java b/src/main/java/oscar/oscarBilling/ca/bc/MSP/DocumentTeleplanReportUploadServlet.java
+index 5deb72ed5c..d6a8318ea0 100644
+--- a/src/main/java/oscar/oscarBilling/ca/bc/MSP/DocumentTeleplanReportUploadServlet.java
++++ b/src/main/java/oscar/oscarBilling/ca/bc/MSP/DocumentTeleplanReportUploadServlet.java
+@@ -51,18 +51,10 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
+     public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException  {
+         
+         
+-        byte data[] = new byte[BUFFER];
+-        byte data1[] = new byte[BUFFER/2];
+-        byte data2[] = new byte[BUFFER/2];
+-        byte enddata[] = new byte[2];
+-        
+-        
+         HttpSession session = request.getSession(true);
+-        String backupfilepath = ((String) session.getAttribute("homepath"))!=null?((String) session.getAttribute("homepath")):"null" ;
+-        
+-        
+-        
+-        String foldername="", fileheader="", forwardTo="";
++        String foldername = "";
++        String fileheader = "";
++        String forwardTo = "";
+         
+         String userHomePath = System.getProperty("user.home", "user.dir");
+         MiscUtils.getLogger().debug(userHomePath);
+diff --git a/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java b/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java
+index a416eb6ee1..36d7a81873 100644
+--- a/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java
++++ b/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java
+@@ -359,7 +359,6 @@ public class JdbcBillingClaimImpl {
+ 		String paymentSumParam = null;
+ 		String paymentDateParam = null;
+ 		String paymentTypeParam = null;
+-		String provider_no=mVal.get("provider_no");
+ 		for (int i = 0; i < temp.length; i++) {
+ 			String val = mVal.get(temp[i]);
+ 			if ("discount".equals(temp[i])) {
+@@ -397,7 +396,6 @@ public class JdbcBillingClaimImpl {
+ 	    	if(paymentTypeParam==null || paymentTypeParam.equals("")) {
+ 	    		paymentTypeParam="1";
+ 	    	}
+-    		BillingPaymentType type = billingPaymentTypeDao.find(Integer.parseInt(paymentTypeParam));
+     		BillingONPayment payment = null;
+     		
+     		if(paymentSumParam != null) {
+diff --git a/src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java b/src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java
+index 2e45d3ccc1..db190907a9 100644
+--- a/src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java
++++ b/src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java
+@@ -106,7 +106,6 @@ public class PrintDemoLabelAction extends OscarAction {
+         }
+         if (ins == null){
+             try {
+-                ServletContext context = getServlet().getServletContext();
+                 ins = getClass().getResourceAsStream("/oscar/oscarDemographic/label.xml");
+                 logger.debug("loading from : /oscar/oscarDemographic/label.xml " + ins);
+             }
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/CihiExportPHC_VRSAction.java b/src/main/java/oscar/oscarDemographic/pageUtil/CihiExportPHC_VRSAction.java
+index b9c4ac4ed5..2ed471d5f9 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/CihiExportPHC_VRSAction.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/CihiExportPHC_VRSAction.java
+@@ -1145,12 +1145,11 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
+ 
+     private void buildMedications(Demographic demo, PatientRecord patientRecord) {
+ 		MedicationsAndTreatments medications;
+-		RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demo.getDemographicNo().toString()));
++		oscar.oscarRx.data.RxPrescriptionData.Prescription[]pa = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demo.getDemographicNo().toString()));
+ 		String drugname;
+ 		String customname;
+ 		String dosage;
+ 		String[] strength;
+-		int sep;
+ 
+ 		for(int p = 0; p<pa.length; ++p) {
+ 			drugname = pa[p].getBrandName();
+@@ -1180,7 +1179,6 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
+             	} else {//amount & unit not separated, probably e.g. 50mg / 2tablet
+             		if (strength.length>1 && strength[1].equals("/")) {
+             			if (strength.length>2) {
+-            				String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
+             				String unit2 = Util.trailingTxt(strength[2]).equals("") ? "unit" : Util.trailingTxt(strength[2]);
+ 
+                     		drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2]));
+diff --git a/src/main/java/oscar/oscarDemographic/pageUtil/ReadHRMFile.java b/src/main/java/oscar/oscarDemographic/pageUtil/ReadHRMFile.java
+index 3df710063c..e077c34b49 100644
+--- a/src/main/java/oscar/oscarDemographic/pageUtil/ReadHRMFile.java
++++ b/src/main/java/oscar/oscarDemographic/pageUtil/ReadHRMFile.java
+@@ -94,7 +94,6 @@ public class ReadHRMFile {
+             // Load a WXS schema, represented by a Schema instance.
+             Source schemaFile = new StreamSource(new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
+             try {
+-            	Schema schema = factory.newSchema(schemaFile);
+             } catch (SAXException e) {
+             	logger.error(e.getMessage());
+             } 
+diff --git a/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java b/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java
+index 1bc67c1044..32396ff9fb 100644
+--- a/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java
++++ b/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java
+@@ -273,7 +273,6 @@ public class EctRourkeRecord {
+ //////////////new/ Done By Jay////
+     public boolean isFemale(int demo){
+         boolean retval = false;
+-        DBHandler db;
+         ResultSet rs;
+         String str = "M";
+         try{
+diff --git a/src/main/java/oscar/oscarEncounter/immunization/config/pageUtil/EctImmCreateImmunizationSetConfigAction.java b/src/main/java/oscar/oscarEncounter/immunization/config/pageUtil/EctImmCreateImmunizationSetConfigAction.java
+index 73719a453d..a73c7bb659 100644
+--- a/src/main/java/oscar/oscarEncounter/immunization/config/pageUtil/EctImmCreateImmunizationSetConfigAction.java
++++ b/src/main/java/oscar/oscarEncounter/immunization/config/pageUtil/EctImmCreateImmunizationSetConfigAction.java
+@@ -61,7 +61,6 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
+       Vector immunizationVec = new Vector();
+       Vector yearAgeVec = new Vector();
+       String setName = ((EctImmCreateImmunizationSetConfigForm)form).getName();
+-      String headers = "true";
+       String str;
+       for(; e.hasMoreElements(); MiscUtils.getLogger().debug("str ".concat(String.valueOf(String.valueOf(str))))) {
+          str = (String)e.nextElement();
+@@ -73,7 +72,6 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
+             immunizationVec.add(str);
+             continue;
+          }
+-         boolean flag1;
+          if(str.startsWith("yearAge"))
+             yearAgeVec.add(str);
+          else
+@@ -110,7 +108,6 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
+       immunizationVector.setSize(immunizationVec.size());
+       for(int i = 0; i < immunizationVec.size(); i++) {
+          EctImmImmunizations immunization = new EctImmImmunizations();
+-         String colHead = (String)immunizationVec.elementAt(i);
+          String immName = (String)immunizationVec.elementAt(i);
+          String gett = immName.substring(12);
+          StringTokenizer stringTokenizer = new StringTokenizer(gett, "D");
+@@ -131,7 +128,6 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
+       }
+       
+       for(int q = 0; q < immunizationVector.size(); q++) {
+-         EctImmImmunizations immunization = (EctImmImmunizations)immunizationVector.elementAt(q);
+ 
+       }
+       
+@@ -144,7 +140,6 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
+          String rowToBeParsed = (String)stringTokenizer.nextElement();
+          String colToBeParsed = (String)stringTokenizer.nextElement();
+          int intRow = 0;
+-         int intCol = 0;
+          try {
+             intRow = Integer.parseInt(rowToBeParsed);
+             intCol = Integer.parseInt(colToBeParsed);
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java
+index 30d85362ce..9f06ce0ac3 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java
+@@ -57,9 +57,6 @@ public class ConsultationPrintDocsAction extends Action {
+     	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
+ 			throw new SecurityException("missing required security object (_con)");
+ 		}
+-    	
+-        String reqId = request.getParameter("reqId");
+-        String demoNo = request.getParameter("demographicNo");
+         //ArrayList docs = EDocUtil.listDocs( demoNo, reqId, EDocUtil.ATTACHED);        
+         String[] docs = request.getParameterValues("docNo");
+         ArrayList alist = new ArrayList();
+diff --git a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctIncomingConsultationAction.java b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctIncomingConsultationAction.java
+index 2aa8f5a615..6d2a142f14 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctIncomingConsultationAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctIncomingConsultationAction.java
+@@ -41,8 +41,6 @@ public class EctIncomingConsultationAction extends Action {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+       EctIncomingConsultationForm frm = (EctIncomingConsultationForm)form;
+-      String providerNo = frm.getProviderNo();
+-      String demographicNo = frm.getDemographicNo();
+         /*EctSessionBean bean = new EctSessionBean();
+         bean.providerNo = providerNo;
+         EctSessionBean abean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementTypeAction.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementTypeAction.java
+index 0730ca478d..8ad4c36d91 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementTypeAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementTypeAction.java
+@@ -106,7 +106,7 @@ public class EctAddMeasurementTypeAction extends Action {
+         String regExp = validate.getRegCharacterExp();
+         boolean isValid = true;
+         
+-        for(MeasurementType mt:dao.findByType(type)) {
++        for(:dao.findByType(type)) {
+         	errors.add(type, new ActionMessage("error.oscarEncounter.Measurements.duplicateTypeName"));
+             saveErrors(request, errors);
+             isValid = false;            
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasuringInstructionAction.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasuringInstructionAction.java
+index 9cf68c30b1..665a681f47 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasuringInstructionAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasuringInstructionAction.java
+@@ -67,9 +67,6 @@ public class EctAddMeasuringInstructionAction extends Action {
+         if( securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null) || securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin.measurements", "w", null) )  {
+         
+         request.getSession().setAttribute("EctAddMeasuringInstructionForm", frm);
+-        
+-        MsgStringQuote str = new MsgStringQuote();
+-        String requestId = "";
+         List messages = new LinkedList();
+         
+        
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctMeasurementsAction.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctMeasurementsAction.java
+index e5790ed318..6fbfbf9b81 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctMeasurementsAction.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctMeasurementsAction.java
+@@ -115,10 +115,19 @@ public class EctMeasurementsAction extends Action {
+ 
+ 		EctValidation ectValidation = new EctValidation();
+ 		ActionMessages errors = new ActionMessages();
+-
+-		String inputValueName, inputTypeName, inputTypeDisplayName, mInstrcName, commentsName;
+-		String dateName, validationName, inputValue, inputType, inputTypeDisplay, mInstrc;
+-		String comments, dateObserved, validation;
++		String inputValueName;
++		String inputTypeName;
++		String inputTypeDisplayName;
++		String mInstrcName;
++		String commentsName;
++		String dateName;
++		String validationName;
++		String inputValue;
++		String inputType;
++		String inputTypeDisplay;
++		String mInstrc;
++		String comments;
++		String validation;
+ 
+ 		String regExp = null;
+ 		Double dMax = new Double(0);
+@@ -128,7 +137,6 @@ public class EctMeasurementsAction extends Action {
+ 		Boolean numeric = null;
+ 		
+ 		List<Validations> vs = null;
+-		String regCharExp;
+ 		//goes through each type to check if the input value is valid
+ 		for (int i = 0; i < iType; i++) {
+ 			inputValueName = "inputValue-" + i;
+@@ -235,8 +243,6 @@ public class EctMeasurementsAction extends Action {
+ 				comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
+ 				validation = (String) frm.getValue(validationName);
+ 				dateObserved = (String) frm.getValue(dateName);
+-
+-				org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+ 				if (!GenericValidator.isBlankOrNull(inputValue)) {
+ 
+ 					//Find if the same data has already been entered into the system
+diff --git a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSendMeasurementToPhr.java b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSendMeasurementToPhr.java
+index 46a26660ad..75a00d0fd3 100644
+--- a/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSendMeasurementToPhr.java
++++ b/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSendMeasurementToPhr.java
+@@ -77,8 +77,6 @@ public class EctSendMeasurementToPhr extends Action {
+ 	        
+ 			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+ 	        Long myOscarUserId = MyOscarUtils.getMyOscarUserIdFromOscarDemographicId(myOscarLoggedInInfo, demographicNo);
+-	        
+-	        EctMeasurementsDataBeanHandler hd = new EctMeasurementsDataBeanHandler(demographicNo);
+ 	        for (String measurementType: measurementTypeList) {
+ 	            List<EctMeasurementsDataBean> measurements =  EctMeasurementsDataBeanHandler.getMeasurementObjectByType(measurementType, demographicNo);
+ 	            for (EctMeasurementsDataBean measurement: measurements) {
+diff --git a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayEpisodeAction.java b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayEpisodeAction.java
+index 3b6425329a..2a57cf6eb0 100644
+--- a/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayEpisodeAction.java
++++ b/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayEpisodeAction.java
+@@ -52,11 +52,11 @@ public class EctDisplayEpisodeAction extends EctDisplayAction {
+     		return true;
+     	} else {
+     		try {
+-    			String appointmentNo = request.getParameter("appointment_no");
+ 
+ 			    //Set lefthand module heading and link
+ 			    String winName = "episode" + bean.demographicNo;
+-			    String pathview, pathedit;
++                String pathview;
++                String pathedit;
+ 
+ 			    pathview = request.getContextPath() + "/Episode.do?method=list&demographicNo=" + bean.demographicNo;
+ 			    pathedit = request.getContextPath() + "/Episode.do?method=edit&demographicNo=" + bean.demographicNo;
+diff --git a/src/main/java/oscar/oscarProvider/data/ProviderMyOscarIdData.java b/src/main/java/oscar/oscarProvider/data/ProviderMyOscarIdData.java
+index f6f9e78ba5..c5dd0e76c0 100644
+--- a/src/main/java/oscar/oscarProvider/data/ProviderMyOscarIdData.java
++++ b/src/main/java/oscar/oscarProvider/data/ProviderMyOscarIdData.java
+@@ -62,7 +62,6 @@ public final class ProviderMyOscarIdData {
+ 	 *set myOscar login id in property table
+ 	 */
+ 	public static boolean setId(String providerId, String id) {
+-		String sql;
+ 		boolean ret = true;
+ 
+ 		List<Property> props = dao.findByNameAndProvider(PROPERTY_KEY, providerId);
+diff --git a/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSelectCDMReportAction.java b/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSelectCDMReportAction.java
+index 91da7365dc..04451a1e62 100644
+--- a/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSelectCDMReportAction.java
++++ b/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptSelectCDMReportAction.java
+@@ -73,10 +73,7 @@ public final class RptSelectCDMReportAction extends Action {
+             
+         }
+         MiscUtils.getLogger().debug("the value of forward is :" + forward);
+-        GregorianCalendar now=new GregorianCalendar(); 
+-        int curYear = now.get(Calendar.YEAR);
+-        int curMonth = (now.get(Calendar.MONTH)+1);
+-        int curDay = now.get(Calendar.DAY_OF_MONTH);
++        GregorianCalendar now=new GregorianCalendar();
+         String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;        
+         String lastYear = now.get(Calendar.YEAR)-1+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ; 
+         
+diff --git a/src/main/java/oscar/oscarReport/pageUtil/ManagePatientLettersAction.java b/src/main/java/oscar/oscarReport/pageUtil/ManagePatientLettersAction.java
+index 398afb3580..1652a867db 100644
+--- a/src/main/java/oscar/oscarReport/pageUtil/ManagePatientLettersAction.java
++++ b/src/main/java/oscar/oscarReport/pageUtil/ManagePatientLettersAction.java
+@@ -85,12 +85,6 @@ public class ManagePatientLettersAction extends Action {
+             
+             fileData = fFile.getFileData();
+             String reportName = request.getParameter("reportName");
+-            
+-            //Getter Stream for letter
+-            //Validate that it is a valid jasper report file
+-            //Save to database
+-            
+-            JasperReport jasperReport = JasperCompileManager.compileReport(new ByteArrayInputStream(fileData));
+         
+             ManageLetters manageLetters = new ManageLetters();
+             manageLetters.saveReport( (String) request.getSession().getAttribute("user"), reportName,fFile.getFileName(), fileData);
+diff --git a/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java b/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java
+index 6c022b7d47..33fa60de10 100644
+--- a/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java
++++ b/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java
+@@ -98,7 +98,6 @@ public class dxQuickListItemsHandler {
+ 		dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+ 		String[] codingSystems = codingSys.getCodingSystems();
+ 		String codingSystem;
+-		String sql;
+ 
+ 		for (int idx = 0; idx < codingSystems.length; ++idx) {
+ 			codingSystem = codingSystems[idx];
+diff --git a/src/test/java/org/oscarehr/integration/born/ONAREnhancedBornConnectorTest.java b/src/test/java/org/oscarehr/integration/born/ONAREnhancedBornConnectorTest.java
+index 76dca64f74..f4c40feb5f 100644
+--- a/src/test/java/org/oscarehr/integration/born/ONAREnhancedBornConnectorTest.java
++++ b/src/test/java/org/oscarehr/integration/born/ONAREnhancedBornConnectorTest.java
+@@ -42,9 +42,8 @@ public class ONAREnhancedBornConnectorTest extends DaoTestFixtures {
+ 	@Test
+ 	@Ignore
+ 	public void testConnector()  {
+-		ONAREnhancedBornConnector c = new ONAREnhancedBornConnector();
+-		//not sure it's worth fixing right now
+-		//c.updateBorn();
++		// not sure it's worth fixing right now
++		// c.updateBorn();
+ 	}
+ 
+ }
+diff --git a/src/test/java/org/oscarehr/ws/conversion/DrugConverterTest.java b/src/test/java/org/oscarehr/ws/conversion/DrugConverterTest.java
+index 692294af47..a08a86ce1d 100644
+--- a/src/test/java/org/oscarehr/ws/conversion/DrugConverterTest.java
++++ b/src/test/java/org/oscarehr/ws/conversion/DrugConverterTest.java
+@@ -153,8 +153,6 @@ public class DrugConverterTest extends DrugConverter {
+         d.setArchived(false);
+         d.setArchivedDate((Date) archivedDate.clone());
+         d.setArchivedReason("reason");
+-
+-        DrugTo1 t = this.getAsTransferObject(info, d);
+     }
+ 
+     
